@@ -1,3 +1,5 @@
-Astro mód v Pixelu spustil vážný zájem o noční oblohu.
+V srpnu 2022 přišla první zásadní jiskra po pořízení telefonu Google Pixel 7a.
 
-Jednoduchý setup, velká zvědavost a začátek dlouhé větve.
+Vestavěný astro mód mi ukázal, že i mobil dokáže zachytit překvapivě hodně detailů noční oblohy. Z jednorázového zkoušení se rychle stala pravidelná aktivita.
+
+Tento moment nastartoval hlubší zájem o optiku, zpracování snímků i kvalitu samotného capture procesu.

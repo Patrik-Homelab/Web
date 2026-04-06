@@ -1,7 +1,5 @@
-Tato planeta obsahuje strukturovanou vzdělávací linku:
+Tato planeta reprezentuje moji formální vzdělávací dráhu a pevné základy, které mi dala.
 
-- chemická střední škola
-- bakalář informatiky
-- navazující studium se zaměřením na zpracování obrazu a grafiku
+Začínal jsem na chemicky zaměřené střední škole, pokračoval bakalářem informatiky na VŠB-TUO a nyní studuji navazující magisterský obor se zaměřením na digitální zpracování obrazu a počítačovou grafiku. Každá etapa přinesla jiný typ posunu: disciplínu, technickou hloubku a následně specializaci.
 
-Jde o stabilní orbitu, která dala technické základy.
+Velká hodnota této orbity je v tom, že mě nutila osvojit si i témata, která bych si sám možná nevybral. Právě ta se později ukázala jako klíčová v reálných projektech.

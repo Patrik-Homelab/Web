@@ -4,6 +4,14 @@ const galleryImage = '/images/Image-800.webp';
 const galleryPreview = '/images/Image-400.webp';
 const profile = '/images/PFP.jpg';
 
+const czechContentMap = import.meta.glob('./content/cs/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default'
+}) as Record<string, string>;
+
+const fullContent = (id: string) => czechContentMap[`./content/cs/${id}.md`] ?? '';
+
 const czechAboutStory: AboutStory = {
   title: 'Můj vlastní příběhový systém',
   subtitle: 'Osobní orbita, kde planety jsou oblasti života a měsíce jsou milníky.',
@@ -15,7 +23,7 @@ const czechAboutStory: AboutStory = {
       title: 'Jádro začátku',
       subtitle: '2016: první jiskra',
       preview: 'Centrum všeho: první zájem o weby a rozhodnutí učit se skutečný kód.',
-      full: 'Začínal jsem na vizuálních editorech, ale rychle přešel na čisté HTML/CSS, abych pochopil principy. Brzy následovaly i jednoduché PHP session a logika přihlášení. Tady vznikl základ celé mé cesty.',
+      full: fullContent('origin-core'),
       images: [
         {
           src: profile,
@@ -32,7 +40,7 @@ const czechAboutStory: AboutStory = {
       subtitle: 'Formální vzdělávací dráha',
       preview:
         'Tato planeta shrnuje cestu od střední školy přes bakaláře po současné navazující studium.',
-      full: 'Prošel jsem chemickou střední školou, bakalářem informatiky a nyní navazujícím magisterským studiem se zaměřením na zpracování obrazu a grafiku. Tahle orbita mi dala pevné technické základy.',
+      full: fullContent('school-planet'),
       images: [
         {
           src: galleryImage,
@@ -49,7 +57,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc střední školy',
       subtitle: '2018-2020',
       preview: 'Chemická střední škola a paralelní samostudium programování doma.',
-      full: 'Tento milník reprezentuje samostatný způsob učení: ve škole chemie, mimo školu software projekty a praxe.',
+      full: fullContent('school-high-school'),
       images: [{ src: profile, alt: 'Milník střední školy' }],
       visual: { orbit: 3, period: 6.2, size: 1.05, startAngle: 20, theme: 'moon' }
     },
@@ -60,7 +68,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc bakaláře',
       subtitle: '2022-2025',
       preview: 'Bakalář na VSB-TUO, základy C, databází a migrační bakalářská práce.',
-      full: 'Tento milník pokrývá hlubší pochopení paměti/dat, klíčové informatické předměty a bakalářskou práci na reaktivní migraci frontendu.',
+      full: fullContent('school-bachelor'),
       images: [{ src: galleryPreview, alt: 'Milník bakalářského studia' }],
       visual: { orbit: 3.9, period: 7.8, size: 1.08, startAngle: 130, theme: 'moon' }
     },
@@ -71,7 +79,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc navazujícího studia',
       subtitle: '2025-současnost',
       preview: 'Současné navazující studium a směr diplomky Astro Grader.',
-      full: 'Nyní řeším Astro Grader a přechod od klasických metrik kvality FITS snímků k vlastní neuronové síti.',
+      full: fullContent('school-master'),
       images: [
         { src: galleryImage, alt: 'Milník navazujícího studia' },
         { src: galleryPreview, alt: 'Druhý obrázek milníku navazujícího studia' }
@@ -84,7 +92,7 @@ const czechAboutStory: AboutStory = {
       title: 'Planeta kódu',
       subtitle: 'Vývoj programování a kariéry',
       preview: 'Od PHP éry přes JS/Node až po moderní full-stack a týmovou praxi.',
-      full: 'Od čistého PHP, přes JavaScript/Node nástroje až po SvelteKit full-stack architekturu - tato orbita reprezentuje hlavní build-and-ship linii.',
+      full: fullContent('code-planet'),
       images: [{ src: galleryImage, alt: 'Obrázek pro planetu kódu' }],
       visual: { orbit: 18, period: 30, size: 3, startAngle: 185, theme: 'jupiter' }
     },
@@ -95,7 +103,7 @@ const czechAboutStory: AboutStory = {
       title: 'PHP měsíc',
       subtitle: '2018-2020',
       preview: 'Ruční systémy bez frameworku: admin, tickety, práva a automatizace.',
-      full: 'Milník backendových základů získaných tvorbou kompletních systémů od nuly.',
+      full: fullContent('code-php'),
       images: [{ src: galleryPreview, alt: 'Milník PHP' }],
       visual: { orbit: 3.3, period: 6.6, size: 1, startAngle: 35, theme: 'moon' }
     },
@@ -106,7 +114,7 @@ const czechAboutStory: AboutStory = {
       title: 'JS + Node měsíc',
       subtitle: '2020-2022',
       preview: 'Dynamičtější frontend, Discord boti a utility nástroje.',
-      full: 'Zlepšování UX pomocí jQuery/AJAX a rozšiřování praxe skrze boty a automatizaci.',
+      full: fullContent('code-js-node'),
       images: [{ src: galleryImage, alt: 'Milník JS a Node' }],
       visual: { orbit: 4.3, period: 8.1, size: 1.08, startAngle: 148, theme: 'moon' }
     },
@@ -117,7 +125,7 @@ const czechAboutStory: AboutStory = {
       title: 'SvelteKit měsíc',
       subtitle: '2022+',
       preview: 'Velký frameworkový posun na SvelteKit pro většinu webových projektů.',
-      full: 'Po prvním kontaktu s Next.js se SvelteKit stal hlavním stackem díky syntaxí i workflow.',
+      full: fullContent('code-sveltekit'),
       images: [{ src: profile, alt: 'Milník SvelteKitu' }],
       visual: { orbit: 5.1, period: 9.6, size: 1.06, startAngle: 250, theme: 'moon' }
     },
@@ -128,7 +136,7 @@ const czechAboutStory: AboutStory = {
       title: 'Profiq měsíc',
       subtitle: '2025-současnost',
       preview: 'Stáž a následná firemní spolupráce s React/NestJS.',
-      full: 'Milník profesionální týmové praxe, lepší spolupráce a průběžného přínosu při studiu.',
+      full: fullContent('code-profiq'),
       images: [{ src: galleryImage, alt: 'Milník profesního růstu' }],
       visual: { orbit: 6.1, period: 11.8, size: 1.1, startAngle: 330, theme: 'moon' }
     },
@@ -138,7 +146,7 @@ const czechAboutStory: AboutStory = {
       title: 'Astro planeta',
       subtitle: 'Cesta astrofotografie',
       preview: 'Samostatná planeta pro růst od mobilního astro módu po deep-sky rig.',
-      full: 'Tato orbita sleduje vizuální cestu: první záběry mobilem, první teleskop a současný deep-sky setup.',
+      full: fullContent('astro-planet'),
       images: [
         {
           src: galleryImage,
@@ -155,7 +163,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc jiskry',
       subtitle: 'Srpen 2022',
       preview: 'Pixel astro mód spustil první vážný zájem o noční oblohu.',
-      full: 'Mobilní astrofotografie ukázala potenciál i z jednoduchého setupu a posunula mě dál.',
+      full: fullContent('astro-spark'),
       images: [{ src: profile, alt: 'Milník astro jiskry' }],
       visual: { orbit: 3.8, period: 7.3, size: 1.02, startAngle: 60, theme: 'moon' }
     },
@@ -166,7 +174,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc prvního teleskopu',
       subtitle: 'Květen 2023',
       preview: 'Celestron Astromaster 130EQ a první lepší snímky Měsíce/planet.',
-      full: 'Milník přechodu od mobilních pokusů k reálné optické práci a kvalitnějším výsledkům.',
+      full: fullContent('astro-telescope'),
       images: [{ src: galleryPreview, alt: 'Milník prvního teleskopu' }],
       visual: { orbit: 4.9, period: 8.8, size: 1.07, startAngle: 180, theme: 'moon' }
     },
@@ -177,7 +185,7 @@ const czechAboutStory: AboutStory = {
       title: 'Měsíc deep-sky rigu',
       subtitle: 'Současnost',
       preview: 'Redcat 51 WIFD, ASI kamery, Radgoll montáž a Gemini focuser.',
-      full: 'Nyní je fokus na galaxie, mlhoviny a hvězdokupy. Tento technický workflow přímo podporuje i směr Astro Grader projektu.',
+      full: fullContent('astro-rig'),
       images: [
         { src: galleryImage, alt: 'Současný deep-sky setup' },
         { src: galleryPreview, alt: 'Druhý obrázek deep-sky setupu' }
@@ -190,7 +198,7 @@ const czechAboutStory: AboutStory = {
       title: 'Planeta budoucnosti',
       subtitle: 'Další směr',
       preview: 'Výhledová planeta pro ML grading, produktový růst a hlubší engineering.',
-      full: 'Tato planeta reprezentuje roadmapu: posun Astro Graderu do zralejší podoby, širší profesní dopad a spojení software inženýrství se zobrazovací vědou.',
+      full: fullContent('future-planet'),
       images: [{ src: galleryImage, alt: 'Obrázek pro budoucí směr' }],
       visual: { orbit: 40, period: 66, size: 2.7, startAngle: 120, theme: 'uranus' }
     },
@@ -201,7 +209,7 @@ const czechAboutStory: AboutStory = {
       title: 'ML měsíc',
       subtitle: 'Cíl neuronového hodnocení',
       preview: 'Nahrazení klasických metrik kvality vlastním učeným modelem.',
-      full: 'Tento milník reprezentuje cílový stav diplomové části: robustní learned grading raw astro snímků pro praktickou automatizaci workflow.',
+      full: fullContent('future-ml'),
       images: [{ src: profile, alt: 'Milník budoucího ML směru' }],
       visual: { orbit: 4.1, period: 8.3, size: 1.02, startAngle: 95, theme: 'moon' }
     }

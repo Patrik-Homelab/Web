@@ -1,5 +1,5 @@
-Core thesis target:
+The central future milestone is replacing conventional astro-frame scoring with a custom-trained neural model.
 
-**replace conventional frame-quality metrics with custom-trained neural grading**
+Instead of relying only on handcrafted metrics (such as FWHM or star count thresholds), the target is a learned system that can evaluate frame quality more holistically and robustly across varying conditions.
 
-This moon represents the long-term automation objective.
+This is both a thesis objective and a practical engineering direction: more reliable grading, less manual filtering, and better automation for real astrophotography pipelines.

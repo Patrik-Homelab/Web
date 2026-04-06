@@ -5,8 +5,6 @@
   type SolarSystemLabels = {
     openDetails: string;
     close: string;
-    showMore: string;
-    showLess: string;
     images: string;
     imageCounter: string;
   };
@@ -61,6 +59,8 @@
   const ORBIT_SLOWDOWN = 3.8;
   const fillerOrbitRaw = [8, 12, 16, 20, 26, 32, 38, 44];
 
+  const tooltipText = (entry: StoryEntry) => entry.preview || entry.title;
+
   const moonVariantClass = (id: string) => {
     const variants = ['moon-v1', 'moon-v2', 'moon-v3', 'moon-v4', 'moon-v5', 'moon-v6'];
     const hash = Array.from(id).reduce((sum, char) => sum + char.charCodeAt(0), 0);
@@ -79,9 +79,15 @@
     fillerOrbitRaw.map((orbit) => (orbit / maxPlanetOrbit) * 47)
   );
 
+  type TooltipState = {
+    text: string;
+    x: number;
+    y: number;
+  };
+
   let selectedId = $state<string | null>(null);
   let selectedImage = $state(0);
-  let expanded = $state(false);
+  let tooltip = $state<TooltipState | null>(null);
 
   const selectedEntry = $derived(selectedId ? entriesById[selectedId] : undefined);
   const selectedImages = $derived(selectedEntry?.images ?? []);
@@ -92,22 +98,62 @@
   const openEntry = (entryId: string) => {
     selectedId = entryId;
     selectedImage = 0;
-    expanded = false;
+    tooltip = null;
   };
 
   const closeDialog = () => {
     selectedId = null;
     selectedImage = 0;
-    expanded = false;
   };
 
   const themeClass = (theme: StoryVisualTheme) => `theme-${theme}`;
+
+  const showTooltip = (entry: StoryEntry, event: MouseEvent) => {
+    tooltip = {
+      text: tooltipText(entry),
+      x: event.clientX,
+      y: event.clientY
+    };
+  };
+
+  const moveTooltip = (event: MouseEvent) => {
+    if (!tooltip) {
+      return;
+    }
+
+    tooltip = {
+      ...tooltip,
+      x: event.clientX,
+      y: event.clientY
+    };
+  };
+
+  const hideTooltip = () => {
+    tooltip = null;
+  };
 
   const onWindowKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && selectedEntry) {
       closeDialog();
     }
   };
+
+  $effect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    if (!selectedEntry) {
+      return;
+    }
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  });
 </script>
 
 <svelte:window onkeydown={onWindowKeydown} />
@@ -132,7 +178,9 @@
         class={`space-node node-sun ${themeClass(sun.visual.theme)}`}
         style={`--size:${sun.visual.size}rem`}
         onclick={() => openEntry(sun.id)}
-        title={`${sun.title} - ${sun.subtitle}`}
+        onmouseenter={(event) => showTooltip(sun, event)}
+        onmousemove={moveTooltip}
+        onmouseleave={hideTooltip}
         aria-label={`${labels.openDetails}: ${sun.title}`}
       >
         <span class="node-core"></span>
@@ -150,7 +198,9 @@
             class={`space-node node-planet ${themeClass(planet.visual.theme)}`}
             style={`--size:${planet.visual.size}rem`}
             onclick={() => openEntry(planet.id)}
-            title={`${planet.title} - ${planet.subtitle}`}
+            onmouseenter={(event) => showTooltip(planet, event)}
+            onmousemove={moveTooltip}
+            onmouseleave={hideTooltip}
             aria-label={`${labels.openDetails}: ${planet.title}`}
           >
             <span class="node-core"></span>
@@ -166,7 +216,9 @@
                 class={`space-node node-moon ${themeClass(moon.visual.theme)} ${moonVariantClass(moon.id)}`}
                 style={`--size:${moonSize(moon)}rem`}
                 onclick={() => openEntry(moon.id)}
-                title={`${moon.title} - ${moon.subtitle}`}
+                onmouseenter={(event) => showTooltip(moon, event)}
+                onmousemove={moveTooltip}
+                onmouseleave={hideTooltip}
                 aria-label={`${labels.openDetails}: ${moon.title}`}
               >
                 <span class="node-core"></span>
@@ -178,10 +230,21 @@
     {/each}
   </div>
 
+  {#if tooltip}
+    <div
+      class="space-tooltip"
+      style={`left:${tooltip.x}px;top:${tooltip.y}px;`}
+      role="tooltip"
+      aria-live="polite"
+    >
+      {tooltip.text}
+    </div>
+  {/if}
+
   <Dialog opened={Boolean(selectedEntry)} onClose={closeDialog}>
     {#if selectedEntry}
       <article
-        class="solar-dialog text-text max-h-[calc(100vh-2rem)] w-[min(72rem,95vw)] overflow-hidden"
+        class="solar-dialog text-text max-h-[calc(100vh-2rem)] w-[min(72rem,95vw)] overflow-y-auto"
       >
         <header class="mb-4 border-b border-white/10 pb-4">
           <p class="text-text-muted text-sm font-semibold tracking-[0.18em] uppercase">
@@ -195,20 +258,10 @@
         </header>
 
         <section class="mb-5">
-          <p class="text-base leading-relaxed sm:text-lg">{selectedEntry.preview}</p>
-          {#if expanded}
-            <Markdown
-              content={selectedEntry.full}
-              class="text-text-muted prose prose-theme prose-sm sm:prose-base lg:prose-lg mt-3 max-w-none"
-            />
-          {/if}
-          <button
-            class="solar-link mt-3"
-            type="button"
-            onclick={() => (expanded = !expanded)}
-          >
-            {expanded ? labels.showLess : labels.showMore}
-          </button>
+          <Markdown
+            content={selectedEntry.full}
+            class="text-text-muted prose prose-theme prose-sm sm:prose-base lg:prose-lg max-w-none"
+          />
         </section>
 
         {#if selectedImages.length > 0}
@@ -572,6 +625,23 @@
 
   .close-btn:hover {
     background: rgb(255 255 255 / 0.14);
+  }
+
+  .space-tooltip {
+    position: fixed;
+    z-index: 80;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 0.65rem));
+    max-width: min(30rem, calc(100vw - 1.5rem));
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 0.65rem;
+    background: rgb(10 12 21 / 0.95);
+    box-shadow: 0 0.65rem 1.8rem rgb(0 0 0 / 0.45);
+    padding: 0.45rem 0.65rem;
+    color: rgb(232 236 245);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    text-wrap: pretty;
   }
 
   @keyframes orbit-spin {

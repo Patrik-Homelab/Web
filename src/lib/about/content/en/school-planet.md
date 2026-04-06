@@ -1,7 +1,5 @@
-This planet contains the structured education line:
+This planet represents my formal education path and the structured foundation it gave me.
 
-- chemistry-focused high school
-- bachelor computer science studies
-- current master studies focused on image processing and computer graphics
+I came from a chemistry-focused high school background, then moved to computer science at VSB-TUO for bachelor studies, and now continue in a master's program with specialization in digital image processing and computer graphics. Each stage brought a different type of growth: discipline, technical depth, and finally domain specialization.
 
-It is the stable orbit that formed the technical base.
+The key value of this orbit is that it forced me to learn areas I might not have picked on my own. Those topics later became crucial in real projects, especially when solving problems around performance, data representation, and correctness.
