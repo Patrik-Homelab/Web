@@ -26,7 +26,7 @@ export type StoryEntry = {
   subtitle: string;
   preview: string;
   full: string;
-  images: StoryImage[];
+  images?: StoryImage[];
   visual: {
     orbit: number;
     period: number;

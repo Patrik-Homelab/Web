@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Dialog, Image } from '$/components/utility';
+  import { Dialog, Image, Markdown } from '$/components/utility';
   import type { AboutStory, StoryEntry, StoryVisualTheme } from '$/lib/about/types';
 
   type SolarSystemLabels = {
@@ -58,8 +58,22 @@
     return map;
   });
 
-  const ORBIT_SLOWDOWN = 2.4;
+  const ORBIT_SLOWDOWN = 3.8;
   const fillerOrbitRaw = [8, 12, 16, 20, 26, 32, 38, 44];
+
+  const moonVariantClass = (id: string) => {
+    const variants = ['moon-v1', 'moon-v2', 'moon-v3', 'moon-v4', 'moon-v5', 'moon-v6'];
+    const hash = Array.from(id).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    return variants[hash % variants.length];
+  };
+
+  const moonSize = (moon: StoryEntry) => {
+    const multipliers = [0.94, 1.02, 1.1, 0.98, 1.16, 1.06];
+    const hash = Array.from(moon.id).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const multiplier = multipliers[hash % multipliers.length];
+
+    return Math.max((moon.visual.size + 0.24) * multiplier, 1.05);
+  };
 
   const fillerOrbits = $derived.by(() =>
     fillerOrbitRaw.map((orbit) => (orbit / maxPlanetOrbit) * 47)
@@ -70,6 +84,7 @@
   let expanded = $state(false);
 
   const selectedEntry = $derived(selectedId ? entriesById[selectedId] : undefined);
+  const selectedImages = $derived(selectedEntry?.images ?? []);
 
   const formatImageCounter = (index: number, total: number) =>
     labels.imageCounter.replace('%1', String(index + 1)).replace('%2', String(total));
@@ -148,8 +163,8 @@
             >
               <button
                 type="button"
-                class={`space-node node-moon ${themeClass(moon.visual.theme)}`}
-                style={`--size:${moon.visual.size}rem`}
+                class={`space-node node-moon ${themeClass(moon.visual.theme)} ${moonVariantClass(moon.id)}`}
+                style={`--size:${moonSize(moon)}rem`}
                 onclick={() => openEntry(moon.id)}
                 title={`${moon.title} - ${moon.subtitle}`}
                 aria-label={`${labels.openDetails}: ${moon.title}`}
@@ -166,7 +181,7 @@
   <Dialog opened={Boolean(selectedEntry)} onClose={closeDialog}>
     {#if selectedEntry}
       <article
-        class="solar-dialog text-text max-h-[85vh] w-[min(56rem,95vw)] overflow-y-auto"
+        class="solar-dialog text-text max-h-[calc(100vh-2rem)] w-[min(72rem,95vw)] overflow-hidden"
       >
         <header class="mb-4 border-b border-white/10 pb-4">
           <p class="text-text-muted text-sm font-semibold tracking-[0.18em] uppercase">
@@ -182,9 +197,10 @@
         <section class="mb-5">
           <p class="text-base leading-relaxed sm:text-lg">{selectedEntry.preview}</p>
           {#if expanded}
-            <p class="text-text-muted mt-3 text-base leading-relaxed sm:text-lg">
-              {selectedEntry.full}
-            </p>
+            <Markdown
+              content={selectedEntry.full}
+              class="text-text-muted prose prose-theme prose-sm sm:prose-base lg:prose-lg mt-3 max-w-none"
+            />
           {/if}
           <button
             class="solar-link mt-3"
@@ -195,12 +211,12 @@
           </button>
         </section>
 
-        {#if selectedEntry.images.length > 0}
+        {#if selectedImages.length > 0}
           <section>
             <div class="mb-3 flex items-center justify-between gap-3">
               <h4 class="text-lg font-semibold">{labels.images}</h4>
               <span class="text-text-muted text-sm">
-                {formatImageCounter(selectedImage, selectedEntry.images.length)}
+                {formatImageCounter(selectedImage, selectedImages.length)}
               </span>
             </div>
 
@@ -208,22 +224,22 @@
               class="border-text/30 mb-3 overflow-hidden rounded-xl border bg-gray-950/70"
             >
               <Image
-                name={selectedEntry.images[selectedImage].src}
-                alt={selectedEntry.images[selectedImage].alt}
+                name={selectedImages[selectedImage].src}
+                alt={selectedImages[selectedImage].alt}
                 class="aspect-[16/10] w-full object-cover"
                 format="webp"
               />
             </div>
 
-            {#if selectedEntry.images[selectedImage].caption}
+            {#if selectedImages[selectedImage].caption}
               <p class="text-text-muted mb-3 text-sm italic">
-                {selectedEntry.images[selectedImage].caption}
+                {selectedImages[selectedImage].caption}
               </p>
             {/if}
 
-            {#if selectedEntry.images.length > 1}
+            {#if selectedImages.length > 1}
               <div class="flex flex-wrap gap-2">
-                {#each selectedEntry.images as image, idx (image.src + idx)}
+                {#each selectedImages as image, idx (image.src + idx)}
                   <button
                     type="button"
                     class="thumb-btn"
@@ -329,7 +345,8 @@
     pointer-events: auto;
   }
 
-  .space-node:hover {
+  .node-planet:hover,
+  .node-moon:hover {
     transform: scale(1.08);
   }
 
@@ -353,7 +370,7 @@
     width: 100%;
     height: 100%;
     border-radius: inherit;
-    animation: self-spin 58s linear infinite;
+    animation: self-spin 92s linear infinite;
     background-size: cover;
     background-position: center;
   }
@@ -449,6 +466,60 @@
       rgb(171 198 255),
       rgb(75 117 224) 58%,
       rgb(42 69 155)
+    );
+  }
+
+  .node-moon.moon-v1 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(232 228 255),
+      rgb(171 156 224) 56%,
+      rgb(112 94 169)
+    );
+  }
+
+  .node-moon.moon-v2 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(207 242 255),
+      rgb(129 192 221) 56%,
+      rgb(79 139 165)
+    );
+  }
+
+  .node-moon.moon-v3 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(255 226 205),
+      rgb(224 167 123) 56%,
+      rgb(168 111 73)
+    );
+  }
+
+  .node-moon.moon-v4 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(220 255 218),
+      rgb(143 207 153) 56%,
+      rgb(88 145 100)
+    );
+  }
+
+  .node-moon.moon-v5 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(255 222 240),
+      rgb(221 151 186) 56%,
+      rgb(155 96 126)
+    );
+  }
+
+  .node-moon.moon-v6 .node-core {
+    background-image: radial-gradient(
+      circle at 35% 26%,
+      rgb(247 247 213),
+      rgb(205 194 129) 56%,
+      rgb(147 133 83)
     );
   }
 
