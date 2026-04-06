@@ -1,14 +1,21 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { twMerge } from 'tailwind-merge';
   import ClickOutside from './clickOutside.svelte';
 
   type DialogProps = {
     children: Snippet;
     opened: boolean;
     onClose?: () => void;
+    class?: string;
   };
 
-  let { children, opened = $bindable(false), onClose = () => {} }: DialogProps = $props();
+  let {
+    children,
+    opened = $bindable(false),
+    onClose = () => {},
+    class: cls = ''
+  }: DialogProps = $props();
 </script>
 
 {#if opened}
@@ -18,7 +25,10 @@
         opened = false;
         onClose();
       }}
-      class="border-text bg-background/80 m-auto flex max-w-[90%] flex-col rounded-md border-2 p-4"
+      class={twMerge(
+        'border-text bg-background/80 m-auto flex max-w-[90%] flex-col rounded-md border-2 p-4',
+        cls
+      )}
     >
       {@render children()}
     </ClickOutside>

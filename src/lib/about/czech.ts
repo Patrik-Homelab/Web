@@ -12,11 +12,23 @@ const czechContentMap = import.meta.glob('./content/cs/*.md', {
 
 const fullContent = (id: string) => czechContentMap[`./content/cs/${id}.md`] ?? '';
 
+const keepOnlySunImages = (entries: AboutStory['entries']) =>
+  entries.map((entry) => {
+    if (entry.kind === 'sun') {
+      return entry;
+    }
+
+    return {
+      ...entry,
+      images: undefined
+    };
+  });
+
 const czechAboutStory: AboutStory = {
   title: 'Můj vlastní příběhový systém',
   subtitle: 'Osobní orbita, kde planety jsou oblasti života a měsíce jsou milníky.',
   hint: 'Klikni na objekt pro rychlý náhled a potom rozbal celý detail.',
-  entries: [
+  entries: keepOnlySunImages([
     {
       id: 'origin-core',
       kind: 'sun',
@@ -213,7 +225,7 @@ const czechAboutStory: AboutStory = {
       images: [{ src: profile, alt: 'Milník budoucího ML směru' }],
       visual: { orbit: 4.1, period: 8.3, size: 1.02, startAngle: 95, theme: 'moon' }
     }
-  ]
+  ])
 };
 
 export default czechAboutStory;

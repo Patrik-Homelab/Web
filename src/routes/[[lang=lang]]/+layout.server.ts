@@ -32,7 +32,7 @@ export const load = (async ({ params, url, cookies }) => {
     languageList: Object.fromEntries(
       Object.entries(languages).map(([code, lang]) => [
         code,
-        { name: lang.name, flag: lang.flag }
+        { name: lang.name, flag: lang.flag, flagIcon: lang.flagIcon }
       ])
     ),
     userState: getUserState(cookies)

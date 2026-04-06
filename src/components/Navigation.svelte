@@ -32,6 +32,11 @@
       matchStart: true
     },
     {
+      name: _state.lang.navigation.about,
+      icon: 'bi-info-circle-fill',
+      path: '/about'
+    },
+    {
       name: _state.lang.navigation.contact,
       icon: 'bi-envelope-fill',
       path: '/contact'
@@ -161,6 +166,8 @@
     return undefined;
   });
   const description = $derived(meta?.description ?? _state.lang.default_desc);
+
+  const languageLabel = (lang: string, name: string) => `${lang.toUpperCase()} ${name}`;
 </script>
 
 <svelte:head>
@@ -197,12 +204,26 @@
     {/each}
   </div>
 
-  <div class="flex flex-1 items-center justify-end">
-    <select bind:value={selectedLanguage} class="cursor-pointer font-bold">
-      {#each Object.entries(_state.languages) as [langKey, langData] (langKey)}
-        <option value={langKey}>{langData.flag} {langData.name}</option>
-      {/each}
-    </select>
+  <div class="flex flex-1 items-center justify-end gap-2">
+    {#each Object.entries(_state.languages) as [langKey, langData] (langKey)}
+      <button
+        type="button"
+        onclick={() => (selectedLanguage = langKey)}
+        class={{
+          'hover:bg-primary/15 inline-flex cursor-pointer items-center gap-2 rounded-md border px-2 py-1 font-bold transition-colors': true,
+          'border-primary bg-primary/20': selectedLanguage === langKey,
+          'border-text/40': selectedLanguage !== langKey
+        }}
+        aria-label={languageLabel(langKey, langData.name)}
+      >
+        {#if langData.flagIcon}
+          <img src={langData.flagIcon} alt="" class="h-4 w-6 rounded-xs object-cover" />
+        {:else}
+          <span>{langData.flag}</span>
+        {/if}
+        <span>{langKey.toUpperCase()}</span>
+      </button>
+    {/each}
   </div>
 </nav>
 {#if _state.userState.logged && _state.path.startsWith('/admin')}
@@ -243,11 +264,27 @@
       name="bi-x-lg"
       class="border-text transition-color hover:bg-primary m-4 ml-auto w-max cursor-pointer rounded-md border-2 px-1 text-4xl duration-200 md:hidden"
     />
-    <select bind:value={selectedLanguage} class="mb-8 cursor-pointer font-bold">
+    <div class="mb-6 flex flex-wrap justify-center gap-2">
       {#each Object.entries(_state.languages) as [langKey, langData] (langKey)}
-        <option value={langKey}>{langData.flag} {langData.name}</option>
+        <button
+          type="button"
+          onclick={() => (selectedLanguage = langKey)}
+          class={{
+            'hover:bg-primary/15 inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-1 text-xl font-bold transition-colors': true,
+            'border-primary bg-primary/20': selectedLanguage === langKey,
+            'border-text/40': selectedLanguage !== langKey
+          }}
+          aria-label={languageLabel(langKey, langData.name)}
+        >
+          {#if langData.flagIcon}
+            <img src={langData.flagIcon} alt="" class="h-4 w-6 rounded-xs object-cover" />
+          {:else}
+            <span>{langData.flag}</span>
+          {/if}
+          <span>{langData.name}</span>
+        </button>
       {/each}
-    </select>
+    </div>
     {#each filteredNavigation as item, index (index)}
       {@const isActive = _isActive(item)}
       <a

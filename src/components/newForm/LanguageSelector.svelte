@@ -7,6 +7,8 @@
   import { getFormContext } from './Form.svelte';
 
   const context = getFormContext();
+
+  const languageLabel = (lang: string, name: string) => `${lang.toUpperCase()} ${name}`;
 </script>
 
 <div class="flex items-center gap-2">
@@ -22,8 +24,12 @@
       }}
       onclick={() => (context.lang.selectedLanguage = lang)}
     >
-      {data.flag}
-      {data.name}
+      {#if data.flagIcon}
+        <img src={data.flagIcon} alt="" class="h-4 w-6 rounded-xs object-cover" />
+      {:else}
+        <span>{data.flag}</span>
+      {/if}
+      {languageLabel(lang, data.name)}
     </Button>
   {/each}
 </div>

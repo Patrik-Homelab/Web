@@ -10,11 +10,13 @@ export const languages = {
   cs: {
     t: czech,
     flag: '🇨🇿',
+    flagIcon: '/images/flags/cs.svg',
     name: 'Čeština'
   },
   en: {
     t: english,
     flag: '🇺🇸',
+    flagIcon: '/images/flags/en.svg',
     name: 'English'
   }
 };

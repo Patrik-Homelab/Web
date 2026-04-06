@@ -12,12 +12,24 @@ const englishContentMap = import.meta.glob('./content/en/*.md', {
 
 const fullContent = (id: string) => englishContentMap[`./content/en/${id}.md`] ?? '';
 
+const keepOnlySunImages = (entries: AboutStory['entries']) =>
+  entries.map((entry) => {
+    if (entry.kind === 'sun') {
+      return entry;
+    }
+
+    return {
+      ...entry,
+      images: undefined
+    };
+  });
+
 const englishAboutStory: AboutStory = {
   title: 'My Custom Story System',
   subtitle:
     'A personal orbit map where each planet is a life area and moons are milestones.',
   hint: 'Click any object to open a quick preview and then expand to full details.',
-  entries: [
+  entries: keepOnlySunImages([
     {
       id: 'origin-core',
       kind: 'sun',
@@ -225,7 +237,7 @@ const englishAboutStory: AboutStory = {
       images: [{ src: profile, alt: 'Future ML milestone image' }],
       visual: { orbit: 4.1, period: 8.3, size: 1.02, startAngle: 95, theme: 'moon' }
     }
-  ]
+  ])
 };
 
 export default englishAboutStory;

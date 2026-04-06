@@ -74,6 +74,8 @@
     }
   };
 
+  const languageLabel = (lang: string, name: string) => `${lang.toUpperCase()} ${name}`;
+
   const setAltText = (idx: number, lang: string, text: string) => {
     const arr = ensureArray(lang);
     if (arr[idx]) {
@@ -113,8 +115,16 @@
             {@const inputId = `${name}-${idx}-${langKey}`}
             <div class="flex flex-col gap-1">
               <label for={inputId} class="flex items-center gap-2 text-sm font-semibold">
-                <span>{langInfo.flag}</span>
-                {langInfo.name}
+                {#if langInfo.flagIcon}
+                  <img
+                    src={langInfo.flagIcon}
+                    alt=""
+                    class="h-4 w-6 rounded-xs object-cover"
+                  />
+                {:else}
+                  <span>{langInfo.flag}</span>
+                {/if}
+                {languageLabel(langKey, langInfo.name)}
               </label>
               <!-- Reuse Input styling manually or create usage -->
               <input

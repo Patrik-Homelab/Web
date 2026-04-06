@@ -90,7 +90,9 @@
   let tooltip = $state<TooltipState | null>(null);
 
   const selectedEntry = $derived(selectedId ? entriesById[selectedId] : undefined);
-  const selectedImages = $derived(selectedEntry?.images ?? []);
+  const selectedImages = $derived(
+    selectedEntry?.kind === 'sun' ? (selectedEntry.images ?? []) : []
+  );
 
   const formatImageCounter = (index: number, total: number) =>
     labels.imageCounter.replace('%1', String(index + 1)).replace('%2', String(total));
@@ -241,85 +243,83 @@
     </div>
   {/if}
 
-  <Dialog opened={Boolean(selectedEntry)} onClose={closeDialog}>
+  <Dialog
+    opened={Boolean(selectedEntry)}
+    onClose={closeDialog}
+    class="solar-dialog text-text max-h-[calc(100vh-2rem)] w-[min(72rem,95vw)] overflow-y-auto"
+  >
     {#if selectedEntry}
-      <article
-        class="solar-dialog text-text max-h-[calc(100vh-2rem)] w-[min(72rem,95vw)] overflow-y-auto"
-      >
-        <header class="mb-4 border-b border-white/10 pb-4">
-          <p class="text-text-muted text-sm font-semibold tracking-[0.18em] uppercase">
-            {selectedEntry.subtitle}
-          </p>
-          <h3
-            class="font-poppins text-primary-100 mt-2 text-2xl font-semibold sm:text-3xl"
-          >
-            {selectedEntry.title}
-          </h3>
-        </header>
+      <header class="mb-4 border-b border-white/10 pb-4">
+        <p class="text-text-muted text-sm font-semibold tracking-[0.18em] uppercase">
+          {selectedEntry.subtitle}
+        </p>
+        <h3 class="font-poppins text-primary-100 mt-2 text-2xl font-semibold sm:text-3xl">
+          {selectedEntry.title}
+        </h3>
+      </header>
 
-        <section class="mb-5">
-          <Markdown
-            content={selectedEntry.full}
-            class="text-text-muted prose prose-theme prose-sm sm:prose-base lg:prose-lg max-w-none"
-          />
+      <section class="mb-5">
+        <Markdown
+          content={selectedEntry.full}
+          class="text-text-muted prose prose-theme prose-sm sm:prose-base lg:prose-lg max-w-none"
+        />
+      </section>
+
+      {#if selectedImages.length > 0}
+        <section>
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h4 class="text-lg font-semibold">{labels.images}</h4>
+            <span class="text-text-muted text-sm">
+              {formatImageCounter(selectedImage, selectedImages.length)}
+            </span>
+          </div>
+
+          <div
+            class="border-text/30 mb-3 overflow-hidden rounded-xl border bg-gray-950/70"
+          >
+            <Image
+              name={selectedImages[selectedImage].src}
+              alt={selectedImages[selectedImage].alt}
+              class="aspect-[16/10] w-full object-cover"
+              format="webp"
+            />
+          </div>
+
+          {#if selectedImages[selectedImage].caption}
+            <p class="text-text-muted mb-3 text-sm italic">
+              {selectedImages[selectedImage].caption}
+            </p>
+          {/if}
+
+          {#if selectedImages.length > 1}
+            <div class="flex flex-wrap gap-2">
+              {#each selectedImages as image, idx (image.src + idx)}
+                <button
+                  type="button"
+                  class="thumb-btn"
+                  data-active={idx === selectedImage}
+                  onclick={() => (selectedImage = idx)}
+                  aria-label={`${labels.openDetails}: ${selectedEntry.title} (${idx + 1})`}
+                >
+                  <Image
+                    name={image.src}
+                    alt={image.alt}
+                    class="h-16 w-24 rounded-md object-cover"
+                    format="webp"
+                    quality={70}
+                  />
+                </button>
+              {/each}
+            </div>
+          {/if}
         </section>
+      {/if}
 
-        {#if selectedImages.length > 0}
-          <section>
-            <div class="mb-3 flex items-center justify-between gap-3">
-              <h4 class="text-lg font-semibold">{labels.images}</h4>
-              <span class="text-text-muted text-sm">
-                {formatImageCounter(selectedImage, selectedImages.length)}
-              </span>
-            </div>
-
-            <div
-              class="border-text/30 mb-3 overflow-hidden rounded-xl border bg-gray-950/70"
-            >
-              <Image
-                name={selectedImages[selectedImage].src}
-                alt={selectedImages[selectedImage].alt}
-                class="aspect-[16/10] w-full object-cover"
-                format="webp"
-              />
-            </div>
-
-            {#if selectedImages[selectedImage].caption}
-              <p class="text-text-muted mb-3 text-sm italic">
-                {selectedImages[selectedImage].caption}
-              </p>
-            {/if}
-
-            {#if selectedImages.length > 1}
-              <div class="flex flex-wrap gap-2">
-                {#each selectedImages as image, idx (image.src + idx)}
-                  <button
-                    type="button"
-                    class="thumb-btn"
-                    data-active={idx === selectedImage}
-                    onclick={() => (selectedImage = idx)}
-                    aria-label={`${labels.openDetails}: ${selectedEntry.title} (${idx + 1})`}
-                  >
-                    <Image
-                      name={image.src}
-                      alt={image.alt}
-                      class="h-16 w-24 rounded-md object-cover"
-                      format="webp"
-                      quality={70}
-                    />
-                  </button>
-                {/each}
-              </div>
-            {/if}
-          </section>
-        {/if}
-
-        <div class="mt-6 flex justify-end">
-          <button type="button" class="close-btn" onclick={closeDialog}
-            >{labels.close}</button
-          >
-        </div>
-      </article>
+      <div class="mt-6 flex justify-end">
+        <button type="button" class="close-btn" onclick={closeDialog}
+          >{labels.close}</button
+        >
+      </div>
     {/if}
   </Dialog>
 </section>

@@ -10,9 +10,10 @@
 
   const { context, path }: TranslationAvailabilityProps = $props();
 
-  const errors = $derived(context.errors());
-  const data = $derived(context.data);
-  const defaultValue = context.defaultData;
+  const errors = $derived.by(() => context.errors());
+  const data = $derived.by(() => context.data);
+  const defaultValue = $derived.by(() => context.defaultData);
+  const languageCode = (lang: string) => lang.toUpperCase();
 </script>
 
 <div class="flex items-center justify-center gap-2 pb-2">
@@ -28,12 +29,18 @@
     {@const isDefaultValue = defaultVal === '' || defaultVal === null}
     {@const isValid =
       error === undefined && (isDefaultValue ? value !== defaultVal : true)}
-    <div class="border-text rounded-full border-2 px-2 py-1">
+    <div
+      class="border-text inline-flex items-center gap-1 rounded-full border-2 px-2 py-1"
+    >
       <Icon
         name={isValid ? 'bi-check' : 'bi-x'}
         class={isValid ? 'text-green-500' : 'text-red-500'}
       />
-      {langData.flag}
+      {#if langData.flagIcon}
+        <img src={langData.flagIcon} alt="" class="h-3.5 w-5 rounded-xs object-cover" />
+      {:else}
+        <span>{languageCode(lang)}</span>
+      {/if}
     </div>
   {/each}
 </div>

@@ -12,6 +12,7 @@ type State = {
     {
       name: string;
       flag: string;
+      flagIcon?: string;
     }
   >;
   path: string;
