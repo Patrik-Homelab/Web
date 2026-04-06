@@ -28,7 +28,7 @@ const englishAboutStory: AboutStory = {
   title: 'My Custom Story System',
   subtitle:
     'A personal orbit map where each planet is a life area and moons are milestones.',
-  hint: 'Click any object to open a quick preview and then expand to full details.',
+  hint: 'Explore the objects below — click any to see a preview, then expand for full details. Moons are arranged chronologically!',
   entries: keepOnlySunImages([
     {
       id: 'origin-core',
@@ -74,7 +74,7 @@ const englishAboutStory: AboutStory = {
         'Chemistry high school period while learning programming independently at home.',
       full: fullContent('school-high-school'),
       images: [{ src: profile, alt: 'High school milestone image' }],
-      visual: { orbit: 3, period: 6.2, size: 1.05, startAngle: 20, theme: 'moon' }
+      visual: { orbit: 2.2, period: 6.2, size: 1.05, startAngle: 20, theme: 'moon' }
     },
     {
       id: 'school-bachelor',
@@ -86,7 +86,7 @@ const englishAboutStory: AboutStory = {
         'Bachelor studies at VSB-TUO, including C foundations, databases, and thesis migration work.',
       full: fullContent('school-bachelor'),
       images: [{ src: galleryPreview, alt: 'Bachelor milestone image' }],
-      visual: { orbit: 3.9, period: 7.8, size: 1.08, startAngle: 130, theme: 'moon' }
+      visual: { orbit: 5.2, period: 7.8, size: 1.08, startAngle: 130, theme: 'moon' }
     },
     {
       id: 'school-master',
@@ -100,7 +100,7 @@ const englishAboutStory: AboutStory = {
         { src: galleryImage, alt: 'Master and thesis milestone image' },
         { src: galleryPreview, alt: 'Second master milestone image' }
       ],
-      visual: { orbit: 4.8, period: 9.2, size: 1.12, startAngle: 250, theme: 'moon' }
+      visual: { orbit: 8, period: 9.2, size: 1.12, startAngle: 250, theme: 'moon' }
     },
     {
       id: 'code-planet',

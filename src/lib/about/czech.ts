@@ -27,7 +27,7 @@ const keepOnlySunImages = (entries: AboutStory['entries']) =>
 const czechAboutStory: AboutStory = {
   title: 'Můj vlastní příběhový systém',
   subtitle: 'Osobní orbita, kde planety jsou oblasti života a měsíce jsou milníky.',
-  hint: 'Klikni na objekt pro rychlý náhled a potom rozbal celý detail.',
+  hint: 'Exploruji objekty níže – klikni na kterýkoli pro náhled, potom rozbal do detailu. Měsíce jsou řazené podle času!',
   entries: keepOnlySunImages([
     {
       id: 'origin-core',
@@ -71,7 +71,7 @@ const czechAboutStory: AboutStory = {
       preview: 'Chemická střední škola a paralelní samostudium programování doma.',
       full: fullContent('school-high-school'),
       images: [{ src: profile, alt: 'Milník střední školy' }],
-      visual: { orbit: 3, period: 6.2, size: 1.05, startAngle: 20, theme: 'moon' }
+      visual: { orbit: 2.2, period: 6.2, size: 1.05, startAngle: 20, theme: 'moon' }
     },
     {
       id: 'school-bachelor',
@@ -82,7 +82,7 @@ const czechAboutStory: AboutStory = {
       preview: 'Bakalář na VSB-TUO, základy C, databází a migrační bakalářská práce.',
       full: fullContent('school-bachelor'),
       images: [{ src: galleryPreview, alt: 'Milník bakalářského studia' }],
-      visual: { orbit: 3.9, period: 7.8, size: 1.08, startAngle: 130, theme: 'moon' }
+      visual: { orbit: 5.2, period: 7.8, size: 1.08, startAngle: 130, theme: 'moon' }
     },
     {
       id: 'school-master',
@@ -96,7 +96,7 @@ const czechAboutStory: AboutStory = {
         { src: galleryImage, alt: 'Milník navazujícího studia' },
         { src: galleryPreview, alt: 'Druhý obrázek milníku navazujícího studia' }
       ],
-      visual: { orbit: 4.8, period: 9.2, size: 1.12, startAngle: 250, theme: 'moon' }
+      visual: { orbit: 8, period: 9.2, size: 1.12, startAngle: 250, theme: 'moon' }
     },
     {
       id: 'code-planet',
