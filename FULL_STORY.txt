@@ -1,0 +1,103 @@
+English:
+### **About Me**
+Here you will find the story of how I got into programming, my educational journey, and my passion for capturing the universe. 
+
+---
+
+### **Education**
+
+* **2025 – Present: Master's Degree & Thesis Development**
+    I am currently pursuing my Master's degree in Computer Science at VŠB - TUO, specializing in Digital Image Processing and Computer Graphics. This program broadened my horizons with fascinating subjects and introduced me to **Rust**, a language I now heavily utilize in my own projects. 
+    Currently, I am working on my semestral project and Master's thesis: an **Astro Grader software**. The application parses raw `.fits` images from astro-cameras. In the first phase, it uses conventional methods (FWHM, star count, background contrast) to filter out bad frames (e.g., star trails, clouds). For my final thesis, I will replace this statistical grading with a custom-trained neural network.
+* **Sept 2024 – May 2025: Bachelor's Thesis**
+    For my final year of undergraduate studies, I wrote my thesis on a *"Reactive frontend for an e-learning system."* I was responsible for upgrading the frontend of the university's Kelvin system from a static/semi-dynamic Svelte 3 setup to a fully reactive Vue3 architecture. This involved running both frameworks side-by-side during the transition, updating components, and expanding my backend knowledge by modifying Django API endpoints.
+* **2022 – 2025: Bachelor's Degree**
+    After high school, I enrolled at VŠB - TUO (Faculty of Electrical Engineering and Computer Science) majoring in Computer Science. My goal was to earn my degree and learn technologies I wouldn't naturally pick up on my own. I gained a deep understanding of memory management and data representation through C, learned the fundamentals of C++, C#, and Python, and mastered relational database design.
+* **2018 – 2020: High School**
+    I attended the Heyrovský Secondary Industrial School of Chemistry in Ostrava. I chose this path because I loved chemistry in middle school and preferred to learn programming self-taught at home. Ultimately, this self-driven approach allowed me to learn more about software development than a traditional high school IT curriculum would have. 
+
+---
+
+### **Programming & Career**
+
+* **June 2025 – Present: Software Engineer at Profiq**
+    I joined Profiq for a three-month internship where I was introduced to **React** and the backend framework **NestJS**. I contributed to internal projects, including a new employee budget-tracking system, and learned valuable agile and team-based practices. After the internship, I stayed with the company and continue to help with smaller projects alongside my studies.
+* **2022: Discovering SvelteKit & Full-Stack Development**
+    My first encounter with a full-stack framework was Next.JS during a friend's hosting project (Skypad), but I found myself mostly copy-pasting React code without fully enjoying the syntax. Later, I discovered **SvelteKit**. Because it compiles code rather than using a virtual DOM, the syntax felt much cleaner and more intuitive. I adopted SvelteKit for all my web development going forward, starting with my personal site and a wiki for the GameRealms server. 
+* **2020 – 2022: JavaScript, NodeJS & Discord Bots**
+    During high school, I dove deep into JavaScript. I used jQuery and AJAX to build a seamless, reload-free information system for a Minecraft server. I also started working with NodeJS to create Discord bots, starting with a Self-Bot that tracked League of Legends statistics, which later evolved into a public bot named *Miňonka* (currently being rewritten into v3). To merge my interests, I built web tools in PHP and JS to simplify chemistry calculations, like a Q-Test calculator and a graph-to-equation solver.
+* **2018 – 2020: The PHP Era & Early Projects**
+    I began using PHP regularly, building everything from scratch without frameworks. I created an automated administration system for SinusBots that connected via SSH to deploy, configure, and manage bot instances. I also built a comprehensive ticketing, permission, and premium currency info-panel for the SurprisePlay Minecraft server. 
+* **2016: How It All Started**
+    My interest in web development began in the 8th grade. After experimenting with WYSIWYG Web Builders and messy HTML exports from MS Word, I decided to learn raw HTML and CSS. I soon integrated basic PHP session-based authentication scripts to understand how server-side logic and user logins worked.
+
+---
+
+### **Astrophotography**
+
+* **Present: The Deep Sky Rig**
+    My journey has evolved from simple lunar shots to capturing Deep Sky Objects (DSOs) like distant galaxies, nebulae, and star clusters. My current astrophotography setup includes:
+    * **Main Scope:** William Optics Redcat 51 WIFD
+    * **Main Camera:** ZWO ASI 585MC Pro
+    * **Guide Scope:** William Optics Uniguide 31mm
+    * **Guide Camera:** ZWO ASI678MC
+    * **Mount:** Proxisky Radgoll 17 Pro
+    * **Focuser:** Gemini Astro Focuser Pro
+    
+    *You can follow my journey through the universe and view my captures in the **[/gallery](/gallery)**.*
+* **May 2023: First Telescope**
+    For my 20th birthday, my parents noticed my growing obsession with the night sky and gifted me a Celestron Astromaster 130EQ. This telescope allowed me to take my very first proper photos of the Moon and local planets.
+* **August 2022: The Spark**
+    Before my 20th birthday, I bought a Google Pixel 7a. The built-in "Astro Mode" in the camera app ignited my passion for space. I started photographing the night sky from my phone and wondering what else was hidden up there.
+
+Czech:
+### **O mně**
+Zde nalezneš můj příběh, jak jsem se dostal k programování úplně od začátku, moji cestu studiem a také moji vášeň pro objevování vesmíru.
+
+---
+
+### **Vzdělání**
+
+* **2025 – Současnost: Magisterské studium a diplomová práce**
+    Nastoupil jsem na magisterský obor Informatika na VŠB - TUO, který navazuje na mé předchozí studium. Vybral jsem si zaměření Digitální zpracování obrazu a Počítačová grafika. Během studia jsem se setkal se zajímavými předměty, které mi daly další rozhled, a zapsal jsem si volitelný předmět Programování v Rustu. Tento jazyk mě nadchl a dnes ho poměrně hodně využívám ve svých projektech. 
+    V rámci semestrálního projektu a diplomové práce aktuálně vyvíjím **Astro Grader**. Jde o software, který analyzuje vyfocené `.fits` raw snímky z astro kamery. V první fázi (pomocí konvenčních metod jako FWHM, počet hvězd či kontrast pozadí) třídí fotky na ty použitelné a ty špatné (star trails, mraky atd.). V diplomovém projektu pak tyto konvenční metody nahradím za vlastně natrénovanou neuronovou síť.
+* **Září 2024 – Květen 2025: Bakalářská práce**
+    Poslední rok na bakalářském studiu jsem pracoval na práci s názvem *"Reaktivní frontend pro e-learningový systém"*. Mým úkolem bylo aktualizovat frontend v univerzitním systému Kelvin ze statického a částečně dynamického prostředí ve Svelte 3 do plně reaktivního frontendu ve Vue 3. To vyžadovalo běh obou frameworků souběžně na jedné stránce, postupnou aktualizaci komponent a rozšíření znalostí v backendovém frameworku Django, kde jsem upravoval a přidával API endpointy.
+* **2022 – 2025: Bakalářské studium**
+    Po střední škole jsem se dal na Vysokou školu báňskou – Fakultu elektrotechniky a informatiky (VŠB - TUO), obor Informatika. Na vysokou školu jsem šel s cílem získat titul a přiučit se technologiím, které bych se sám nikdy nenaučil. Díky jazyku C jsem lépe porozuměl tomu, jak program pracuje s pamětí a jak jsou v ní reprezentována data. Osvojil jsem si základy C++, C# a Pythonu a předmět Databázové systémy mě naučil lépe navrhovat relační databáze.
+* **2018 – 2020: Střední škola**
+    Na střední školu jsem chodil na Chemickou průmyslovou školu akademika Heyrovského v Ostravě-Zábřehu. Zvolil jsem si ji, protože mě na základní škole bavila chemie a programování jsem se učil raději doma ve volném čase. Zpětně si myslím, že jsem se tímto přístupem naučil sám víc, než kdybych studoval přímo IT střední školu.
+
+---
+
+### **Programování a Kariéra**
+
+* **Červen 2025 – Současnost: Software Engineer v Profiq**
+    Přihlásil jsem se na tříměsíční stáž do firmy Profiq, kde jsem se seznámil s frameworkem React a backendovým frameworkem NestJS. Pomáhal jsem na interních projektech a pracoval na novém projektu pro trackování interního budgetu zaměstnanců. Naučil jsem se pracovat ve firemním kolektivu a osvojil si nové praktiky. Po stáži jsem se rozhodl ve firmě zůstat a dodnes v ní při studiu vypomáhám s menšími projekty.
+* **2022: SvelteKit a webový vývoj**
+    Ke konci střední jsem se poprvé seznámil s fullstack frameworkem Next.JS, když jsem pomáhal kamarádovi s hostingem (Skypad). Většinu věcí jsem ale jen kopíroval a React jsem si moc neoblíbil. Na sítích jsem poté narazil na **SvelteKit**. Protože prochází kompilací kódu a nepoužívá virtuální DOM, přišla mi jeho syntaxe mnohem hezčí a přívětivější. Od té doby v něm tvořím vše webové – od svých stránek až po wiki pro server GameRealms.
+* **2020 – 2022: JavaScript, NodeJS a Discord boti**
+    Během střední školy jsem se začal více učit JavaScript. Používal jsem jQuery a AJAX k tomu, aby mé weby byly plynulejší a nemusely se neustále načítat. Postupně jsem přešel k NodeJS a začal tvořit Discord boty. Začal jsem Self-Botem, který ukazoval statistiky z League of Legends, a později ho předělal na veřejného bota *Miňonka* (který právě prochází updatem na verzi 3). Také jsem v JS a PHP tvořil weby pro ulehčení chemických výpočtů (kalkulačka Q-Testu, rovnice z grafu).
+* **2018 – 2020: Éra PHP a ranné projekty**
+    Na střední už jsem se s PHP setkával pravidelně, vše jsem ale psal sám bez frameworků. Vytvořil jsem například automatizovaný systém pro vytváření a správu Sinus botů (napojení přes SSH, kopírování zipů, úprava portů v configu). Pro Minecraft server SurprisePlay.eu jsem naprogramoval informační systém, kde hráči psali tickety, admini spravovali ToDo listy a upravovali prémiovou měnu.
+* **2016: Jak to všechno začalo**
+    O weby jsem se začal zajímat v 8. třídě. Zkoušel jsem WYSIWYG Web Builder a dokonce i Word, ale generovalo to spoustu zbytečných tagů. Začal jsem se proto postupně učit čisté HTML a CSS. K tomu jsem si stáhl základní autentizační systém v PHP, na kterém jsem začal zkoumat, jak fungují sessiony a kdo je vlastně na webu přihlášený.
+
+---
+
+### **Astrofotografie**
+
+* **Současnost: Deep Sky Rig**
+    Více než planety mě postupně začaly zajímat DSO (Deep Sky Objects) – objekty vzdáleného vesmíru, jako jsou galaxie, hvězdokupy a mlhoviny. Postupně jsem vylepšoval svůj setup a aktuálně fotím na tento kompletní rig:
+    * **Hlavní dalekohled:** William Optics Redcat 51 WIFD
+    * **Hlavní kamera:** ZWO ASI 585MC Pro
+    * **Pointační dalekohled (Guide scope):** William Optics Uniguide 31mm
+    * **Pointační kamera (Guide cam):** ZWO ASI678MC
+    * **Montáž:** Proxisky Radgoll 17 Pro
+    * **Ostření (Focuser):** Gemini astro focuser pro
+    
+    *Moje cesta vesmírem stále pokračuje a mé snímky můžete sledovat v sekci **[/gallery](/gallery)**.*
+* **Květen 2023: První teleskop**
+    Rodiče si všimli mého nadšení do vesmíru a k 20. narozeninám mi pořídili můj první teleskop – Celestron Astromaster 130EQ. Díky němu jsem pořídil své úplně první fotografie Měsíce a planet v naší sluneční soustavě.
+* **Srpen 2022: Jiskra jménem Pixel**
+    Před 20. narozeninami jsem si pořídil nový telefon Google Pixel 7a. Jeho vestavěný astro mód ve fotoaparátu mě naprosto pohltil. Začal jsem fotit oblohu čistě z mobilu a zkoumat, co všechno se tam nahoře vlastně nachází.
