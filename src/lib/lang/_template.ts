@@ -227,7 +227,15 @@ export default o({
     })
   }),
   about: o({
-    title: _
+    title: _,
+    ui: o({
+      openDetails: _,
+      close: _,
+      showMore: _,
+      showLess: _,
+      images: _,
+      imageCounter: _
+    })
   }),
   errors: o({
     internal: _,

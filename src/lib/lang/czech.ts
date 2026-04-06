@@ -267,7 +267,15 @@ export default lang.parse({
     }
   },
   about: {
-    title: 'Zde najdeš něco málo o mně'
+    title: 'Zde najdeš něco málo o mně',
+    ui: {
+      openDetails: 'Otevřít detail',
+      close: 'Zavřít',
+      showMore: 'Zobrazit celý příběh',
+      showLess: 'Zobrazit méně',
+      images: 'Obrázky',
+      imageCounter: 'Obrázek %1 z %2'
+    }
   },
   errors: {
     internal: 'Něco se nepovedlo, zkus to prosím zachvíli znova.',

@@ -267,7 +267,15 @@ export default lang.parse({
     }
   },
   about: {
-    title: 'Here you will find something about me'
+    title: 'Here you will find something about me',
+    ui: {
+      openDetails: 'Open details',
+      close: 'Close',
+      showMore: 'Show full story',
+      showLess: 'Show less',
+      images: 'Images',
+      imageCounter: 'Image %1 of %2'
+    }
   },
   errors: {
     internal: 'Internal Server Error, please try again later.',
