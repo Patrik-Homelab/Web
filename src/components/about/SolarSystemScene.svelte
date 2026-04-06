@@ -29,7 +29,11 @@
   });
 
   const sun = $derived(story.entries.find((entry) => entry.kind === 'sun'));
-  const planets = $derived(story.entries.filter((entry) => entry.kind === 'planet'));
+  const planets = $derived.by(() =>
+    story.entries
+      .filter((entry) => entry.kind === 'planet')
+      .toSorted((a, b) => a.visual.orbit - b.visual.orbit)
+  );
   const maxPlanetOrbit = $derived(
     Math.max(...planets.map((planet) => planet.visual.orbit), 1)
   );
@@ -45,6 +49,10 @@
       const children = map[entry.parentId] ?? [];
       children.push(entry);
       map[entry.parentId] = children;
+    }
+
+    for (const parentId of Object.keys(map)) {
+      map[parentId] = map[parentId].toSorted((a, b) => a.visual.orbit - b.visual.orbit);
     }
 
     return map;
@@ -109,6 +117,7 @@
         class={`space-node node-sun ${themeClass(sun.visual.theme)}`}
         style={`--size:${sun.visual.size}rem`}
         onclick={() => openEntry(sun.id)}
+        title={`${sun.title} - ${sun.subtitle}`}
         aria-label={`${labels.openDetails}: ${sun.title}`}
       >
         <span class="node-core"></span>
@@ -126,6 +135,7 @@
             class={`space-node node-planet ${themeClass(planet.visual.theme)}`}
             style={`--size:${planet.visual.size}rem`}
             onclick={() => openEntry(planet.id)}
+            title={`${planet.title} - ${planet.subtitle}`}
             aria-label={`${labels.openDetails}: ${planet.title}`}
           >
             <span class="node-core"></span>
@@ -141,6 +151,7 @@
                 class={`space-node node-moon ${themeClass(moon.visual.theme)}`}
                 style={`--size:${moon.visual.size}rem`}
                 onclick={() => openEntry(moon.id)}
+                title={`${moon.title} - ${moon.subtitle}`}
                 aria-label={`${labels.openDetails}: ${moon.title}`}
               >
                 <span class="node-core"></span>
@@ -261,6 +272,7 @@
     top: 50%;
     left: 50%;
     border-radius: 999px;
+    pointer-events: none;
   }
 
   .empty-orbit {
@@ -283,6 +295,7 @@
     top: 50%;
     right: -0.35rem;
     transform: translateY(-50%);
+    pointer-events: none;
   }
 
   .moon-orbit {
@@ -295,6 +308,7 @@
     border: 1px dashed rgb(255 255 255 / 0.18);
     border-radius: 999px;
     animation: orbit-spin var(--moon-period) linear infinite reverse;
+    pointer-events: none;
   }
 
   .moon-orbit > .space-node {
@@ -312,6 +326,7 @@
     box-shadow: 0 0 0.8rem rgb(255 255 255 / 0.25);
     transition: transform 220ms ease;
     cursor: pointer;
+    pointer-events: auto;
   }
 
   .space-node:hover {

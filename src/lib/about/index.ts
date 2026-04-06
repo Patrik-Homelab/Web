@@ -1,5 +1,5 @@
-import englishAboutStory from './english';
 import czechAboutStory from './czech';
+import englishAboutStory from './english';
 
 export const aboutStories = {
   en: englishAboutStory,
