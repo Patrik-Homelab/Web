@@ -93,8 +93,11 @@ export default [
         await trx
           .insertInto('exposure')
           .values(
-            input.exposures.map((exposure) => ({
-              ...exposure,
+            input.exposures.map(({ count, date, exposure_time_s, type }) => ({
+              count,
+              date,
+              exposure_time_s,
+              type,
               article_id: uuid
             }))
           )
@@ -300,8 +303,11 @@ export default [
         await trx
           .insertInto('exposure')
           .values(
-            toAddExposures.map((exposure) => ({
-              ...exposure,
+            toAddExposures.map(({ count, date, exposure_time_s, type }) => ({
+              count,
+              date,
+              exposure_time_s,
+              type,
               article_id: input.id!
             }))
           )

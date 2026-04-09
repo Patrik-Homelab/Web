@@ -18,7 +18,9 @@ export const handle = (async ({ event, resolve }) => {
     conn
       .insertInto('visitors')
       .values({
-        ip: event.getClientAddress(),
+        ip:
+          event.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+          event.getClientAddress(),
         page: path,
         user_agent: event.request.headers.get('user-agent') || ''
       })
