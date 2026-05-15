@@ -1,4 +1,8 @@
+allowBuilds:
+  bcrypt: true
+  esbuild: true
+  sharp: true
 onlyBuiltDependencies:
-    - bcrypt
-    - esbuild
-    - sharp
+  - bcrypt
+  - esbuild
+  - sharp
