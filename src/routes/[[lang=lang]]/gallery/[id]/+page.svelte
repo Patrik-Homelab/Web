@@ -27,6 +27,12 @@
   let section = $state<'article' | 'details'>('article');
 
   type Frame = 'light' | 'dark' | 'bias' | 'flat';
+
+  function openImage() {
+    const image = data.post.images[selectedImage];
+    const url = `/image/${image.name}?format=jpg`;
+    window.open(url, '_blank');
+  }
 </script>
 
 <section class="flex flex-1 flex-col gap-4 p-4">
@@ -65,10 +71,24 @@
             alt={_langDynamic[data.post.images[selectedImage].alt_text]}
             class="h-full w-full object-cover"
           />
-          {#if data.post.images.length > 1}
-            <div
-              class="absolute top-0 left-0 flex h-full w-full items-center justify-between p-4"
-            >
+          <div
+            role="button"
+            aria-label="Overlay for controlling Image opening by clicking it inside gallery. By pressing enter you open current image"
+            tabindex={0}
+            class="absolute top-0 left-0 flex h-full w-full cursor-pointer items-center justify-between p-4"
+            onkeypress={(ev) => {
+              if (ev.key === 'Enter') {
+                openImage();
+              }
+            }}
+            onclick={function (ev) {
+              //@ts-expect-error The target is type of Node & this is of type HTMLElement
+              if (ev.target === this) {
+                openImage();
+              }
+            }}
+          >
+            {#if data.post.images.length > 1}
               <button
                 onclick={() =>
                   (selectedImage =
@@ -85,8 +105,8 @@
               >
                 <Icon name="bi-arrow-right" />
               </button>
-            </div>
-          {/if}
+            {/if}
+          </div>
         </div>
         <span class="text-center"
           >{_langDynamic[data.post.images[selectedImage].alt_text]}</span
@@ -163,25 +183,6 @@
           content={_langDynamic[data.post.content_md]}
         />
         <hr />
-        <H1>{_lang.images}</H1>
-        <div class="flex flex-wrap gap-4">
-          {#each data.post.images as image (image.id)}
-            <a
-              href="/image/{image.name}?format=jpg"
-              target="_blank"
-              class="group border-text relative aspect-[4/3] w-full overflow-hidden rounded-md border-2 md:w-1/2 lg:w-1/3"
-            >
-              <Image
-                name={image.name}
-                alt={_langDynamic[image.alt_text]}
-                class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <span class="bg-background/75 absolute bottom-0 left-0 w-full p-2">
-                {_langDynamic[image.alt_text]}
-              </span>
-            </a>
-          {/each}
-        </div>
       {:else}
         <div class="flex flex-col gap-2">
           <H2 class="font-bold">{_lang.exposureDetails}</H2>
