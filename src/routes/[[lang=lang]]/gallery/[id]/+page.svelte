@@ -69,7 +69,7 @@
           <Image
             name={data.post.images[selectedImage].name}
             alt={_langDynamic[data.post.images[selectedImage].alt_text]}
-            class="h-full w-full object-cover"
+            class="h-full w-full object-contain"
           />
           <div
             role="button"
@@ -182,7 +182,6 @@
           class="w-full max-w-full"
           content={_langDynamic[data.post.content_md]}
         />
-        <hr />
       {:else}
         <div class="flex flex-col gap-2">
           <H2 class="font-bold">{_lang.exposureDetails}</H2>
