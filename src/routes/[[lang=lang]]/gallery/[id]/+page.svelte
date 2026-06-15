@@ -84,24 +84,26 @@
 
                 const rad = Math.PI / 180;
                 const cosDec = Math.cos(decVal * rad) || 1;
-                const dRa = width / 2 / cosDec;
-                const dDec = height / 2;
 
-                const rotatePoint = (x: number, y: number, angleDeg: number) => {
+                const rotateAndScale = (x: number, y: number, angleDeg: number) => {
                   const angleRad = -angleDeg * rad;
                   const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
                   const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-                  return [rx, ry];
+                  // Convert sky degrees to coordinate degrees for the RA component
+                  return [rx / cosDec, ry];
                 };
 
+                const halfW = width / 2;
+                const halfH = height / 2;
+
                 const corners = [
-                  [-dRa, -dDec],
-                  [dRa, -dDec],
-                  [dRa, dDec],
-                  [-dRa, dDec]
+                  [-halfW, -halfH],
+                  [halfW, -halfH],
+                  [halfW, halfH],
+                  [-halfW, halfH]
                 ].map(([x, y]) => {
-                  const [rx, ry] = rotatePoint(x, y, rot);
-                  return [raVal + rx, decVal + ry];
+                  const [dRa, dDec] = rotateAndScale(x, y, rot);
+                  return [raVal + dRa, decVal + dDec];
                 });
 
                 const polygon = globalA.polygon(corners);
