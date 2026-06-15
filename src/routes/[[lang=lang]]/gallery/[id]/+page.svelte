@@ -43,62 +43,75 @@
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     if (ra !== null && dec !== null && aladinContainer) {
       const checkAndInit = () => {
-        // @ts-expect-error Aladin Lite is loaded via a global script tag
-        if (window.A) {
-          try {
-            // @ts-expect-error Aladin Lite constructor is not typed
-            aladinInstance = window.A.aladin(aladinContainer, {
-              survey: 'P/DSS2/color',
-              fov: (data.post.fov_width || 1) * 2,
-              target: `${ra} ${dec}`,
-              showReticle: false,
-              showZoomControl: true,
-              showLayersControl: false,
-              showFullscreenControl: false
-            });
-
-            if (data.post.fov_width && data.post.fov_height) {
-              const width = data.post.fov_width;
-              const height = data.post.fov_height;
-              const rot = data.post.fov_rotation || 0;
-              const raVal = ra as number;
-              const decVal = dec as number;
-
-              // @ts-expect-error graphicOverlay is not typed in global window.A
-              const overlay = window.A.graphicOverlay({ color: '#f75b00', lineWidth: 2 });
-              // @ts-expect-error aladinInstance is typed as unknown
-              aladinInstance.addOverlay(overlay);
-
-              const rad = Math.PI / 180;
-              const cosDec = Math.cos(decVal * rad) || 1;
-              const dRa = width / 2 / cosDec;
-              const dDec = height / 2;
-
-              const rotatePoint = (x: number, y: number, angleDeg: number) => {
-                const angleRad = -angleDeg * rad;
-                const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
-                const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-                return [rx, ry];
-              };
-
-              const corners = [
-                [-dRa, -dDec],
-                [dRa, -dDec],
-                [dRa, dDec],
-                [-dRa, dDec]
-              ].map(([x, y]) => {
-                const [rx, ry] = rotatePoint(x, y, rot);
-                return [raVal + rx, decVal + ry];
+        const globalA = (
+          window as unknown as {
+            A?: {
+              init: Promise<void>;
+              aladin: (...args: unknown[]) => unknown;
+              graphicOverlay: (...args: unknown[]) => { add: (shape: unknown) => void };
+              polygon: (...args: unknown[]) => unknown;
+            };
+          }
+        ).A;
+        if (globalA && globalA.init) {
+          // A.init resolves when WASM module compilation is complete in v3
+          globalA.init.then(() => {
+            try {
+              if (!aladinContainer) return;
+              aladinInstance = globalA.aladin(aladinContainer, {
+                survey: 'P/DSS2/color',
+                fov: (data.post.fov_width || 1) * 2,
+                target: `${ra} ${dec}`,
+                showReticle: false,
+                showZoomControl: true,
+                showLayersControl: false,
+                showFullscreenControl: false
               });
 
-              // @ts-expect-error polygon is not typed in global window.A
-              const polygon = window.A.polygon(corners);
-              overlay.add(polygon);
+              if (data.post.fov_width && data.post.fov_height) {
+                const width = data.post.fov_width;
+                const height = data.post.fov_height;
+                const rot = data.post.fov_rotation || 0;
+                const raVal = ra as number;
+                const decVal = dec as number;
+
+                const overlay = globalA.graphicOverlay({
+                  color: '#f75b00',
+                  lineWidth: 2
+                });
+                // @ts-expect-error aladinInstance is typed as unknown
+                aladinInstance.addOverlay(overlay);
+
+                const rad = Math.PI / 180;
+                const cosDec = Math.cos(decVal * rad) || 1;
+                const dRa = width / 2 / cosDec;
+                const dDec = height / 2;
+
+                const rotatePoint = (x: number, y: number, angleDeg: number) => {
+                  const angleRad = -angleDeg * rad;
+                  const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
+                  const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
+                  return [rx, ry];
+                };
+
+                const corners = [
+                  [-dRa, -dDec],
+                  [dRa, -dDec],
+                  [dRa, dDec],
+                  [-dRa, dDec]
+                ].map(([x, y]) => {
+                  const [rx, ry] = rotatePoint(x, y, rot);
+                  return [raVal + rx, decVal + ry];
+                });
+
+                const polygon = globalA.polygon(corners);
+                overlay.add(polygon);
+              }
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error('Failed to initialize Aladin Lite:', e);
             }
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error('Failed to initialize Aladin Lite:', e);
-          }
+          });
         } else {
           timeoutId = setTimeout(checkAndInit, 100);
         }
@@ -117,10 +130,10 @@
 <svelte:head>
   <link
     rel="stylesheet"
-    href="https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/aladin.min.css"
+    href="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.css"
   />
   <script
-    src="https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/aladin.js"
+    src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js"
     charset="utf-8"
   ></script>
 </svelte:head>
