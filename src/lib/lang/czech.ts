@@ -160,7 +160,12 @@ export default lang.parse({
         },
         delete: {
           question: 'Opravdu chceš smazat toto vybavení?'
-        }
+        },
+        focalLength: 'Ohnisková vzdálenost (mm)',
+        aperture: 'Apertura (mm)',
+        pixelSize: 'Velikost pixelu (µm)',
+        sensorWidth: 'Šířka senzoru (px)',
+        sensorHeight: 'Výška senzoru (px)'
       }
     },
     article: {
@@ -221,7 +226,23 @@ export default lang.parse({
         save: 'Uložit článek',
         create: 'Vytvořit článek',
         created: 'Článek byl úspěšně vytvořen!',
-        updated: 'Článek byl úspěšně upraven!'
+        updated: 'Článek byl úspěšně upraven!',
+        target: {
+          title: 'Cíl a Souřadnice (FOV)',
+          object: 'Astronomický objekt',
+          select: 'Vyber objekt',
+          none: 'Žádný',
+          newCs: 'Nový objekt (CZ)',
+          newEn: 'Nový objekt (EN)',
+          add: 'Přidat objekt',
+          ra: 'Rektascenze (RA ve stupních)',
+          dec: 'Deklinace (DEC ve stupních)',
+          width: 'Šířka zorného pole (ve stupních)',
+          height: 'Výška zorného pole (ve stupních)',
+          rotation: 'Rotace zorného pole (ve stupních)',
+          searchAstroDb: 'Vyhledat souřadnice',
+          calculateFov: 'Vypočítat FOV z techniky'
+        }
       }
     }
   },
@@ -246,7 +267,18 @@ export default lang.parse({
     },
     exposureDetails: 'Detaily expozic',
     equipmentDetails: 'Detaily vybavení',
-    images: 'Obrázky'
+    images: 'Obrázky',
+    object: 'Objekt',
+    all: 'Všechny příspěvky',
+    byObject: 'Podle objektu',
+    skyMap: 'Mapa oblohy',
+    fov: 'Zorné pole (FOV)',
+    postsCount: {
+      '1': 'příspěvek',
+      '2': 'příspěvky',
+      other: 'příspěvků'
+    },
+    older: 'Starší'
   },
   contact: {
     title: 'Spoj se se mnou',
