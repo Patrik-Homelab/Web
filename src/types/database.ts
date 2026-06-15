@@ -19,8 +19,14 @@ export interface Account {
 export interface Article {
   content_md: string;
   created_at: Generated<Date>;
+  dec: Generated<number | null>;
   description: string;
+  fov_height: Generated<number | null>;
+  fov_rotation: Generated<number | null>;
+  fov_width: Generated<number | null>;
   id: Generated<string>;
+  object_id: Generated<unknown | null>;
+  ra: Generated<number | null>;
   title: string;
   updated_at: Generated<Date>;
 }
@@ -31,10 +37,20 @@ export interface ArticleEquipment {
   id: Generated<number>;
 }
 
+export interface AstronomicalObject {
+  id: unknown;
+  name: unknown;
+}
+
 export interface Equipment {
+  aperture: Generated<number | null>;
+  focal_length: Generated<number | null>;
   id: Generated<number>;
   link: string;
   name: string;
+  pixel_size: Generated<number | null>;
+  sensor_height: Generated<number | null>;
+  sensor_width: Generated<number | null>;
   type_id: number;
 }
 
@@ -78,6 +94,7 @@ export interface DB {
   account: Account;
   article: Article;
   article_equipment: ArticleEquipment;
+  astronomical_object: AstronomicalObject;
   equipment: Equipment;
   equipment_type: EquipmentType;
   exposure: Exposure;

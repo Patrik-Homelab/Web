@@ -3,10 +3,11 @@ import type { Selectable } from 'kysely';
 import type { ClassValue } from 'svelte/elements';
 import type { Account } from './database';
 
-export type FormElement<$Attrs> = {
+export type FormElement<$Attrs, $Extends = object> = {
   class?: ClassValue;
   error?: string;
-} & $Attrs;
+} & $Attrs &
+  Omit<$Extends, keyof $Attrs>;
 
 export type UserData = Omit<Selectable<Account>, 'password'>;
 
