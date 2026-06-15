@@ -36,7 +36,13 @@ export default [
           id: uuid,
           title: translations.title,
           description: translations.description,
-          content_md: translations.content_md
+          content_md: translations.content_md,
+          object_id: input.object_id ?? null,
+          ra: input.ra ?? null,
+          dec: input.dec ?? null,
+          fov_width: input.fov_width ?? null,
+          fov_height: input.fov_height ?? null,
+          fov_rotation: input.fov_rotation ?? null
         })
         .execute();
 
@@ -326,10 +332,28 @@ export default [
           .execute();
       }
 
+      const directFieldsChanged =
+        originalData.object_id !== (input.object_id ?? null) ||
+        originalData.ra !== (input.ra ?? null) ||
+        originalData.dec !== (input.dec ?? null) ||
+        originalData.fov_width !== (input.fov_width ?? null) ||
+        originalData.fov_height !== (input.fov_height ?? null) ||
+        originalData.fov_rotation !== (input.fov_rotation ?? null);
+
+      if (directFieldsChanged) {
+        someChanged = true;
+      }
+
       if (someChanged) {
         await trx
           .updateTable('article')
           .set({
+            object_id: input.object_id ?? null,
+            ra: input.ra ?? null,
+            dec: input.dec ?? null,
+            fov_width: input.fov_width ?? null,
+            fov_height: input.fov_height ?? null,
+            fov_rotation: input.fov_rotation ?? null,
             updated_at: new Date()
           })
           .where('id', '=', input.id!)
