@@ -40,6 +40,7 @@
   $effect(() => {
     const ra = data.post.ra;
     const dec = data.post.dec;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
     if (ra !== null && dec !== null && aladinContainer) {
       const checkAndInit = () => {
         // @ts-expect-error Aladin Lite is loaded via a global script tag
@@ -99,22 +100,27 @@
             console.error('Failed to initialize Aladin Lite:', e);
           }
         } else {
-          setTimeout(checkAndInit, 100);
+          timeoutId = setTimeout(checkAndInit, 100);
         }
       };
 
       checkAndInit();
     }
+    return () => {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
   });
 </script>
 
 <svelte:head>
   <link
     rel="stylesheet"
-    href="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.css"
+    href="https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/aladin.min.css"
   />
   <script
-    src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js"
+    src="https://aladin.cds.unistra.fr/AladinLite/api/v2/latest/aladin.js"
     charset="utf-8"
   ></script>
 </svelte:head>

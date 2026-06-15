@@ -70,7 +70,7 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   let showPreview = $state(false);
   let selectedEquipment = $state<null | number>(null);
 
-  let equipment = $state<number[]>([]);
+  let equipment = $state<number[]>((data.article as any).equipment ?? []);
 
   $effect(() => {
     if (selectedEquipment !== null) {
@@ -83,7 +83,7 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   let exposureType = $state('light');
   let exposureCount = $state(1);
   let exposureDuration = $state(30);
-  let exposures = $state<Selectable<Exposure>[]>([]);
+  let exposures = $state<Selectable<Exposure>[]>((data.article as any).exposures ?? []);
 
   const addExposure = () => {
     exposures.push({
@@ -99,11 +99,11 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   let newObjectCs = $state('');
   let newObjectEn = $state('');
 
-  let ra = $state<number | null>(null);
-  let dec = $state<number | null>(null);
-  let fovWidth = $state<number | null>(null);
-  let fovHeight = $state<number | null>(null);
-  let fovRotation = $state<number | null>(null);
+  let ra = $state<number | null>((data.article as any).ra ?? null);
+  let dec = $state<number | null>((data.article as any).dec ?? null);
+  let fovWidth = $state<number | null>((data.article as any).fov_width ?? null);
+  let fovHeight = $state<number | null>((data.article as any).fov_height ?? null);
+  let fovRotation = $state<number | null>((data.article as any).fov_rotation ?? null);
 
   let isResolving = $state(false);
 

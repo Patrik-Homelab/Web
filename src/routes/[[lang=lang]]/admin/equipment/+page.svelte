@@ -158,136 +158,143 @@
 {/snippet}
 
 <Dialog opened={typeEditing !== null} onClose={() => (typeEditing = null)}>
-  {@render title(replacePlaceholders(_lang.types.edit.title, typeEditing!.id.toString()))}
-  <form
-    class="flex flex-col items-center justify-center"
-    method="POST"
-    action="?/typeEdit"
-    use:enhance={createSubmitFunction(
-      _lang.types.editSuccess,
-      () => (typeEditing = null)
+  {#if typeEditing}
+    {@render title(
+      replacePlaceholders(_lang.types.edit.title, typeEditing.id.toString())
     )}
-  >
-    <input type="hidden" name="id" value={typeEditing!.id} />
-    <FormItem for="key" label={_lang.types.translateKey}>
-      <Input
-        id="key"
-        name="lang_key"
-        type="text"
-        placeholder={_lang.types.translateKey}
-        value={typeEditing!.lang_key}
-        max={64}
-        required
-      />
-    </FormItem>
-    <FormItem for="priority" label={_lang.types.priority}>
-      <Input
-        id="priority"
-        name="priority"
-        type="number"
-        value={typeEditing!.priority}
-        min={0}
-        required
-      />
-    </FormItem>
-    <Button type="submit">{_lang.types.edit.button}</Button>
-  </form>
+    <form
+      class="flex flex-col items-center justify-center"
+      method="POST"
+      action="?/typeEdit"
+      use:enhance={createSubmitFunction(
+        _lang.types.editSuccess,
+        () => (typeEditing = null)
+      )}
+    >
+      <input type="hidden" name="id" value={typeEditing.id} />
+      <FormItem for="key" label={_lang.types.translateKey}>
+        <Input
+          id="key"
+          name="lang_key"
+          type="text"
+          placeholder={_lang.types.translateKey}
+          value={typeEditing.lang_key}
+          max={64}
+          required
+        />
+      </FormItem>
+      <FormItem for="priority" label={_lang.types.priority}>
+        <Input
+          id="priority"
+          name="priority"
+          type="number"
+          value={typeEditing.priority}
+          min={0}
+          required
+        />
+      </FormItem>
+      <Button type="submit">{_lang.types.edit.button}</Button>
+    </form>
+  {/if}
 </Dialog>
 
 <Dialog opened={equipmentEditing !== null} onClose={() => (equipmentEditing = null)}>
-  {@render title(
-    replacePlaceholders(_lang.equipment.edit.title, equipmentEditing!.id.toString())
-  )}
-  <form
-    class="flex flex-col items-center justify-center"
-    method="POST"
-    action="?/equipmentEdit"
-    use:enhance={createSubmitFunction(
-      _lang.equipment.editSuccess,
-      () => (equipmentEditing = null)
+  {#if equipmentEditing}
+    {@render title(
+      replacePlaceholders(_lang.equipment.edit.title, equipmentEditing.id.toString())
     )}
-  >
-    <input type="hidden" name="id" value={equipmentEditing!.id} />
-    <FormItem for="name" label={_lang.equipment.name}>
-      <Input
-        id="name"
-        name="name"
-        type="text"
-        placeholder={_lang.equipment.name}
-        value={equipmentEditing!.name}
-        max={128}
-        required
-      />
-    </FormItem>
-    <FormItem for="type" label={_lang.equipment.type}>
-      <Select id="type" name="type" bind:value={equipmentEditing!.type_id} required>
-        {#each data.types as type (type.id.toString())}
-          <option value={type.id}>{resolveTranslation(type.lang_key, _state.lang)}</option
-          >
-        {/each}
-      </Select>
-    </FormItem>
-    <FormItem for="link" label={_lang.equipment.link}>
-      <Input
-        id="link"
-        name="link"
-        type="url"
-        placeholder={_lang.equipment.link}
-        value={equipmentEditing!.link}
-        max={512}
-        required
-      />
-    </FormItem>
+    <form
+      class="flex flex-col items-center justify-center"
+      method="POST"
+      action="?/equipmentEdit"
+      use:enhance={createSubmitFunction(
+        _lang.equipment.editSuccess,
+        () => (equipmentEditing = null)
+      )}
+    >
+      <input type="hidden" name="id" value={equipmentEditing.id} />
+      <FormItem for="name" label={_lang.equipment.name}>
+        <Input
+          id="name"
+          name="name"
+          type="text"
+          placeholder={_lang.equipment.name}
+          value={equipmentEditing.name}
+          max={128}
+          required
+        />
+      </FormItem>
+      <FormItem for="type" label={_lang.equipment.type}>
+        <Select id="type" name="type" bind:value={equipmentEditing.type_id} required>
+          {#each data.types as type (type.id.toString())}
+            <option value={type.id}
+              >{resolveTranslation(type.lang_key, _state.lang)}</option
+            >
+          {/each}
+        </Select>
+      </FormItem>
+      <FormItem for="link" label={_lang.equipment.link}>
+        <Input
+          id="link"
+          name="link"
+          type="url"
+          placeholder={_lang.equipment.link}
+          value={equipmentEditing.link}
+          max={512}
+          required
+        />
+      </FormItem>
 
-    {#if equipmentEditing!.type_id === 1}
-      <FormItem for="focal_length" label={_lang.equipment.focalLength}>
-        <Input
-          id="focal_length"
-          name="focal_length"
-          type="number"
-          step="any"
-          value={equipmentEditing!.focal_length ?? undefined}
-        />
-      </FormItem>
-      <FormItem for="aperture" label={_lang.equipment.aperture}>
-        <Input
-          id="aperture"
-          name="aperture"
-          type="number"
-          step="any"
-          value={equipmentEditing!.aperture ?? undefined}
-        />
-      </FormItem>
-    {:else if equipmentEditing!.type_id === 2}
-      <FormItem for="pixel_size" label={_lang.equipment.pixelSize}>
-        <Input
-          id="pixel_size"
-          name="pixel_size"
-          type="number"
-          step="any"
-          value={equipmentEditing!.pixel_size ?? undefined}
-        />
-      </FormItem>
-      <FormItem for="sensor_width" label={_lang.equipment.sensorWidth}>
-        <Input
-          id="sensor_width"
-          name="sensor_width"
-          type="number"
-          value={equipmentEditing!.sensor_width ?? undefined}
-        />
-      </FormItem>
-      <FormItem for="sensor_height" label={_lang.equipment.sensorHeight}>
-        <Input
-          id="sensor_height"
-          name="sensor_height"
-          type="number"
-          value={equipmentEditing!.sensor_height ?? undefined}
-        />
-      </FormItem>
-    {/if}
+      {#if equipmentEditing.type_id === 1}
+        <FormItem for="focal_length" label={_lang.equipment.focalLength}>
+          <Input
+            id="focal_length"
+            name="focal_length"
+            type="number"
+            step="any"
+            value={equipmentEditing.focal_length ?? undefined}
+          />
+        </FormItem>
+        <FormItem for="aperture" label={_lang.equipment.aperture}>
+          <Input
+            id="aperture"
+            name="aperture"
+            type="number"
+            step="any"
+            value={equipmentEditing.aperture ?? undefined}
+          />
+        </FormItem>
+      {:else if equipmentEditing.type_id === 2}
+        <FormItem for="pixel_size" label={_lang.equipment.pixelSize}>
+          <Input
+            id="pixel_size"
+            name="pixel_size"
+            type="number"
+            step="any"
+            value={equipmentEditing.pixel_size ?? undefined}
+          />
+        </FormItem>
+        <FormItem for="sensor_width" label={_lang.equipment.sensorWidth}>
+          <Input
+            id="sensor_width"
+            name="sensor_width"
+            type="number"
+            value={equipmentEditing.sensor_width ?? undefined}
+          />
+        </FormItem>
+        <FormItem for="sensor_height" label={_lang.equipment.sensorHeight}>
+          <Input
+            id="sensor_height"
+            name="sensor_height"
+            type="number"
+            value={equipmentEditing.sensor_height ?? undefined}
+          />
+        </FormItem>
+      {/if}
 
-    <Button type="submit">{_lang.equipment.edit.button}</Button>
-  </form>
+      <Button type="submit">{_lang.equipment.edit.button}</Button>
+    </form>
+  {/if}
 </Dialog>
 
 <Dialog bind:opened={openTypeAdd}>
