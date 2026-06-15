@@ -7,7 +7,19 @@ export const load = (async ({ parent }) => {
 
   const posts = await conn
     .selectFrom('article')
-    .select(['id', 'title', 'description', 'created_at', 'updated_at'])
+    .select([
+      'id',
+      'title',
+      'description',
+      'created_at',
+      'updated_at',
+      'object_id',
+      'ra',
+      'dec',
+      'fov_width',
+      'fov_height',
+      'fov_rotation'
+    ])
     .orderBy('created_at', 'desc')
     .execute();
 
@@ -21,6 +33,7 @@ export const load = (async ({ parent }) => {
 
   const images = await conn.selectFrom('gallery_image').selectAll().execute();
   const exposures = await conn.selectFrom('exposure').selectAll().execute();
+  const objects = await conn.selectFrom('astronomical_object').selectAll().execute();
 
   return {
     posts: posts.map((post) => ({
@@ -31,10 +44,12 @@ export const load = (async ({ parent }) => {
       images: images.filter((image) => image.article_id === post.id),
       exposures: exposures.filter((exposure) => exposure.article_id === post.id)
     })),
+    objects,
     dynamicTranslations: await gatherTranslations(
       [
         ...posts.map((post) => [post.title, post.description]).flat(),
-        ...images.map((image) => image.alt_text)
+        ...images.map((image) => image.alt_text),
+        ...objects.map((obj) => obj.name as string)
       ],
       parentData.selectedLang
     )

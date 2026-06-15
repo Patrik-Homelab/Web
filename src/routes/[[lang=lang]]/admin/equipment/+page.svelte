@@ -86,11 +86,18 @@
     invalidateAll();
   };
 
+  let newEquipmentTypeId = $state<number | null>(null);
+
   let equipmentEditing = $state<null | {
     id: number;
     name: string;
     type_id: number;
     link: string;
+    focal_length: number | null;
+    aperture: number | null;
+    pixel_size: number | null;
+    sensor_width: number | null;
+    sensor_height: number | null;
   }>(null);
 
   const equipmentDelete = async (id: number) => {
@@ -213,7 +220,7 @@
       />
     </FormItem>
     <FormItem for="type" label={_lang.equipment.type}>
-      <Select id="type" name="type" value={equipmentEditing!.type_id} required>
+      <Select id="type" name="type" bind:value={equipmentEditing!.type_id} required>
         {#each data.types as type (type.id.toString())}
           <option value={type.id}>{resolveTranslation(type.lang_key, _state.lang)}</option
           >
@@ -231,6 +238,54 @@
         required
       />
     </FormItem>
+
+    {#if equipmentEditing!.type_id === 1}
+      <FormItem for="focal_length" label={_lang.equipment.focalLength}>
+        <Input
+          id="focal_length"
+          name="focal_length"
+          type="number"
+          step="any"
+          value={equipmentEditing!.focal_length ?? undefined}
+        />
+      </FormItem>
+      <FormItem for="aperture" label={_lang.equipment.aperture}>
+        <Input
+          id="aperture"
+          name="aperture"
+          type="number"
+          step="any"
+          value={equipmentEditing!.aperture ?? undefined}
+        />
+      </FormItem>
+    {:else if equipmentEditing!.type_id === 2}
+      <FormItem for="pixel_size" label={_lang.equipment.pixelSize}>
+        <Input
+          id="pixel_size"
+          name="pixel_size"
+          type="number"
+          step="any"
+          value={equipmentEditing!.pixel_size ?? undefined}
+        />
+      </FormItem>
+      <FormItem for="sensor_width" label={_lang.equipment.sensorWidth}>
+        <Input
+          id="sensor_width"
+          name="sensor_width"
+          type="number"
+          value={equipmentEditing!.sensor_width ?? undefined}
+        />
+      </FormItem>
+      <FormItem for="sensor_height" label={_lang.equipment.sensorHeight}>
+        <Input
+          id="sensor_height"
+          name="sensor_height"
+          type="number"
+          value={equipmentEditing!.sensor_height ?? undefined}
+        />
+      </FormItem>
+    {/if}
+
     <Button type="submit">{_lang.equipment.edit.button}</Button>
   </form>
 </Dialog>
@@ -253,22 +308,27 @@
   </form>
 </Dialog>
 
-<Dialog bind:opened={openEquipmentAdd}>
+<Dialog
+  bind:opened={openEquipmentAdd}
+  onClose={() => {
+    newEquipmentTypeId = null;
+  }}
+>
   {@render title(_lang.equipment.addTitle)}
   <form
     class="border-text flex flex-col items-center justify-center rounded-md border-2 p-2"
     method="POST"
     action="?/equipmentAdd"
-    use:enhance={createSubmitFunction(
-      _lang.equipment.success,
-      () => (openEquipmentAdd = false)
-    )}
+    use:enhance={createSubmitFunction(_lang.equipment.success, () => {
+      openEquipmentAdd = false;
+      newEquipmentTypeId = null;
+    })}
   >
     <FormItem for="name" label={_lang.equipment.name}>
       <Input id="name" name="name" type="text" max={128} required />
     </FormItem>
     <FormItem for="type" label={_lang.equipment.type}>
-      <Select id="type" name="type" required>
+      <Select id="type" name="type" bind:value={newEquipmentTypeId} required>
         <option value={null} disabled selected></option>
         {#each data.types as type (type.id.toString())}
           <option value={type.id}>{resolveTranslation(type.lang_key, _state.lang)}</option
@@ -279,6 +339,26 @@
     <FormItem for="link" label={_lang.equipment.link}>
       <Input id="link" name="link" type="url" max={512} required />
     </FormItem>
+
+    {#if newEquipmentTypeId === 1}
+      <FormItem for="focal_length" label={_lang.equipment.focalLength}>
+        <Input id="focal_length" name="focal_length" type="number" step="any" />
+      </FormItem>
+      <FormItem for="aperture" label={_lang.equipment.aperture}>
+        <Input id="aperture" name="aperture" type="number" step="any" />
+      </FormItem>
+    {:else if newEquipmentTypeId === 2}
+      <FormItem for="pixel_size" label={_lang.equipment.pixelSize}>
+        <Input id="pixel_size" name="pixel_size" type="number" step="any" />
+      </FormItem>
+      <FormItem for="sensor_width" label={_lang.equipment.sensorWidth}>
+        <Input id="sensor_width" name="sensor_width" type="number" />
+      </FormItem>
+      <FormItem for="sensor_height" label={_lang.equipment.sensorHeight}>
+        <Input id="sensor_height" name="sensor_height" type="number" />
+      </FormItem>
+    {/if}
+
     <Button type="submit">{_lang.equipment.button}</Button>
   </form>
 </Dialog>
@@ -380,7 +460,12 @@
                           id: equipment.id,
                           name: equipment.name,
                           type_id: equipment.type_id,
-                          link: equipment.link
+                          link: equipment.link,
+                          focal_length: equipment.focal_length ?? null,
+                          aperture: equipment.aperture ?? null,
+                          pixel_size: equipment.pixel_size ?? null,
+                          sensor_width: equipment.sensor_width ?? null,
+                          sensor_height: equipment.sensor_height ?? null
                         };
                       }}
                       name="bi-pencil-fill"

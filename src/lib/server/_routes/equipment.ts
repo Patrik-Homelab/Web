@@ -9,7 +9,12 @@ import { conn } from '../variables';
 const equipmentSchema = z.object({
   name: z.string().min(1, 'equipment.form.name'),
   type: z.string().min(1, 'equipment.form.type'),
-  link: z.url('equipment.form.link')
+  link: z.url('equipment.form.link'),
+  focal_length: z.coerce.number().nullable().optional(),
+  aperture: z.coerce.number().nullable().optional(),
+  pixel_size: z.coerce.number().nullable().optional(),
+  sensor_width: z.coerce.number().int().nullable().optional(),
+  sensor_height: z.coerce.number().int().nullable().optional()
 });
 
 export default [
@@ -18,6 +23,38 @@ export default [
       const name = input.get('name') as string;
       const type = input.get('type') as string;
       const link = input.get('link') as string;
+
+      const focalLengthVal = input.get('focal_length');
+      const focal_length =
+        focalLengthVal !== null && focalLengthVal !== undefined && focalLengthVal !== ''
+          ? Number(focalLengthVal)
+          : null;
+
+      const apertureVal = input.get('aperture');
+      const aperture =
+        apertureVal !== null && apertureVal !== undefined && apertureVal !== ''
+          ? Number(apertureVal)
+          : null;
+
+      const pixelSizeVal = input.get('pixel_size');
+      const pixel_size =
+        pixelSizeVal !== null && pixelSizeVal !== undefined && pixelSizeVal !== ''
+          ? Number(pixelSizeVal)
+          : null;
+
+      const sensorWidthVal = input.get('sensor_width');
+      const sensor_width =
+        sensorWidthVal !== null && sensorWidthVal !== undefined && sensorWidthVal !== ''
+          ? Number(sensorWidthVal)
+          : null;
+
+      const sensorHeightVal = input.get('sensor_height');
+      const sensor_height =
+        sensorHeightVal !== null &&
+        sensorHeightVal !== undefined &&
+        sensorHeightVal !== ''
+          ? Number(sensorHeightVal)
+          : null;
 
       if (!name || !type || !link || isNaN(Number(type))) {
         return fail(400, {
@@ -44,7 +81,12 @@ export default [
           .values({
             name,
             type_id: Number(type),
-            link
+            link,
+            focal_length,
+            aperture,
+            pixel_size,
+            sensor_width,
+            sensor_height
           })
           .executeTakeFirst();
 
@@ -66,6 +108,38 @@ export default [
       const name = input.get('name') as string | null;
       const type = input.get('type') as string | null;
       const link = input.get('link') as string | null;
+
+      const focalLengthVal = input.get('focal_length');
+      const focal_length =
+        focalLengthVal !== null && focalLengthVal !== undefined && focalLengthVal !== ''
+          ? Number(focalLengthVal)
+          : null;
+
+      const apertureVal = input.get('aperture');
+      const aperture =
+        apertureVal !== null && apertureVal !== undefined && apertureVal !== ''
+          ? Number(apertureVal)
+          : null;
+
+      const pixelSizeVal = input.get('pixel_size');
+      const pixel_size =
+        pixelSizeVal !== null && pixelSizeVal !== undefined && pixelSizeVal !== ''
+          ? Number(pixelSizeVal)
+          : null;
+
+      const sensorWidthVal = input.get('sensor_width');
+      const sensor_width =
+        sensorWidthVal !== null && sensorWidthVal !== undefined && sensorWidthVal !== ''
+          ? Number(sensorWidthVal)
+          : null;
+
+      const sensorHeightVal = input.get('sensor_height');
+      const sensor_height =
+        sensorHeightVal !== null &&
+        sensorHeightVal !== undefined &&
+        sensorHeightVal !== ''
+          ? Number(sensorHeightVal)
+          : null;
 
       if (!id || isNaN(Number(id))) {
         return fail(401, {
@@ -99,7 +173,12 @@ export default [
           .set({
             name,
             type_id: Number(type),
-            link
+            link,
+            focal_length,
+            aperture,
+            pixel_size,
+            sensor_width,
+            sensor_height
           })
           .where('id', '=', Number(id))
           .executeTakeFirst();

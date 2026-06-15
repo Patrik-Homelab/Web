@@ -1,19 +1,16 @@
-import {
-  constructEmptyTranslations,
-  gatherTranslationsAll
-} from '$/lib/server/functions';
+import { gatherTranslationsAll } from '$/lib/server/functions';
 import { Server } from '$/lib/server/server';
 import { conn } from '$/lib/server/variables';
-import type { Article, Exposure, GalleryImage } from '$/types/database';
 import { redirect, type Actions } from '@sveltejs/kit';
-import type { Insertable } from 'kysely';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
   const equipmentData = await conn.selectFrom('equipment').selectAll().execute();
+  const objectsData = await conn.selectFrom('astronomical_object').selectAll().execute();
 
   const baseData = {
-    equipment: equipmentData
+    equipment: equipmentData,
+    objects: objectsData
   };
 
   if (params.id === 'new')
@@ -24,14 +21,18 @@ export const load = (async ({ params }) => {
         content_md: '',
         images: [],
         exposures: [],
-        equipment: []
-      } as Insertable<Article> & {
-        images: Insertable<GalleryImage>[];
-        exposures: Insertable<Exposure>[];
-        equipment: number[];
-      },
+        equipment: [],
+        object_id: null,
+        ra: null,
+        dec: null,
+        fov_width: null,
+        fov_height: null,
+        fov_rotation: null
+      } as unknown as Record<string, unknown>,
       ...baseData,
-      dynamicTranslations: constructEmptyTranslations()
+      dynamicTranslations: await gatherTranslationsAll(
+        objectsData.map((o) => o.name as string)
+      )
     };
 
   const article = await conn
@@ -77,7 +78,8 @@ export const load = (async ({ params }) => {
       article.title,
       article.description,
       article.content_md,
-      ...images.map((image) => image.alt_text)
+      ...images.map((image) => image.alt_text),
+      ...objectsData.map((o) => o.name as string)
     ])
   };
 }) satisfies PageServerLoad;

@@ -129,7 +129,12 @@ export default o({
         }),
         delete: o({
           question: _
-        })
+        }),
+        focalLength: _,
+        aperture: _,
+        pixelSize: _,
+        sensorWidth: _,
+        sensorHeight: _
       })
     }),
     article: o({
@@ -190,7 +195,23 @@ export default o({
         save: _,
         create: _,
         created: _,
-        updated: _
+        updated: _,
+        target: o({
+          title: _,
+          object: _,
+          select: _,
+          none: _,
+          newCs: _,
+          newEn: _,
+          add: _,
+          ra: _,
+          dec: _,
+          width: _,
+          height: _,
+          rotation: _,
+          searchAstroDb: _,
+          calculateFov: _
+        })
       })
     })
   }),
@@ -210,7 +231,14 @@ export default o({
     framesCount: languagable,
     exposureDetails: _,
     equipmentDetails: _,
-    images: _
+    images: _,
+    object: _,
+    all: _,
+    byObject: _,
+    skyMap: _,
+    fov: _,
+    postsCount: languagable,
+    older: _
   }),
   contact: o({
     title: _,

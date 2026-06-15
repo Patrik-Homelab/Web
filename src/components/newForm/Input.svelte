@@ -6,12 +6,14 @@
   import FormItem from './FormItem.svelte';
   import TranslationAvailability from './TranslationAvailability.svelte';
 
-  type InputProps = {
+  import type { SvelteHTMLElements } from 'svelte/elements';
+
+  type InputProps = SvelteHTMLElements['input'] & {
     name: string;
     label: string;
     placeholder?: string;
     class?: string;
-    type?: 'text' | 'email' | 'password';
+    type?: 'text' | 'email' | 'password' | 'number';
     variant?: 'small' | 'normal';
     right?: Snippet;
   };
@@ -23,7 +25,11 @@
     class: cls = '',
     type,
     variant,
-    right: _right
+    right: _right,
+    // the id is unused
+    // eslint-disable-next-line
+    id: _,
+    ...props
   }: InputProps = $props();
 
   const context = getFormContext();
@@ -38,6 +44,9 @@
   $effect(() => {
     setValue(context, name, formValue);
   });
+
+  //eslint-disable-next-line
+  const ILoveTypes = props as any;
 </script>
 
 <FormItem for={id} error={getError(context, name)} {label} {variant}>
@@ -54,9 +63,10 @@
     {id}
     {name}
     {type}
-    bind:value={formValue as string}
+    bind:value={formValue}
     {placeholder}
     error={getError(context, name)}
     class={clsx(cls)}
+    {...ILoveTypes}
   />
 </FormItem>

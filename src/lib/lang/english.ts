@@ -160,7 +160,12 @@ export default lang.parse({
         },
         delete: {
           question: 'Are you sure you want to delete this equipment?'
-        }
+        },
+        focalLength: 'Focal Length (mm)',
+        aperture: 'Aperture (mm)',
+        pixelSize: 'Pixel Size (µm)',
+        sensorWidth: 'Sensor Width (px)',
+        sensorHeight: 'Sensor Height (px)'
       }
     },
     article: {
@@ -221,7 +226,23 @@ export default lang.parse({
         save: 'Save article',
         create: 'Create article',
         created: 'Article was successfully created!',
-        updated: 'Article was successfully updated!'
+        updated: 'Article was successfully updated!',
+        target: {
+          title: 'Target & Coordinates (FOV)',
+          object: 'Astronomical Object',
+          select: 'Select object',
+          none: 'None',
+          newCs: 'New Object (CZ)',
+          newEn: 'New Object (EN)',
+          add: 'Add Object',
+          ra: 'Right Ascension (RA in degrees)',
+          dec: 'Declination (DEC in degrees)',
+          width: 'FOV Width (in degrees)',
+          height: 'FOV Height (in degrees)',
+          rotation: 'FOV Rotation (in degrees)',
+          searchAstroDb: 'Resolve coordinates',
+          calculateFov: 'Calculate FOV from specs'
+        }
       }
     }
   },
@@ -246,7 +267,18 @@ export default lang.parse({
     },
     exposureDetails: 'Exposure details',
     equipmentDetails: 'Equipment details',
-    images: 'Images'
+    images: 'Images',
+    object: 'Object',
+    all: 'All posts',
+    byObject: 'By object',
+    skyMap: 'Sky map',
+    fov: 'Field of view (FOV)',
+    postsCount: {
+      '1': 'post',
+      '2': 'posts',
+      other: 'posts'
+    },
+    older: 'Older'
   },
   contact: {
     title: 'Get in Touch',

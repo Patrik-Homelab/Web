@@ -26,5 +26,41 @@ export const articleSchema = (lang: keyof typeof languages) =>
     updated_at: z.coerce.date().optional(),
     images: z.array(articleImage),
     exposures: z.array(articleExposure),
-    equipment: z.array(z.number())
+    equipment: z.array(z.number()),
+    object_id: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : String(val)),
+        z.string().nullable()
+      )
+      .optional(),
+    ra: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable()
+      )
+      .optional(),
+    dec: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable()
+      )
+      .optional(),
+    fov_width: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable()
+      )
+      .optional(),
+    fov_height: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable()
+      )
+      .optional(),
+    fov_rotation: z
+      .preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable()
+      )
+      .optional()
   });

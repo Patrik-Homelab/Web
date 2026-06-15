@@ -1,4 +1,5 @@
 <script lang="ts">
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   import {
     Button as BaseButton,
     Input as BaseInput,
@@ -14,7 +15,8 @@
     ImageManager,
     Input,
     Markdown,
-    TextArea
+    TextArea,
+    Select as FormSelect
   } from '$/components/newForm';
   import DataProvider from '$/components/newForm/DataProvider.svelte';
   import type { FormAction } from '$/components/newForm/Form.svelte';
@@ -27,10 +29,11 @@
   import type { Exposure } from '$/types/database';
   import { articleSchema } from '$/types/schemes';
   import { NROT } from '$/types/types';
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
   import type { Selectable } from 'kysely';
   import type { PageProps, SubmitFunction } from './$types';
+  import { API } from '$/lib/api';
 
   const { data }: PageProps = $props();
   const { dynamicTranslations } = data;
@@ -41,7 +44,11 @@
   const MultiLangKeys = NROT(['title', 'description', 'content_md', 'images'] as const);
 
   const articleData = $state(
-    transformIntoLanguagable(data.article, dynamicTranslations, MultiLangKeys)
+    transformIntoLanguagable(
+      data.article as unknown as Record<string, unknown>,
+      dynamicTranslations,
+      MultiLangKeys
+    ) as Record<string, any>
   );
 
   const currentArticleData = $derived(
@@ -89,9 +96,184 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
     });
   };
 
+  let newObjectCs = $state('');
+  let newObjectEn = $state('');
+
+  let ra = $state<number | null>(null);
+  let dec = $state<number | null>(null);
+  let fovWidth = $state<number | null>(null);
+  let fovHeight = $state<number | null>(null);
+  let fovRotation = $state<number | null>(null);
+
+  let isResolving = $state(false);
+
+  const searchAstroDb = async (ev: MouseEvent) => {
+    ev.preventDefault();
+    const query = newObjectEn || newObjectCs;
+    if (!query) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Zadejte název objektu pro vyhledání'
+            : 'Enter object name to search',
+        icon: 'warning'
+      });
+      return;
+    }
+
+    isResolving = true;
+    try {
+      const res = await API.astronomical_object.resolve({ name: query });
+      if (res && res.status && res.ra !== undefined && res.dec !== undefined) {
+        ra = res.ra;
+        dec = res.dec;
+        if (!newObjectEn) {
+          newObjectEn = query;
+        }
+        SwalAlert({
+          title:
+            _state.selectedLang === 'cs'
+              ? `Objekt nalezen! Souřadnice RA: ${res.ra}°, DEC: ${res.dec}° byly doplněny.`
+              : `Object found! Coordinates RA: ${res.ra}°, DEC: ${res.dec}° have been auto-filled.`,
+          icon: 'success'
+        });
+      } else {
+        SwalAlert({
+          title:
+            _state.selectedLang === 'cs'
+              ? 'Objekt nebyl v astronomické databázi nalezen.'
+              : 'Object was not found in the astronomical database.',
+          icon: 'error'
+        });
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Chyba při vyhledávání objektu.'
+            : 'Error while searching for the object.',
+        icon: 'error'
+      });
+    } finally {
+      isResolving = false;
+    }
+  };
+
+  const calculateFov = (ev: MouseEvent) => {
+    ev.preventDefault();
+    const telescopes = data.equipment.filter(
+      (item: any) => equipment.includes(item.id) && item.type_id === 1
+    );
+    const cameras = data.equipment.filter(
+      (item: any) => equipment.includes(item.id) && item.type_id === 2
+    );
+
+    if (telescopes.length === 0 || cameras.length === 0) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Pro výpočet musíte mít vybraný alespoň 1 dalekohled a 1 kameru!'
+            : 'You must have at least 1 telescope and 1 camera selected for calculation!',
+        icon: 'warning'
+      });
+      return;
+    }
+
+    // Look for telescope and camera that have all required specifications
+    const telescope = telescopes.find(
+      (t: any) => t.focal_length !== null && t.focal_length !== undefined
+    );
+    const camera = cameras.find(
+      (c: any) =>
+        c.pixel_size !== null &&
+        c.pixel_size !== undefined &&
+        c.sensor_width !== null &&
+        c.sensor_width !== undefined &&
+        c.sensor_height !== null &&
+        c.sensor_height !== undefined
+    );
+
+    if (!telescope || !camera) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Mezi vybraným vybavením nebyl nalezen žádný dalekohled nebo kamera s vyplněnými technickými specifikacemi (ohnisková délka, velikost pixelu nebo rozlišení senzoru)!'
+            : 'Among the selected equipment, no telescope or camera was found with technical specifications filled (focal length, pixel size, or sensor resolution)!',
+        icon: 'warning'
+      });
+      return;
+    }
+
+    const fovW =
+      ((camera.sensor_width! * camera.pixel_size!) / (1000 * telescope.focal_length!)) *
+      57.2957795;
+    const fovH =
+      ((camera.sensor_height! * camera.pixel_size!) / (1000 * telescope.focal_length!)) *
+      57.2957795;
+
+    fovWidth = parseFloat(fovW.toFixed(3));
+    fovHeight = parseFloat(fovH.toFixed(3));
+
+    SwalAlert({
+      title:
+        _state.selectedLang === 'cs'
+          ? `Zorné pole (FOV) bylo vypočítáno pomocí ${telescope.name} a ${camera.name}: ${fovWidth}° × ${fovHeight}°`
+          : `Field of View (FOV) calculated using ${telescope.name} and ${camera.name}: ${fovWidth}° × ${fovHeight}°`,
+      icon: 'success'
+    });
+  };
+
+  const addNewObject = async (ev: MouseEvent) => {
+    ev.preventDefault();
+    if (!newObjectCs || !newObjectEn) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Zadejte název v obou jazycích'
+            : 'Enter names in both languages',
+        icon: 'error'
+      });
+      return;
+    }
+    try {
+      const res = await API.astronomical_object.create({
+        cs: newObjectCs,
+        en: newObjectEn
+      });
+      if (res && res.status) {
+        SwalAlert({
+          title:
+            _state.selectedLang === 'cs'
+              ? 'Objekt byl úspěšně přidán!'
+              : 'Object successfully added!',
+          icon: 'success'
+        });
+        newObjectCs = '';
+        newObjectEn = '';
+        await invalidateAll();
+      } else {
+        SwalAlert({
+          title:
+            _state.selectedLang === 'cs'
+              ? 'Nepodařilo se přidat objekt.'
+              : 'Failed to add object.',
+          icon: 'error'
+        });
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      SwalAlert({
+        title: _state.selectedLang === 'cs' ? 'Chyba serveru.' : 'Server error.',
+        icon: 'error'
+      });
+    }
+  };
+
   const action = (({ result }) => {
     // @ts-expect-error dynamic result type
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = result.data as any;
 
     if (result.type === 'success' && data?.status) {
@@ -118,7 +300,7 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
     schema={articleSchema(_state.selectedLang as keyof typeof languages)}
     multiLang={true}
     multiLangKeys={MultiLangKeys}
-    data={articleData}
+    data={articleData as any}
     class="border-text flex w-full flex-col items-start gap-4 rounded-md border-2 p-4"
     action={editing ? '?/edit' : '?/create'}
     onAction={action}
@@ -178,6 +360,120 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
           {/snippet}
         </Markdown>
       {/if}
+    </Card>
+    <Card>
+      {@render subTitle(_lang.target.title)}
+
+      <FormSelect name="object_id" label={_lang.target.object}>
+        <option value="">{_lang.target.none}</option>
+        {#each data.objects as obj (obj.id)}
+          <option value={obj.id}>
+            {(dynamicTranslations as Record<string, Record<string, string>>)[
+              _state.selectedLang
+            ][obj.name as string]}
+          </option>
+        {/each}
+      </FormSelect>
+
+      <div
+        class="border-text bg-background/50 mt-2 flex flex-col gap-2 rounded-md border p-3"
+      >
+        <h4 class="font-bold">{_lang.target.add}</h4>
+        <div class="flex flex-col gap-2 md:flex-row">
+          <div class="flex-1">
+            <BaseInput
+              type="text"
+              placeholder={_lang.target.newCs}
+              bind:value={newObjectCs}
+            />
+          </div>
+          <div class="flex-1">
+            <BaseInput
+              type="text"
+              placeholder={_lang.target.newEn}
+              bind:value={newObjectEn}
+            />
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <BaseButton
+              onclick={searchAstroDb}
+              disabled={isResolving}
+              class="flex min-w-[140px] items-center justify-center gap-1 bg-blue-600 text-white hover:bg-blue-700"
+            >
+              {#if isResolving}
+                <Icon name="bi-arrow-repeat" class="animate-spin" />
+              {:else}
+                <Icon name="bi-search" />
+              {/if}
+              {_lang.target.searchAstroDb}
+            </BaseButton>
+            <BaseButton
+              onclick={addNewObject}
+              class="bg-primary hover:bg-primary/95 whitespace-nowrap text-white"
+            >
+              {_lang.target.add}
+            </BaseButton>
+          </div>
+        </div>
+      </div>
+
+      <DataProvider name="ra" bind:value={ra} />
+      <DataProvider name="dec" bind:value={dec} />
+      <DataProvider name="fov_width" bind:value={fovWidth} />
+      <DataProvider name="fov_height" bind:value={fovHeight} />
+      <DataProvider name="fov_rotation" bind:value={fovRotation} />
+
+      <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Input
+          name="ra"
+          label={_lang.target.ra}
+          type="number"
+          step="any"
+          placeholder="e.g. 83.82"
+        />
+        <Input
+          name="dec"
+          label={_lang.target.dec}
+          type="number"
+          step="any"
+          placeholder="e.g. -5.39"
+        />
+      </div>
+
+      <div class="mt-6 flex items-center justify-between border-t border-gray-700 pt-4">
+        <h4 class="text-lg font-bold">{_lang.target.title}</h4>
+        <BaseButton
+          onclick={calculateFov}
+          class="flex items-center gap-1 bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700"
+        >
+          <Icon name="bi-calculator" />
+          {_lang.target.calculateFov}
+        </BaseButton>
+      </div>
+
+      <div class="mt-2 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Input
+          name="fov_width"
+          label={_lang.target.width}
+          type="number"
+          step="any"
+          placeholder="e.g. 1.5"
+        />
+        <Input
+          name="fov_height"
+          label={_lang.target.height}
+          type="number"
+          step="any"
+          placeholder="e.g. 1.5"
+        />
+        <Input
+          name="fov_rotation"
+          label={_lang.target.rotation}
+          type="number"
+          step="any"
+          placeholder="e.g. 45"
+        />
+      </div>
     </Card>
     <Card>
       {@render subTitle(_lang.equipment.title)}

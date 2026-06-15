@@ -33,7 +33,91 @@
     const url = `/image/${image.name}?format=jpg`;
     window.open(url, '_blank');
   }
+
+  let aladinContainer = $state<HTMLDivElement | null>(null);
+  let aladinInstance: unknown = null;
+
+  $effect(() => {
+    const ra = data.post.ra;
+    const dec = data.post.dec;
+    if (ra !== null && dec !== null && aladinContainer) {
+      const checkAndInit = () => {
+        // @ts-expect-error Aladin Lite is loaded via a global script tag
+        if (window.A) {
+          try {
+            // @ts-expect-error Aladin Lite constructor is not typed
+            aladinInstance = window.A.aladin(aladinContainer, {
+              survey: 'P/DSS2/color',
+              fov: (data.post.fov_width || 1) * 2,
+              target: `${ra} ${dec}`,
+              showReticle: false,
+              showZoomControl: true,
+              showLayersControl: false,
+              showFullscreenControl: false
+            });
+
+            if (data.post.fov_width && data.post.fov_height) {
+              const width = data.post.fov_width;
+              const height = data.post.fov_height;
+              const rot = data.post.fov_rotation || 0;
+              const raVal = ra as number;
+              const decVal = dec as number;
+
+              // @ts-expect-error graphicOverlay is not typed in global window.A
+              const overlay = window.A.graphicOverlay({ color: '#f75b00', lineWidth: 2 });
+              // @ts-expect-error aladinInstance is typed as unknown
+              aladinInstance.addOverlay(overlay);
+
+              const rad = Math.PI / 180;
+              const cosDec = Math.cos(decVal * rad) || 1;
+              const dRa = width / 2 / cosDec;
+              const dDec = height / 2;
+
+              const rotatePoint = (x: number, y: number, angleDeg: number) => {
+                const angleRad = -angleDeg * rad;
+                const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
+                const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
+                return [rx, ry];
+              };
+
+              const corners = [
+                [-dRa, -dDec],
+                [dRa, -dDec],
+                [dRa, dDec],
+                [-dRa, dDec]
+              ].map(([x, y]) => {
+                const [rx, ry] = rotatePoint(x, y, rot);
+                return [raVal + rx, decVal + ry];
+              });
+
+              // @ts-expect-error polygon is not typed in global window.A
+              const polygon = window.A.polygon(corners);
+              overlay.add(polygon);
+            }
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to initialize Aladin Lite:', e);
+          }
+        } else {
+          setTimeout(checkAndInit, 100);
+        }
+      };
+
+      checkAndInit();
+    }
+  });
 </script>
+
+<svelte:head>
+  <link
+    rel="stylesheet"
+    href="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.css"
+  />
+  <script
+    src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js"
+    charset="utf-8"
+  ></script>
+</svelte:head>
 
 <section class="flex flex-1 flex-col gap-4 p-4">
   <a href="/{_state.selectedLang}/gallery" class="font-bold"
@@ -155,6 +239,64 @@
           {/each}
         </div>
       </div>
+
+      {#if data.post.object_id || (data.post.ra !== null && data.post.dec !== null)}
+        <div
+          class="border-text bg-background flex flex-col gap-4 rounded-md border-2 p-4"
+        >
+          <H3 class="font-bold">{_lang.skyMap}</H3>
+
+          {#if data.objectTranslationUuid}
+            <div class="flex items-center gap-2">
+              <span class="text-text-muted">{_lang.object}:</span>
+              <span
+                class="bg-primary/20 text-primary border-primary/30 rounded-full border px-3 py-0.5 text-base font-semibold"
+              >
+                {_langDynamic[data.objectTranslationUuid]}
+              </span>
+            </div>
+          {/if}
+
+          {#if data.post.ra !== null && data.post.dec !== null}
+            <div class="flex flex-col gap-1 text-base">
+              <div>
+                <span class="text-text-muted">RA:</span>
+                <span class="text-text-strong font-mono font-semibold"
+                  >{data.post.ra}°</span
+                >
+              </div>
+              <div>
+                <span class="text-text-muted">DEC:</span>
+                <span class="text-text-strong font-mono font-semibold"
+                  >{data.post.dec}°</span
+                >
+              </div>
+              {#if data.post.fov_width !== null && data.post.fov_height !== null}
+                <div>
+                  <span class="text-text-muted">{_lang.fov}:</span>
+                  <span class="text-text-strong font-mono font-semibold"
+                    >{data.post.fov_width}° × {data.post.fov_height}°</span
+                  >
+                  {#if data.post.fov_rotation}
+                    <span class="text-text-muted"
+                      >(rot: <span class="text-text-strong font-mono font-semibold"
+                        >{data.post.fov_rotation}°</span
+                      >)</span
+                    >
+                  {/if}
+                </div>
+              {/if}
+            </div>
+
+            <div
+              class="border-divider relative overflow-hidden rounded border-2"
+              style="height: 300px;"
+            >
+              <div bind:this={aladinContainer} class="h-full w-full"></div>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
     <div class="flex flex-2/3 flex-col gap-4">
       <div class="flex w-full rounded-md bg-gray-800 p-1">
