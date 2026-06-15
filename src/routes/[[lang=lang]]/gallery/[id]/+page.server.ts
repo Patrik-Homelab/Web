@@ -34,13 +34,30 @@ export const load = (async ({ params, parent, url }) => {
     .where('article_id', '=', post.id)
     .execute();
 
+  let objectTranslationUuid: string | undefined = undefined;
+  if (post.object_id) {
+    const obj = await conn
+      .selectFrom('astronomical_object')
+      .selectAll()
+      .where('id', '=', post.object_id)
+      .executeTakeFirst();
+    if (obj) {
+      objectTranslationUuid = obj.name as string;
+    }
+  }
+
+  const translationKeys = [
+    post.title,
+    post.description,
+    post.content_md,
+    ...images.map((image) => image.alt_text)
+  ];
+  if (objectTranslationUuid) {
+    translationKeys.push(objectTranslationUuid);
+  }
+
   const dynamicTranslations = await gatherTranslations(
-    [
-      post.title,
-      post.description,
-      post.content_md,
-      ...images.map((image) => image.alt_text)
-    ],
+    translationKeys,
     parentData.selectedLang
   );
 
@@ -51,6 +68,7 @@ export const load = (async ({ params, parent, url }) => {
       exposures,
       equipment
     },
+    objectTranslationUuid,
     dynamicTranslations,
     meta: {
       title: dynamicTranslations[post.title],
