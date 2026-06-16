@@ -38,6 +38,7 @@ export interface ArticleEquipment {
 }
 
 export interface AstronomicalObject {
+  created_at: Generated<Date | null>;
   id: unknown;
   name: unknown;
 }

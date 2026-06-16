@@ -82,5 +82,44 @@ export default {
         message: 'error'
       };
     }
+  }),
+  delete: loggedProcedure.POST.input(
+    z.object({
+      id: z.string()
+    })
+  ).query(async ({ input }) => {
+    const used = await conn
+      .selectFrom('article')
+      .select('id')
+      .where('object_id', '=', input.id)
+      .executeTakeFirst();
+    if (used) {
+      return {
+        status: false,
+        message: 'object_in_use'
+      };
+    }
+    const obj = await conn
+      .selectFrom('astronomical_object')
+      .select('name')
+      .where('id', '=', input.id)
+      .executeTakeFirst();
+    if (obj) {
+      const trx = await conn.startTransaction().execute();
+      try {
+        await trx.deleteFrom('astronomical_object').where('id', '=', input.id).execute();
+        await trx
+          .deleteFrom('translations')
+          .where('key', '=', obj.name as string)
+          .execute();
+        await trx.commit().execute();
+        return { status: true };
+      } catch (err) {
+        await trx.rollback().execute();
+        console.error(err);
+        return { status: false, message: 'internal' };
+      }
+    }
+    return { status: false, message: 'not_found' };
   })
 };

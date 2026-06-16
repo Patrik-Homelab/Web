@@ -6,7 +6,11 @@ import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
   const equipmentData = await conn.selectFrom('equipment').selectAll().execute();
-  const objectsData = await conn.selectFrom('astronomical_object').selectAll().execute();
+  const objectsData = await conn
+    .selectFrom('astronomical_object')
+    .selectAll()
+    .orderBy('created_at', 'desc')
+    .execute();
 
   const baseData = {
     equipment: equipmentData,

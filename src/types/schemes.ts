@@ -29,38 +29,90 @@ export const articleSchema = (lang: keyof typeof languages) =>
     equipment: z.array(z.number()),
     object_id: z
       .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : String(val)),
+        (val) =>
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+            ? null
+            : String(val),
         z.string().nullable()
       )
       .optional(),
     ra: z
-      .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
-        z.number().nullable()
-      )
+      .preprocess((val) => {
+        if (
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+        ) {
+          return null;
+        }
+        const num = Number(val);
+        return isNaN(num) ? null : num;
+      }, z.number().nullable())
       .optional(),
     dec: z
-      .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
-        z.number().nullable()
-      )
+      .preprocess((val) => {
+        if (
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+        ) {
+          return null;
+        }
+        const num = Number(val);
+        return isNaN(num) ? null : num;
+      }, z.number().nullable())
       .optional(),
     fov_width: z
-      .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
-        z.number().nullable()
-      )
+      .preprocess((val) => {
+        if (
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+        ) {
+          return null;
+        }
+        const num = Number(val);
+        return isNaN(num) ? null : num;
+      }, z.number().nullable())
       .optional(),
     fov_height: z
-      .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
-        z.number().nullable()
-      )
+      .preprocess((val) => {
+        if (
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+        ) {
+          return null;
+        }
+        const num = Number(val);
+        return isNaN(num) ? null : num;
+      }, z.number().nullable())
       .optional(),
     fov_rotation: z
-      .preprocess(
-        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
-        z.number().nullable()
-      )
+      .preprocess((val) => {
+        if (
+          val === '' ||
+          val === null ||
+          val === undefined ||
+          val === 'null' ||
+          val === 'undefined'
+        ) {
+          return null;
+        }
+        const num = Number(val);
+        return isNaN(num) ? null : num;
+      }, z.number().nullable())
       .optional()
   });

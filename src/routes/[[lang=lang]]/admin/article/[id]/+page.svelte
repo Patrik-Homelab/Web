@@ -11,18 +11,19 @@
   import {
     Button,
     Form,
+    Select as FormSelect,
     GeminiInput,
     ImageManager,
     Input,
     Markdown,
-    TextArea,
-    Select as FormSelect
+    TextArea
   } from '$/components/newForm';
   import DataProvider from '$/components/newForm/DataProvider.svelte';
   import type { FormAction } from '$/components/newForm/Form.svelte';
   import LanguageSelector from '$/components/newForm/LanguageSelector.svelte';
   import { Table, TBody, Td, Th, THead, Tr } from '$/components/table';
   import { Card, Icon } from '$/components/utility';
+  import { API } from '$/lib/api';
   import { formatDate, SwalAlert } from '$/lib/functions';
   import { languages, resolveError, transformIntoLanguagable } from '$/lib/lang';
   import { getState } from '$/lib/state.svelte';
@@ -33,10 +34,11 @@
   import { page } from '$app/state';
   import type { Selectable } from 'kysely';
   import type { PageProps, SubmitFunction } from './$types';
-  import { API } from '$/lib/api';
+
+  import Swal from 'sweetalert2';
 
   const { data }: PageProps = $props();
-  const { dynamicTranslations } = data;
+  const dynamicTranslations = $derived(data.dynamicTranslations);
 
   const _state = getState();
   const _lang = $derived(_state.lang.admin.article.form);
@@ -46,7 +48,7 @@
   const articleData = $state(
     transformIntoLanguagable(
       data.article as unknown as Record<string, unknown>,
-      dynamicTranslations,
+      data.dynamicTranslations,
       MultiLangKeys
     ) as Record<string, any>
   );
@@ -99,13 +101,15 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   let newObjectCs = $state('');
   let newObjectEn = $state('');
 
-  let ra = $state<number | null>((data.article as any).ra ?? null);
-  let dec = $state<number | null>((data.article as any).dec ?? null);
-  let fovWidth = $state<number | null>((data.article as any).fov_width ?? null);
-  let fovHeight = $state<number | null>((data.article as any).fov_height ?? null);
-  let fovRotation = $state<number | null>((data.article as any).fov_rotation ?? null);
+  let ra = $state(data.article.ra ?? undefined) as number | undefined;
+  let dec = $state(data.article.dec ?? undefined) as number | undefined;
+  let fovWidth = $state(data.article.fov_width ?? undefined) as number | undefined;
+  let fovHeight = $state(data.article.fov_height ?? undefined) as number | undefined;
+  let fovRotation = $state(data.article.fov_rotation ?? undefined) as number | undefined;
 
   let isResolving = $state(false);
+  let showPlatesolveModal = $state(false);
+  let platesolveText = $state('');
 
   const searchAstroDb = async (ev: MouseEvent) => {
     ev.preventDefault();
@@ -161,70 +165,6 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
     }
   };
 
-  const calculateFov = (ev: MouseEvent) => {
-    ev.preventDefault();
-    const telescopes = data.equipment.filter(
-      (item: any) => equipment.includes(item.id) && item.type_id === 1
-    );
-    const cameras = data.equipment.filter(
-      (item: any) => equipment.includes(item.id) && item.type_id === 2
-    );
-
-    if (telescopes.length === 0 || cameras.length === 0) {
-      SwalAlert({
-        title:
-          _state.selectedLang === 'cs'
-            ? 'Pro výpočet musíte mít vybraný alespoň 1 dalekohled a 1 kameru!'
-            : 'You must have at least 1 telescope and 1 camera selected for calculation!',
-        icon: 'warning'
-      });
-      return;
-    }
-
-    // Look for telescope and camera that have all required specifications
-    const telescope = telescopes.find(
-      (t: any) => t.focal_length !== null && t.focal_length !== undefined
-    );
-    const camera = cameras.find(
-      (c: any) =>
-        c.pixel_size !== null &&
-        c.pixel_size !== undefined &&
-        c.sensor_width !== null &&
-        c.sensor_width !== undefined &&
-        c.sensor_height !== null &&
-        c.sensor_height !== undefined
-    );
-
-    if (!telescope || !camera) {
-      SwalAlert({
-        title:
-          _state.selectedLang === 'cs'
-            ? 'Mezi vybraným vybavením nebyl nalezen žádný dalekohled nebo kamera s vyplněnými technickými specifikacemi (ohnisková délka, velikost pixelu nebo rozlišení senzoru)!'
-            : 'Among the selected equipment, no telescope or camera was found with technical specifications filled (focal length, pixel size, or sensor resolution)!',
-        icon: 'warning'
-      });
-      return;
-    }
-
-    const fovW =
-      ((camera.sensor_width! * camera.pixel_size!) / (1000 * telescope.focal_length!)) *
-      57.2957795;
-    const fovH =
-      ((camera.sensor_height! * camera.pixel_size!) / (1000 * telescope.focal_length!)) *
-      57.2957795;
-
-    fovWidth = parseFloat(fovW.toFixed(3));
-    fovHeight = parseFloat(fovH.toFixed(3));
-
-    SwalAlert({
-      title:
-        _state.selectedLang === 'cs'
-          ? `Zorné pole (FOV) bylo vypočítáno pomocí ${telescope.name} a ${camera.name}: ${fovWidth}° × ${fovHeight}°`
-          : `Field of View (FOV) calculated using ${telescope.name} and ${camera.name}: ${fovWidth}° × ${fovHeight}°`,
-      icon: 'success'
-    });
-  };
-
   const addNewObject = async (ev: MouseEvent) => {
     ev.preventDefault();
     if (!newObjectCs || !newObjectEn) {
@@ -267,6 +207,148 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       console.error(err);
       SwalAlert({
         title: _state.selectedLang === 'cs' ? 'Chyba serveru.' : 'Server error.',
+        icon: 'error'
+      });
+    }
+  };
+
+  const deleteObject = async (id: string, name: string) => {
+    const confirm = await Swal.fire({
+      title:
+        _state.selectedLang === 'cs'
+          ? `Opravdu smazat objekt "${name}"?`
+          : `Are you sure you want to delete "${name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: _state.selectedLang === 'cs' ? 'Ano, smazat' : 'Yes, delete',
+      cancelButtonText: _state.selectedLang === 'cs' ? 'Zrušit' : 'Cancel'
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      const res = await API.astronomical_object.delete({ id });
+      if (res && res.status) {
+        SwalAlert({
+          title:
+            _state.selectedLang === 'cs'
+              ? 'Objekt byl smazán.'
+              : 'Object has been deleted.',
+          icon: 'success'
+        });
+        await invalidateAll();
+      } else {
+        const errorMsg =
+          res.message === 'object_in_use'
+            ? _state.selectedLang === 'cs'
+              ? 'Nelze smazat objekt, který je přiřazen k nějakému článku.'
+              : 'Cannot delete an object that is currently assigned to an article.'
+            : _state.selectedLang === 'cs'
+              ? 'Chyba při mazání objektu.'
+              : 'Failed to delete object.';
+        Swal.fire({
+          title: errorMsg,
+          icon: 'error'
+        });
+      }
+    } catch {
+      SwalAlert({
+        title: _state.selectedLang === 'cs' ? 'Chyba serveru.' : 'Server error.',
+        icon: 'error'
+      });
+    }
+  };
+
+  const parseAndFillPlatesolve = (ev: MouseEvent) => {
+    ev.preventDefault();
+    if (!platesolveText.trim()) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Zadejte prosím text z Platesolve.'
+            : 'Please enter Platesolve text.',
+        icon: 'warning'
+      });
+      return;
+    }
+
+    const hmsToDeg = (h: number, m: number, s: number) =>
+      (h + m / 60.0 + s / 3600.0) * 15.0;
+    const dmsToDeg = (dStr: string, m: number, s: number) => {
+      const sign = dStr.includes('-') ? -1.0 : 1.0;
+      const dAbs = Math.abs(parseFloat(dStr));
+      return sign * (dAbs + m / 60.0 + s / 3600.0);
+    };
+    const parseFov = (fovStr: string) => {
+      const match = fovStr.match(/(\d+)d\s+(\d+)'\s+([\d.]+)"/);
+      if (match) {
+        const d = parseFloat(match[1]);
+        const m = parseFloat(match[2]);
+        const s = parseFloat(match[3]);
+        return d + m / 60.0 + s / 3600.0;
+      }
+      return null;
+    };
+
+    const centerRegex =
+      /Image center\s*\.+\s*RA:\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+Dec:\s*([+-]?\s*[\d.]+)\s+([\d.]+)\s+([\d.]+)/;
+    const centerMatch = platesolveText.match(centerRegex);
+
+    const fovRegex = /Field of view\s*\.+\s*([^x\n]+)\s*x\s*([^\n]+)/;
+    const fovMatch = platesolveText.match(fovRegex);
+
+    const rotRegex = /Rotation\s*\.+\s*([+-]?[\d.]+)\s*deg/;
+    const rotMatch = platesolveText.match(rotRegex);
+
+    let parsed = false;
+
+    if (centerMatch) {
+      const raH = parseFloat(centerMatch[1]);
+      const raM = parseFloat(centerMatch[2]);
+      const raS = parseFloat(centerMatch[3]);
+      const decDStr = centerMatch[4].replace(/\s+/g, '');
+      const decM = parseFloat(centerMatch[5]);
+      const decS = parseFloat(centerMatch[6]);
+      ra = parseFloat(hmsToDeg(raH, raM, raS).toFixed(5));
+      dec = parseFloat(dmsToDeg(decDStr, decM, decS).toFixed(5));
+      parsed = true;
+    }
+
+    if (fovMatch) {
+      const wVal = parseFov(fovMatch[1]);
+      const hVal = parseFov(fovMatch[2]);
+      if (wVal !== null && hVal !== null) {
+        fovWidth = parseFloat(wVal.toFixed(5));
+        fovHeight = parseFloat(hVal.toFixed(5));
+        parsed = true;
+      }
+    }
+
+    if (rotMatch) {
+      fovRotation = parseFloat(parseFloat(rotMatch[1]).toFixed(3));
+      parsed = true;
+    }
+
+    if (parsed) {
+      SwalAlert({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Hodnoty byly úspěšně naimportovány!'
+            : 'Values successfully imported!',
+        icon: 'success'
+      });
+      showPlatesolveModal = false;
+      platesolveText = '';
+    } else {
+      Swal.fire({
+        title:
+          _state.selectedLang === 'cs'
+            ? 'Nepodařilo se nalézt žádné platné Platesolve hodnoty.'
+            : 'Could not find any valid Platesolve values.',
+        text:
+          _state.selectedLang === 'cs'
+            ? 'Zkontrolujte formát zadaného textu.'
+            : 'Please check the format of the entered text.',
         icon: 'error'
       });
     }
@@ -362,7 +444,21 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       {/if}
     </Card>
     <Card>
-      {@render subTitle(_lang.target.title)}
+      <div
+        class="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+      >
+        {@render subTitle(_lang.target.title)}
+        <BaseButton
+          onclick={(ev) => {
+            ev.preventDefault();
+            showPlatesolveModal = true;
+          }}
+          class="flex items-center justify-center gap-1 rounded bg-blue-600 px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white hover:bg-blue-700"
+        >
+          <Icon name="bi-file-earmark-text" />
+          {_state.selectedLang === 'cs' ? 'Importovat Platesolve' : 'Import Platesolve'}
+        </BaseButton>
+      </div>
 
       <FormSelect name="object_id" label={_lang.target.object}>
         <option value="">{_lang.target.none}</option>
@@ -371,6 +467,9 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
             {(dynamicTranslations as Record<string, Record<string, string>>)[
               _state.selectedLang
             ][obj.name as string]}
+            {#if obj.created_at}
+              ({formatDate(obj.created_at, true)})
+            {/if}
           </option>
         {/each}
       </FormSelect>
@@ -416,6 +515,44 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
           </div>
         </div>
       </div>
+      <div class="mt-4 flex flex-col gap-2">
+        <h4 class="text-lg font-bold">
+          {_state.selectedLang === 'cs'
+            ? 'Existující objekty (kliknutím na koš smažete):'
+            : 'Existing Objects (click trash to delete):'}
+        </h4>
+        <div
+          class="bg-background/30 flex max-h-[160px] flex-wrap gap-2 overflow-y-auto rounded border border-gray-700 p-2"
+        >
+          {#each data.objects as obj (obj.id)}
+            <div
+              class="border-text bg-background/50 flex items-center gap-2 rounded-md border px-2 py-1 text-sm font-semibold"
+            >
+              <span>
+                {(dynamicTranslations as Record<string, Record<string, string>>)[
+                  _state.selectedLang
+                ][obj.name as string]}
+                {#if obj.created_at}
+                  <span class="text-text-muted text-xs font-normal">
+                    ({formatDate(obj.created_at, true)})
+                  </span>
+                {/if}
+              </span>
+              <Icon
+                onclick={() =>
+                  deleteObject(
+                    obj.id as string,
+                    (dynamicTranslations as Record<string, Record<string, string>>)[
+                      _state.selectedLang
+                    ][obj.name as string]
+                  )}
+                name="bi-trash-fill"
+                class="cursor-pointer text-red-500 hover:text-red-600"
+              />
+            </div>
+          {/each}
+        </div>
+      </div>
 
       <DataProvider name="ra" bind:value={ra} />
       <DataProvider name="dec" bind:value={dec} />
@@ -424,55 +561,70 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       <DataProvider name="fov_rotation" bind:value={fovRotation} />
 
       <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Input
-          name="ra"
-          label={_lang.target.ra}
-          type="number"
-          step="any"
-          placeholder="e.g. 83.82"
-        />
-        <Input
-          name="dec"
-          label={_lang.target.dec}
-          type="number"
-          step="any"
-          placeholder="e.g. -5.39"
-        />
+        <FormItem for="ra" label={_lang.target.ra} variant="small">
+          <BaseInput
+            id="ra"
+            type="number"
+            step="any"
+            placeholder="e.g. 83.82"
+            bind:value={ra}
+          />
+        </FormItem>
+        <FormItem for="dec" label={_lang.target.dec} variant="small">
+          <BaseInput
+            id="dec"
+            type="number"
+            step="any"
+            placeholder="e.g. -5.39"
+            bind:value={dec}
+          />
+        </FormItem>
       </div>
 
-      <div class="mt-6 flex items-center justify-between border-t border-gray-700 pt-4">
-        <h4 class="text-lg font-bold">{_lang.target.title}</h4>
-        <BaseButton
-          onclick={calculateFov}
-          class="flex items-center gap-1 bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700"
-        >
-          <Icon name="bi-calculator" />
-          {_lang.target.calculateFov}
-        </BaseButton>
-      </div>
-
-      <div class="mt-2 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Input
-          name="fov_width"
+      <div class="mt-2 grid grid-cols-1 items-end gap-4 md:grid-cols-3">
+        <FormItem
+          class="flex-1"
+          for="fov_width"
           label={_lang.target.width}
-          type="number"
-          step="any"
-          placeholder="e.g. 1.5"
-        />
-        <Input
-          name="fov_height"
+          variant="small"
+        >
+          <BaseInput
+            id="fov_width"
+            type="number"
+            step="any"
+            placeholder="e.g. 1.5"
+            bind:value={fovWidth}
+          />
+        </FormItem>
+        <FormItem
+          class="flex-1"
+          for="fov_height"
           label={_lang.target.height}
-          type="number"
-          step="any"
-          placeholder="e.g. 1.5"
-        />
-        <Input
-          name="fov_rotation"
+          variant="small"
+        >
+          <BaseInput
+            id="fov_height"
+            name="fov_height"
+            type="number"
+            step="any"
+            placeholder="e.g. 1.5"
+            bind:value={fovHeight}
+          />
+        </FormItem>
+        <FormItem
+          class="flex-1"
+          for="fov_rotation"
           label={_lang.target.rotation}
-          type="number"
-          step="any"
-          placeholder="e.g. 45"
-        />
+          variant="small"
+        >
+          <BaseInput
+            id="fov_rotation"
+            type="number"
+            step="any"
+            placeholder="e.g. 45"
+            bind:value={fovRotation}
+          />
+        </FormItem>
       </div>
     </Card>
     <Card>
@@ -613,4 +765,59 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       </Button>
     </div>
   </Form>
+
+  {#if showPlatesolveModal}
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    >
+      <div
+        class="flex w-full max-w-xl flex-col gap-4 rounded-lg border border-gray-700 bg-gray-900 p-6 shadow-2xl"
+      >
+        <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+          <h3 class="text-xl font-bold text-white">
+            {_state.selectedLang === 'cs'
+              ? 'Importovat výstup z Platesolve'
+              : 'Import Platesolve Output'}
+          </h3>
+          <button
+            type="button"
+            onclick={() => {
+              showPlatesolveModal = false;
+              platesolveText = '';
+            }}
+            class="text-gray-400 transition-colors duration-200 hover:text-white"
+          >
+            <Icon name="bi-x-lg" class="text-xl" />
+          </button>
+        </div>
+        <p class="text-sm text-gray-400">
+          {_state.selectedLang === 'cs'
+            ? 'Vložte kompletní textový výstup z Platesolve (obsahující souřadnice středu snímku, zorné pole a rotaci).'
+            : 'Paste the complete text output from Platesolve (containing image center coordinates, field of view, and rotation).'}
+        </p>
+        <textarea
+          bind:value={platesolveText}
+          placeholder="Image center ...... RA: 21 35 46.446 Dec: +57 26 31.78&#10;Field of view ...... 2d 29' 20.7&quot; x 1d 22' 2.6&quot;&#10;Rotation ...... 62.169 deg"
+          class="bg-gray-850 focus:ring-primary h-48 w-full resize-none rounded-md border border-gray-700 p-3 font-mono text-sm text-white focus:border-transparent focus:ring-2 focus:outline-none"
+        ></textarea>
+        <div class="flex justify-end gap-2 border-t border-gray-800 pt-2">
+          <BaseButton
+            onclick={() => {
+              showPlatesolveModal = false;
+              platesolveText = '';
+            }}
+            class="rounded bg-gray-700 px-4 py-2 font-semibold text-white hover:bg-gray-600"
+          >
+            {_state.selectedLang === 'cs' ? 'Zrušit' : 'Cancel'}
+          </BaseButton>
+          <BaseButton
+            onclick={parseAndFillPlatesolve}
+            class="bg-primary hover:bg-primary/95 rounded px-4 py-2 font-semibold text-white"
+          >
+            {_state.selectedLang === 'cs' ? 'Importovat a vyplnit' : 'Import & Fill'}
+          </BaseButton>
+        </div>
+      </div>
+    </div>
+  {/if}
 </section>
