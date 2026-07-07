@@ -36,7 +36,8 @@ export default o({
     login: _,
     contact: _,
     about: _,
-    live: _
+    live: _,
+    movies: _
   }),
   adminNavigation: o({
     home: _,
@@ -255,7 +256,8 @@ export default o({
     })
   }),
   about: o({
-    title: _
+    title: _,
+    clickToExplore: _
   }),
   errors: o({
     internal: _,

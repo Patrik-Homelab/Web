@@ -42,6 +42,11 @@
       path: '/live-photo'
     },
     {
+      name: _state.lang.navigation.movies,
+      icon: 'bi-film',
+      path: '/movies'
+    },
+    {
       name: _state.lang.navigation.login,
       icon: 'bi-person-fill',
       path: '/login',

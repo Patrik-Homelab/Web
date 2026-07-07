@@ -14,7 +14,8 @@ export default lang.parse({
     login: 'Přihlášení',
     contact: 'Kontakt',
     about: 'O mně',
-    live: 'Astro Okénko'
+    live: 'Astro Okénko',
+    movies: 'Filmy'
   },
   adminNavigation: {
     home: 'Panel',
@@ -299,7 +300,8 @@ export default lang.parse({
     }
   },
   about: {
-    title: 'Zde najdeš něco málo o mně'
+    title: 'Zde najdeš něco málo o mně',
+    clickToExplore: 'Klikni pro prozkoumání'
   },
   errors: {
     internal: 'Něco se nepovedlo, zkus to prosím zachvíli znova.',

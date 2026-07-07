@@ -14,7 +14,8 @@ export default lang.parse({
     login: 'Login',
     contact: 'Contact',
     about: 'About Me',
-    live: 'Astro Window'
+    live: 'Astro Window',
+    movies: 'Movies'
   },
   adminNavigation: {
     home: 'Dashboard',
@@ -299,7 +300,8 @@ export default lang.parse({
     }
   },
   about: {
-    title: 'Here you will find something about me'
+    title: 'Here you will find something about me',
+    clickToExplore: 'Click to explore'
   },
   errors: {
     internal: 'Internal Server Error, please try again later.',
