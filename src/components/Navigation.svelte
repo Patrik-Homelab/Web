@@ -223,9 +223,9 @@
 </svelte:head>
 
 <!-- Floating Glassmorphic Header Container -->
-<header class="fixed top-4 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 px-2 md:px-4">
+<header class="fixed top-4 left-1/2 z-50 w-max max-w-[95%] -translate-x-1/2 px-2">
   <div
-    class="flex h-16 w-full items-center justify-between rounded-full border border-white/10 bg-slate-950/60 px-6 shadow-2xl backdrop-blur-xl transition-all duration-300"
+    class="flex h-16 items-center justify-between gap-4 rounded-full border border-white/10 bg-slate-950/60 px-4 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:gap-6 sm:px-6"
   >
     <!-- Left: Brand / Title -->
     <a
