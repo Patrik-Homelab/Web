@@ -70,11 +70,11 @@
 ></canvas>
 
 <section
-  class="text-text font-ubuntu flex h-full min-h-screen w-full min-w-screen flex-col text-lg lg:text-xl"
+  class="text-text font-ubuntu flex h-full min-h-screen w-full min-w-screen flex-col bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/30 via-slate-950 to-black text-lg lg:text-xl"
 >
   <Navigation />
 
-  <main class="flex flex-1 flex-col">
+  <main class="flex flex-1 flex-col pt-24 pb-8 md:pt-28">
     {@render children()}
   </main>
 
