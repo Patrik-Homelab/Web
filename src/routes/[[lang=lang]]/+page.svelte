@@ -37,7 +37,7 @@
 </script>
 
 <div
-  class="mx-auto my-auto flex w-[90%] max-w-5xl flex-col items-center justify-center gap-10 py-8 lg:flex-row lg:gap-16 xl:gap-24"
+  class="mx-auto flex w-[90%] max-w-5xl flex-col items-center justify-center gap-10 pt-10 pb-12 md:pt-16 lg:flex-row lg:gap-16 xl:gap-24"
 >
   <!-- Left Side: Profile Picture with Orbital Rings -->
   <div class="relative flex items-center justify-center">

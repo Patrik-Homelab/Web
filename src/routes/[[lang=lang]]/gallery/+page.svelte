@@ -195,7 +195,7 @@
   </a>
 {/snippet}
 
-<section class="flex h-full flex-1 flex-col px-4 py-6">
+<section class="flex h-full flex-1 flex-col px-4 pt-10 pb-6 md:pt-16">
   <H1 class="mx-auto mb-6 text-center">{_lang.title}</H1>
 
   <!-- View Mode Switcher: Segmented Capsule Control -->

@@ -140,7 +140,9 @@
   ></script>
 </svelte:head>
 
-<section class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-6">
+<section
+  class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
+>
   <!-- Back Button Link -->
   <a
     href="/{_state.selectedLang}/gallery"

@@ -44,7 +44,7 @@
   });
 </script>
 
-<section class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6">
+<section class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pt-10 pb-6 md:pt-16">
   <!-- Page Header -->
   <div class="flex flex-col gap-2">
     <H1 class="text-left font-bold">{appState.lang.live_photo.title}</H1>

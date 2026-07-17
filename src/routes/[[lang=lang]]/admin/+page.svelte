@@ -30,7 +30,7 @@
   }
 </script>
 
-<section class="flex h-full flex-1 flex-col md:flex-row">
+<section class="flex h-full flex-1 flex-col pt-14 pb-6 md:flex-row md:pt-20">
   <div class="flex flex-1 flex-col items-center">
     <H1><Icon name="bi-bar-chart" /> {_state.lang.admin.main.stats}</H1>
     <h3><span class="font-bold">{_state.lang.admin.main.today}</span>: {data.today}</h3>

@@ -21,7 +21,7 @@
   const _dynamicLang = $derived(data.dynamicTranslations);
 </script>
 
-<section class="mx-auto flex w-full flex-1 p-4 lg:w-[90%] xl:w-[80%]">
+<section class="mx-auto flex w-full flex-1 p-4 pt-14 pb-6 md:pt-20 lg:w-[90%] xl:w-[80%]">
   <div class="border-text flex w-full flex-col items-start rounded-md border-2 p-4">
     <div class="flex w-full items-center justify-between">
       <H1 class="mb-4">{_lang.title}</H1>

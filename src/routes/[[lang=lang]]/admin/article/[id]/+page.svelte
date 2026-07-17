@@ -398,7 +398,7 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   <h2 class="text-2xl font-bold lg:text-3xl">{text}</h2>
 {/snippet}
 
-<section class="mx-auto flex w-full flex-1 p-4 lg:w-[90%] xl:w-[80%]">
+<section class="mx-auto flex w-full flex-1 p-4 pt-14 pb-6 md:pt-20 lg:w-[90%] xl:w-[80%]">
   <Form
     schema={articleSchema(_state.selectedLang as keyof typeof languages)}
     multiLang={true}
