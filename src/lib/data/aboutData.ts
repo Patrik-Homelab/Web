@@ -3,6 +3,7 @@ export interface TimelineEvent {
   title: string;
   desc: string;
   image?: string;
+  thumbnail?: string;
 }
 
 export interface Movie {
@@ -61,22 +62,29 @@ export const aboutCards: CardData[] = [
         tags: ['VŠB-TUO', 'Informatika'],
         timeline: [
           {
+            year: 'Před rokem 2018',
+            title: 'Rozcestí: Volba chemie vs. elektrotechnika',
+            desc: 'Od základní školy mě velmi bavila matematika a chemie, což mě postavilo před těžké rozhodování, kterou střední školu zvolit. Můj děda mi tehdy dal zásadní radu: podat si přihlášku na obě školy, a pokud mě vezmou na obě, vybrat si tu náročnější. Podal jsem si tedy přihlášky na Střední školu chemickou akademika Heyrovského v Ostravě a na dvě elektrotechnické školy v Havířově. Když dorazily výsledky přijímacího řízení, na elektrotechnice jsem skončil na 13. místě z 30 přijímaných studentů. Na chemické škole jsem se umístil na 57. místě ze 60 – od čáry neúspěchu mě dělilo jen pár desetin bodu, takže jsem se dostal jen tak tak. Vybral jsem si chemii s vědomím, že pokročilé chemické laboratoře a pokusy si doma sám nezařídím, což z ní dělalo jedinečnou příležitost ke vzdělávání. Tím začal můj příběh na chemické střední škole.'
+          },
+          {
             year: '2018 - 2022',
-            title: 'Střední průmyslová škola chemická',
-            desc: 'Po nástupu jsem zjistil, že většina spolužáků má mnohem lepší základy chemie než já. Postupem let mě laboratoře velmi chytly, i když organická chemie byla oříšek. Během distanční výuky při Covidu-19 se moje rutina zúžila na probuzení, připojení na Teams a hraní her. Školu jsem úspěšně zakončil maturitou a rozhodl se jít studovat informatiku na VŠB-TUO, abych se naučil věci, ke kterým bych sám doma nenašel motivaci.',
-            image: ''
+            title: 'Střední škola: Chemie, laboratoře a covidová výzva',
+            desc: 'Hned v prvním ročníku na střední škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy chemie než já, a byl jsem poměrně pozadu, přičemž největší obtíží pro mě byla organická chemie. Postupně jsem během let zjišťoval, že laboratoře mě sice baví, ale chemie jako celek není úplně to, co mě dlouhodobě naplňuje. Významný dopad na mé studium měla pandemie Covid-19, která zcela rozbila běžnou rutinu; online výuka většinou znamenala ráno se jen připojit k systému a jít buď dál spát, nebo hrát hry s kamarády. Školu jsem však úspěšně dokončil a získal maturitu. Rozhodl jsem se pokračovat na vysokou školu – hlavním důvodem kromě titulu bylo to, že mě akademické prostředí donutí naučit se komplexní věci, ke kterým bych doma sám nenašel dostatek vnitřní motivace. Podal jsem přihlášky na VUT v Brně (obor Informační technologie) a na VŠB v Ostravě (obor Informatika). Na VUT mě kvůli systému srovnávacích testů nepřijali, a přestože mě později kontaktovali ohledně účasti v dalším kole, rozhodl jsem se nastoupit na VŠB.'
           },
           {
             year: '2022 - 2025',
-            title: 'Bakalářské studium Informatiky',
-            desc: 'Studoval jsem na Fakultě elektrotechniky a informatiky VŠB-TUO. Naučil jsem se nízkoúrovňové programování v C/C++, práci s pamětí, reprezentaci dat, základy C#, Pythonu a relačních databází. Své studium jsem úspěšně zakončil obhajobou bakalářské práce na téma „Reaktivní Frontend pro elearningový systém“ (přepis open-source systému Kelvin do Vue 3 a legacy frontendu ve Svelte 3) a získal titul Bc.',
-            image: ''
+            title: 'Bakalářské studium: Informatika na VŠB-FEI a projekt Kelvin',
+            desc: 'Nastoupil jsem na Fakultě elektrotechniky a informatiky (FEI) na VŠB v Ostravě ke studiu oboru Informatika. Své tříleté bakalářské studium jsem úspěšně zakončil obhajobou bakalářské práce na téma „Reaktivní Frontend pro elearningový systém“. V rámci této práce jsem se podílel na rozvoji školního informačního systému Kelvin. Pokrok byl v průběhu semestrů občas zpomalen specifickou povahou schvalovacích procesů v rámci akademického open-source projektu, kde se na revize odevzdané práce čekalo i několik týdnů. I přes tyto časové komplikace jsem bakalářskou práci úspěšně obhájil, prošel státní závěrečnou zkouškou a získal titul bakalář.'
           },
           {
             year: '2025 - Současnost',
-            title: 'Magisterské studium Informatiky',
-            desc: 'Pokračuji v navazujícím inženýrském studiu na VŠB-TUO se zaměřením na digitální zpracování obrazu a počítačovou grafiku. V prvním ročníku jsem úspěšně obhájil Semestrální projekt „Klasifikace Astronomických fotografií“, který analyzuje a hodnotí raw snímky z teleskopu. Na tuto práci plánuji navázat svou Diplomovou prací s využitím konvolučních neuronových sítí, která bude plně open-source.',
-            image: ''
+            title: 'Magisterské studium: Počítačová grafika a akademické výzvy',
+            desc: 'Magisterské studium na VŠB pro mě bylo logickým krokem – věděl jsem, že mi další dva roky studia rozšíří obzory a umožní mi získat inženýrský titul. Zvolil jsem si obor Informatika, který přímo navazuje na bakalářský program, a jako své užší zaměření jsem si vybral Digitální zpracování obrazu a počítačovou grafiku. S masivním nástupem moderních AI nástrojů do výuky však studium získalo novou dynamiku; AI sice mnoho akademických úkolů zjednodušuje, ale zároveň je kvůli ní těžší udržet si motivaci řešit složité problémy zcela samostatně a pronikat do nich hluboko pod povrch. První rok studia jsem úspěšně zvládl a zakončil ho Semestrálním projektem na téma „Klasifikace Astronomických fotografií“. Navrhl jsem v něm systém, který analyzuje surové snímky z nočního pozorování a na základě statistického vyhodnocení a normálního rozdělení dat je třídí, čímž pomáhá eliminovat nekvalitní snímky znehodnocené mraky, mlhou či atmosférickými vlivy.'
+          },
+          {
+            year: 'Současnost - Budoucnost',
+            title: 'Diplomová práce: Pokročilé zpracování dat v astrofotografii',
+            desc: 'Na výsledky svého semestrálního projektu bezprostředně navazuji v rámci přípravy své magisterské Diplomové práce. Celý klasifikační systém plánuji posunout na vyšší úroveň integrací pokročilých metod rozpoznávání obrazu, které budou snímky noční oblohy třídit zcela autonomně. Výsledný akademický projekt propojí teoretické znalosti z oblasti počítačové grafiky s uživatelsky definovanými kvalitativními kritérii pro čistotu dat. Cílem je úspěšné dokončení inženýrského studia a vytvoření přínosné práce, která najde uplatnění při reálném zpracování astronomických dat.'
           }
         ]
       },
@@ -87,22 +95,29 @@ export const aboutCards: CardData[] = [
         tags: ['VŠB-TUO', 'IT'],
         timeline: [
           {
+            year: 'Before 2018',
+            title: 'The Fork in the Road: Choosing Chemistry vs. Electrical Engineering',
+            desc: 'Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between which high school to choose. My grandfather gave me a pivotal piece of advice: apply to both schools, and if you get accepted to both, choose the more demanding one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika Heyrovského) and two electrical engineering schools in Havířov. When the results of the admissions process came in, I ranked 13th out of 30 accepted students for electrical engineering. On the other hand, I placed 57th out of 60 for the chemistry school—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn\'t easily replicate advanced chemistry labs and experiments at home, it made for a unique educational opportunity. That is how my story at the chemistry high school began.'
+          },
+          {
             year: '2018 - 2022',
-            title: 'High School of Applied Chemistry',
-            desc: 'Upon starting, I found out that most classmates had far better chemistry foundations than me. Over the years, I grew to love labs, although organic chemistry was a nightmare. When Covid-19 forced us into online classes, my routine shifted to waking up, connecting, and gaming. I successfully graduated with a maturity certificate and decided to head to university to study computer science, hoping to challenge myself with subjects I wouldn\'t motivate myself to study at home.',
-            image: ''
+            title: 'High School: Chemistry, Laboratories, and the Covid Challenge',
+            desc: 'Upon entering my first year of high school, I quickly realized that most of my peers had much more advanced chemistry foundations than I did, and I found myself quite far behind, with organic chemistry being my biggest hurdle. Over the years, I gradually realized that while the laboratory sessions were fun, chemistry as a whole was not entirely what fulfilled me in the long run. The Covid-19 pandemic also had a significant impact on my studies, completely disrupting my routine; online learning usually meant waking up, logging into the system, and either going right back to sleep or playing games with friends. However, I successfully finished school and passed my graduation exam (maturita). I decided to continue on to university—the main reason, besides the degree, was that the academic environment would force me to learn complex topics for which I wouldn\'t find enough inner motivation to study alone at home. I submitted applications to VUT in Brno (Information Technology) and VŠB in Ostrava (Informatics). VUT rejected me based on their comparative entry exams system, and even though they later contacted me about participating in the next round, I decided to enroll at VŠB.'
           },
           {
             year: '2022 - 2025',
-            title: "Bachelor's Degree in Computer Science",
-            desc: 'Studied at the Faculty of Electrical Engineering and Computer Science, VŠB-TUO. I learned lower-level programming in C/C++, how programs handle memory, data representation, basic C# and Python, and relational databases. I defended my Bachelor\'s thesis, "Reactive Frontend for e-learning system" (which rewritten parts of the open-source Kelvin platform using Vue 3 and Svelte 3), and successfully graduated.',
-            image: ''
+            title: "Bachelor's Degree: Informatics at VŠB-FEI and the Kelvin Project",
+            desc: 'I enrolled at the Faculty of Electrical Engineering and Computer Science (FEI) at VŠB in Ostrava to study Informatics. I successfully completed my three-year bachelor\'s journey by defending my Bachelor\'s thesis titled "Reactive Frontend for e-learning system". As part of this thesis, I participated in the development of the school information system Kelvin. My progress throughout the semesters was occasionally slowed down by the specific nature of the approval processes within the academic open-source project, where it sometimes took several weeks to get reviews on the submitted work. Despite these time complications, I successfully defended my bachelor\'s thesis, passed my final state exams, and earned my Bachelor\'s degree.'
           },
           {
             year: '2025 - Present',
-            title: "Master's Degree in Computer Science",
-            desc: 'Continuing my Master\'s studies at VŠB-TUO, specializing in Digital Image Processing and Computer Graphics. Although studies became somewhat tedious with the rise of AI, I completed my first-year project: "Classification of Astronomical Photographs," which analyzes telescope raw frames and grades them based on stars and clouds. I plan to expand this into my Master\'s Thesis using a convolutional neural network.',
-            image: ''
+            title: "Master's Degree: Computer Graphics and Academic Challenges",
+            desc: 'Continuing on to a Master\'s degree at VŠB was a logical step for me—I knew that another two years of study would broaden my horizons and allow me to earn an engineering degree (Ing.). I chose Informatics, which directly follows the bachelor\'s program, and picked Digital Image Processing and Computer Graphics as my narrow specialization. However, with the massive influx of modern AI tools into education, the studies gained a new dynamic; while AI simplifies many academic tasks, it also makes it harder to maintain the motivation to solve complex problems entirely on one\'s own and dive deep beneath the surface. Nonetheless, I successfully managed my first year of studies and concluded it with a Semester Project on the topic "Classification of Astronomical Photographs". I designed a system that analyzes raw frames from night observations and sorts them based on statistical evaluation and normal data distribution, which helps eliminate low-quality frames ruined by clouds, mist, or atmospheric influences.'
+          },
+          {
+            year: 'Present - Future',
+            title: 'Diploma Thesis: Advanced Data Processing in Astrophotography',
+            desc: 'I am currently building directly on the results of my semester project as I prepare my Master\'s Diploma Thesis. I plan to elevate the entire classification system to a higher level by integrating advanced image recognition methods that will sort the night sky frames completely autonomously. The resulting academic project will bridge theoretical knowledge from the field of computer graphics with user-defined qualitative criteria for data purity. The goal is to successfully complete my engineering studies and create a beneficial piece of work that finds real-world application in the processing of astronomical data.'
           }
         ]
       }
@@ -126,34 +141,50 @@ export const aboutCards: CardData[] = [
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
           {
+            year: 'Před rokem 2018',
+            title: 'Rozcestí: Volba té těžší cesty',
+            desc: 'Od základní školy mě neskutečně bavila matematika a chemie, což mě postavilo před těžké rozhodování, zda jít na elektrotechnickou střední školu a vydat se cestou programování, nebo zvolit chemii. Můj děda mi tehdy dal zásadní radu: podat si přihlášku na obě a pokud mě vezmou na obě, vybrat si tu těžší. Podal jsem si tedy přihlášky na Střední školu chemickou akademika Heyrovského v Ostravě a na dvě elektrotechnické školy v Havířově. Když přišly výsledky, na elektrotechnice jsem skončil na 13. místě z 30 přijímaných. Na chemické škole jsem se umístil na 57. místě ze 60 – od čáry neúspěchu mě dělilo jen pár desetin bodu, takže jsem se dostal jen tak tak. Vybral jsem si chemii s vědomím, že pokročilé chemické laboratoře si doma nezařídím, ale programovat se můžu v klidu učit sám ve volném čase. Tím začal můj příběh na chemické střední škole.'
+          },
+          {
             year: '2016',
-            title: 'První krůčky v kódování',
-            desc: 'V 8. třídě základní školy mě začala zajímat tvorba webu. Začínal jsem s WYSIWYG Web Builderem a MS Wordem (který generoval nepořádný HTML kód). Brzy jsem se začal sám učit HTML a CSS a analyzoval stažený PHP přihlašovací systém, což nastartovalo můj zájem o PHP a backend.',
+            title: 'První jiskra: Drag-and-Drop rozvržení',
+            desc: 'Moje úplně první zkušenost s webovým vývojem začala ještě před nástupem na střední školu. Tehdy jsem začal experimentovat s jednoduchým webovým designem a strukturou stránek, přičemž jsem zkoušel klikat v drag-and-drop nástroji WYSIWYG Web Builder, abych vůbec dostal do ruky cit pro to, jak se jednotlivé prvky na obrazovce skládají k sobě.',
             image: '/images/webBuilder.jpg'
           },
           {
-            year: '2018 - 2020',
-            title: 'PHP projekty a administrační panely',
-            desc: 'Na střední škole jsem pravidelně vyvíjel v čistém PHP. Vytvořil jsem systém na administraci a SSH nasazení instancí SinusBotů. Později jsem naprogramoval rozsáhlý informační systém pro Minecraft portál SurprisePlay.eu, který spravoval tickety, úkoly pro admin tým, práva hráčů a prémiovou měnu.',
-            image: ''
-          },
-          {
-            year: '2020 - 2022',
-            title: 'Plynulost s JS, Node.js a automatizace',
-            desc: 'Učil jsem se pokročilý JavaScript s jQuery a AJAXem pro hladký chod webu. Vstoupil jsem do Node.js ekosystému a tvořil své první Discord boty pro statistiky ze hry League of Legends. Vytvořil jsem také PHP a JS webové kalkulačky pro výpočty v chemických laboratořích (Q-test a rovnice z grafu).',
-            image: ''
+            year: '2018 - 2022',
+            title: 'Tajný programátor: Středoškolské laboratoře a samostudium',
+            desc: 'Hned v prváku na chemické škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy než já a s chemií (hlavně s tou organickou) jsem docela bojoval. Postupně jsem zjišťoval, že laboratoře jsou sice fajn, ale chemie jako taková mě úplně nenaplňuje. Zlom přišel s pandemií Covid-19, která úplně rozbila běžnou rutinu – výuka se přesunula do online prostoru, což většinou znamenalo ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Já jsem ale tento čas doma využil k tomu, že jsem se začal intenzivně a tvrdohlavě učit programovat. Mezi lety 2018 a 2020 jsem se zaměřil na tvorbu svých prvních osobních webů a v letech 2020 až 2022 se mi podařilo úspěšně upevnit své programátorské základy. Střední školu jsem sice úspěšně odmaturoval, ale věděl jsem, že chci jít dál cestou IT.'
           },
           {
             year: '2022',
-            title: 'Fullstack, SvelteKit a DiscordJS',
-            desc: 'Seznámil jsem se s Reactem/Next.js při pomoci kamarádovi s projektem hostingu, ale React mi k srdci nepřirostl. Narazil jsem však na framework SvelteKit. Zamiloval jsem si jeho kompilovaný a přehledný styl a začal v něm dělat všechny své projekty, jako je např. GameRealms Wiki. Dále jsem vyvinul LoL bota „Miňonka“ ve verzi 3.',
-            image: ''
+            title: 'Rozšiřování ekosystému: DiscordJS a SvelteKit',
+            desc: 'Tento rok byl pro můj technologický stack klíčový, protože jsem se posunul od úplných základních stavebních bloků k modernímu javascriptovému ekosystému. Výrazně jsem rozšířil své obzory, když jsem kompletně pronikl do **SvelteKit** a začal vyvíjet vlastní automatizační boty pomocí **DiscordJS**.'
+          },
+          {
+            year: '2022 - 2025',
+            title: 'Akademický hluboký ponor: Bakalářské studium Informatiky',
+            desc: 'Abych se donutil studovat i komplexnější témata, ke kterým bych sám doma nenašel dostatek vnitřní motivace, rozhodl jsem se pro vysokou školu. Podal jsem si přihlášku na IT na VUT v Brně a na Informatiku na VŠB v Ostravě. Na VUT mě kvůli srovnávacím testům nevzali, a přestože mě později zvali do dalšího kola, zvolil jsem VŠB - FEI. Studium jsem zakončil bakalářskou prací na téma *„Reaktivní Frontend pro elearningový systém“*, kde bylo mým cílem přepsat open-source školní systém **Kelvin** do reaktivního frontendu. Konkrétně šlo o přepis komponent z legacy Svelte 3 do **Vue 3**. I když byl vývoj kvůli open-source povaze projektu pomalý – po vytvoření Pull Requestu jsem často čekal týden až dva na code review, než jsem mohl pokračovat dál – práci jsem úspěšně obhájil, složil státnice a získal titul bakalář.'
+          },
+          {
+            year: '2025',
+            title: 'Profesní skok: Stáž v Profiq a CI/CD pipeline',
+            desc: 'Hned po státnicích na bakaláři jsem udělal svůj první velký krok do praxe a nastoupil jako stážista do firmy **Profiq.com**. Toto firemní prostředí mě obrovsky posunulo dopředu jak technicky, tak v oblasti týmové spolupráce. Získal jsem praktické zkušenosti s **React.JS** a **Google Firebase**, naučil se fungovat v agilním týmu za použití Slacku a GitLabu, a hlavně jsem se poprvé setkal s produkčním **CI/CD deployem**. Tento automatizovaný přístup se mi zalíbil natolik, že ho od té doby aplikuji na GitHubu u všech svých osobních projektů.'
           },
           {
             year: '2025 - Současnost',
-            title: 'Stáž Profiq, Rust & Tauri',
-            desc: 'Po bakalářských státnicích jsem nastoupil na stáž do firmy Profiq.com, kde jsem pracoval s React.js, Firebase, Gitlabem a CI/CD pipelines. Během magisterského studia jsem se naučil programovat v jazyce Rust a v kombinaci se SvelteKitem a Tauri nyní vyvíjím desktopové a mobilní multiplatformní aplikace.',
-            image: ''
+            title: 'Cesta za vysokým výkonem: Magisterské studium, Rust a Tauri',
+            desc: 'Pokračování na magisterském studiu Informatiky na VŠB pro mě bylo logickým krokem, přičemž jsem si jako zaměření vybral **Digitální zpracování obrazu a počítačovou grafiku**. Musím přiznat, že s masivním nástupem AI nástrojů začalo být studium trochu nudné, protože AI všechno až moc zjednodušuje a člověk pak ztrácí motivaci věci louskat sám a jít do hloubky. Abych si udržel ostrou mysl a posunul své technické hranice, naučil jsem se programovat v jazyce **Rust**. Kombinací Rustu se SvelteKitem v rámci frameworku **Tauri** jsem objevil možnost, jak vytvářet neuvěřitelně lehké a extrémně rychlé desktopové i mobilní aplikace.'
+          },
+          {
+            year: '2025 - 2026',
+            title: 'Spojení kódu s hvězdami: Projekt astronomické klasifikace',
+            desc: 'Na konci prvního ročníku navazujícího studia jsem propojil své programátorské dovednosti se svou velkou vášní pro astrofotografii v rámci Semestrálního projektu: vytvořil jsem aplikaci pro **Klasifikaci astronomických fotografií**. Software automaticky načítá raw snímky z teleskopu, analyzuje je a na základě matematických metrik a normálního rozdělení jim uděluje body od 1 (nejlepší, nejblíže ke statistickému středu) do 0 (špatná data). Díky tomu dokáže aplikace automaticky vyfiltrovat snímky zničené mrakem, mlhou nebo rozmazanými hvězdami, i když samotný algoritmus vyžadoval hodně ručního ladění konstant pro konkrétní teleskop, kameru a dataset.'
+          },
+          {
+            year: 'Současnost - Budoucnost',
+            title: 'Open-Source vize: Deep Learning a hluboký vesmír',
+            desc: 'Na svůj semestrální projekt momentálně navazuji ve své **Diplomové práci**, kde chci celý systém posunout na úplně novou úroveň. Trénuji **konvoluční neuronovou síť (CNN)**, která bude snímky klasifikovat zcela automaticky a sama rozpozná „dobrý“ a „špatný“ záběr. Výsledný systém propojí neuronovou siť s uživatelsky nastavitelnými metrikami, takže si astrofotografové budou moci určit přesné hranice pro přijetí snímků do finálního zpracování (např. FWHM < 2.8 && star_count > 1000). Celý projekt plánuji vydat jako open-source na svém GitHubu, aby ho mohl volně využívat jak já, tak kdokoliv další z astronomické komunity.'
           }
         ]
       },
@@ -164,34 +195,50 @@ export const aboutCards: CardData[] = [
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
           {
+            year: 'Before 2018',
+            title: 'The Fork in the Road: Choosing the Harder Path',
+            desc: 'Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between attending an electrical engineering high school to pursue programming or going down the chemistry route. My grandfather gave me a pivotal piece of advice: apply to both, and if you get accepted to both, choose the harder one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika heyrovského) and two electrical schools in Havířov. When the results came in, I ranked 13th out of 30 for electrical engineering, but placed 57th out of 60 for chemistry—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn\'t easily replicate advanced chemistry labs at home, I could always teach myself how to code in my own free time.'
+          },
+          {
             year: '2016',
-            title: 'First Coding Steps',
-            desc: 'In 8th grade, I started building websites using WYSIWYG Web Builder and even MS Word (which spit out messy HTML). I soon started manually learning HTML and CSS, and studied a basic PHP authentication template. This sparked my interest in PHP and backend development.',
+            title: 'The Early Spark: Drag-and-Drop Layouts',
+            desc: 'My very first exposure to web development actually began slightly before high school. I started experimenting with basic web design and layouts, tinkering with a drag-and-drop WYSIWYG Web Builder to get a feel for how elements came together on a screen.',
             image: '/images/webBuilder.jpg'
           },
           {
-            year: '2018 - 2020',
-            title: 'PHP Projects & Minecraft System Panels',
-            desc: 'In high school, I regularly coded in raw PHP without frameworks. I created a custom SSH panel to deploy and control multiple SinusBot instances. Later, I created a complex administrative info-panel for the Minecraft portal SurprisePlay.eu, enabling player tickets, todo lists, and premium currency management.',
-            image: ''
-          },
-          {
-            year: '2020 - 2022',
-            title: 'Evolving JS, Node.js & Scripting',
-            desc: 'Learned advanced JavaScript with jQuery and AJAX to make websites fluid. Dove into Node.js to create Discord self-bots and standard bots. I also made PHP/JS mini web calculators to help compute Q-tests and graph equations for chemistry class.',
-            image: ''
+            year: '2018 - 2022',
+            title: 'The Secret Programmer: High School Labs & Self-Education',
+            desc: 'Upon entering high school, I quickly realized my peers had much more advanced chemistry foundations than I did, and I found myself struggling to catch up, particularly with organic chemistry. When the Covid-19 pandemic hit, it completely disrupted my routine; school shifted to online learning, which usually meant waking up, logging into class, and either going right back to sleep or playing games with friends. However, I used my free time at home to relentlessly teach myself programming. Between 2018 and 2020, I focused on building early personal websites, and from 2020 to 2022, I successfully solidified my core coding foundations.'
           },
           {
             year: '2022',
-            title: 'Fullstack Frameworks, SvelteKit & DiscordJS',
-            desc: 'Discovered React/Next.js while helping a friend on a hosting project, but disliked React\'s syntax. Then I found SvelteKit, fell in love with its clean compiled design, and built my projects in it (including the GameRealms Wiki). I also developed a league-of-legends Discord bot named "Miňonka" and other automation scripts.',
-            image: ''
+            title: 'Expanding the Ecosystem: DiscordJS & SvelteKit',
+            desc: 'This was a massive breakout year for my self-taught development stack as I transitioned away from basic building blocks and dove headfirst into modern JavaScript ecosystems. I expanded my toolkit significantly by mastering **SvelteKit** and developing custom automation bots using **DiscordJS**.'
+          },
+          {
+            year: '2022 - 2025',
+            title: 'The Academic Deep Dive: Bachelor’s Degree in Informatics',
+            desc: 'To force myself to learn complex topics that I lacked the self-motivation to study alone at home, I decided to pursue a university degree. I applied to IT at VUT in Brno and Informatics at VŠB in Ostrava. Though VUT rejected me based on their comparative entry exams, I enrolled at VŠB - FEI to officially study Informatics. My undergraduate journey culminated in my Bachelor\'s thesis, "Reactive Frontend for e-learning system," where I worked on Kelvin, an open-source school platform. My goal was to modernize its legacy Svelte 3 codebase by rewriting key components into a reactive Vue 3 frontend. Despite navigating the slow open-source pipeline—where submitting a Pull Request meant waiting one to two weeks for a review before I could proceed—I successfully defended my thesis, passed my state exams, and earned my Bachelor\'s degree.'
+          },
+          {
+            year: '2025',
+            title: 'The Professional Leap: Profiq Internship & CI/CD Pipelines',
+            desc: 'Immediately after passing my Bachelor\'s state exams, I took a major step into the industry by joining Profiq.com as an intern. This professional environment drastically leveled up my technical and collaborative skills; I gained hands-on experience with React.JS and Google Firebase, while learning to operate smoothly within an agile team using Slack and GitLab. Crucially, this is where I was introduced to production-grade CI/CD deployment pipelines—a practice I valued so much that I now implement it across all of my personal GitHub repositories.'
           },
           {
             year: '2025 - Present',
-            title: 'Profiq Internship, Rust & Tauri',
-            desc: "Completed an internship at Profiq.com after my Bachelor finals, learning React.js, Firebase, team collaboration, Slack/GitLab, and CI/CD pipelines. During my Master's studies, I picked up Rust and now build cross-platform desktop and mobile apps using Tauri and SvelteKit.",
-            image: ''
+            title: 'High-Performance Code: Master’s Degree, Rust, & Tauri',
+            desc: 'Continuing my academic path, I enrolled in the Master\'s Informatics program at VŠB, choosing a specialization in Digital Image Processing and Computer Graphics. Admittedly, the sudden rise of mainstream AI tools has made university feel a bit tedious, as AI makes tasks too easy and dampens the motivation to struggle through and deeply understand concepts on your own. To keep myself sharp and push my technical boundaries, I taught myself Rust. By combining Rust with SvelteKit inside the Tauri framework, I unlocked the ability to build incredibly lightweight, high-performance desktop and mobile applications.'
+          },
+          {
+            year: '2025 - 2026',
+            title: 'Merging Code with the Stars: The Astronomical Classification Project',
+            desc: 'For the conclusion of my first Master\'s year, I merged my programming skills with my passion for astrophotography for my Semester Project: building a custom desktop application for the Classification of Astronomical Photographs. The software automatically parses raw telescope frames from a night of shooting and scores them from 1 (optimal, closest to the statistical center) to 0 (poor data) using normal distribution metrics. This allowed me to automatically filter out frames ruined by mists, clouds, or trailed stars, though the algorithm required heavy manual tuning of constants depending on the specific telescope, camera, and dataset used.'
+          },
+          {
+            year: 'Present - Future',
+            title: 'The Open-Source Vision: Deep Learning & Deep Space',
+            desc: 'I am currently preparing to scale up my astronomical software for my upcoming Master\'s Diploma Thesis. I am training a Convolutional Neural Network (CNN) to fully automate the image classification process, teaching it to recognize "good" vs. "bad" frames on its own. The final system will combine this neural network with user-defined threshold metrics—allowing astrophotographers to set absolute quality baselines (such as FWHM < 2.8 && star_count > 1000). To give back to the community, the finished tool will be hosted completely open-source on my GitHub for anyone to use.'
           }
         ]
       }
@@ -215,23 +262,32 @@ export const aboutCards: CardData[] = [
         tags: ['Vesmír', 'DSO', 'PixInsight', 'Mlhoviny'],
         timeline: [
           {
-            year: '2023',
-            title: 'Focení mobilem Google Pixel 7a',
-            desc: 'V červnu 2023 jsem si pořídil Google Pixel 7a. Jeho oficiální Google fotoaparát obsahoval astrofotografický mód, čímž začala má cesta focení noční oblohy ze zahrady. Také jsem zkoušel fotit Měsíc a Saturn přes naši starou videokameru s 60x optickým zoomem.',
-            image: ''
+            year: 'Červen 2023',
+            title: 'Mobilní jiskra: Objevování noční oblohy',
+            desc: 'Moje cesta do hlubin vesmíru začala víceméně nečekaně, když jsem si v červnu 2023 pořídil nový telefon Google Pixel 7a. Výhodou telefonů řady Pixel je, že běžnou verzi Androidu doplňuje i oficiální aplikace Google Fotoaparát disponující specializovaným astrofotografickým módem. Fascinován touto funkcí jsem začal ze své zahrady zkoušet fotit noční oblohu na dlouhé expozice, abych zjistil, jaké skryté detaily dokáže mobilní senzor zachytit. Přibližně ve stejné době jsem se pokusil posunout své limity pomocí staré rodinné kamery, která nabízela obrovský 60násobný optický zoom (až 80násobný digitální). Pokusil jsem se s ní vyfotit Měsíc a aspoň trochu zachytit Saturn, ale výsledky byly poměrně slabé, což ve mně pouze probudilo touhu po skutečném astronomickém vybavení.'
           },
           {
-            year: '2023 - 2024',
-            title: 'První dalekohled a rovníková montáž',
-            desc: 'K 20. narozeninám jsem od rodičů dostal Celestron Astromaster 130EQ. Koupil jsem si k němu planetární kameru ZWO ASI678MC pro snímání Měsíce a Jupiteru. Brzy mě však začal lákat hluboký vesmír, a tak jsem pořídil pointovanou montáž SkyWatcher Star Adventurer GTI pro dlouhé expozice DSO.',
-            image: ''
+            year: 'Konec roku 2023',
+            title: 'První skutečná optika: Teleskop k 20. narozeninám',
+            desc: 'Rodiče si postupně všimli mé rostoucí fascinace vesmírem a hvězdnou oblohou, a proto mě k mým 20. narozeninám překvapili koupí mého úplně prvního teleskopu – Celestron Astromaster 130EQ. Vyzbrojen skutečnou optikou jsem začal trávit noci pozorováním oblohy, vyhledáváním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem chtěl vizuální zážitky také zdokumentovat, brzy jsem své možnosti rozšířil nákupem dedikované planetární kamery ZWO ASI678MC a začal zkoušet skutečné fotografování. S touto novou sestavou se mi podařilo úspěšně vyfotit Jupiter a pořídit detailní snímky Měsíce.'
           },
           {
-            year: '2024 - Současnost',
-            title: 'DSO Setup, plná automatizace a PixInsight',
-            desc: 'Sestavil jsem si pokročilý DSO setup: chlazenou kameru ZWO ASI585MC Pro, refraktor William Optics RedCat 51 a pointační dalekohled. V roce 2025 jsem pořídil montáž Proxisky Ragdoll 17 Pro, automatické ostření Gemini Astro EAF, mini PC a kompletně přešel na kalibraci a procesování snímků v PixInsightu. Postup můžete sledovat v mé astro-galerii.',
-            image: ''
-          }
+            year: '2024',
+            title: 'Vstup do hlubokého vesmíru: Montáž Star Adventurer',
+            desc: 'Následující rok znamenal obrovský posun v mém přístupu, protože jsem přešel od pozorování planet k objektům hlubokého vesmíru (DSO). Pořídil jsem si svoji první motorizovanou rovníkovou montáž SkyWatcher Star Adventurer GTI, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem si uvědomil, že focení vzdálených mlhovin a galaxií mě fascinuje mnohem více než planety. Abych si vybudoval specializovaný DSO setup, postupně jsem kompletně obměnil výbavu: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro pro eliminaci tepelného šumu a starý teleskop nahradil prémiovým refraktorem William Optics RedCat 51 s naváděcím dalekohledem. S touto pokročilou sestavou jsem úspěšně vyfotit své první mlhoviny, galaxie a další objekty.'
+          },
+          {
+            year: '2025',
+            title: 'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
+            desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.'
+          },
+
+          {
+            year: 'Červen 2026',
+            title: 'Rozšiřování obzorů: 10palcový planetární upgrade',
+            desc: 'V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10\'\' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru.'
+          },
+
         ]
       },
       en: {
@@ -241,23 +297,32 @@ export const aboutCards: CardData[] = [
         tags: ['Universe', 'DSO', 'PixInsight', 'Nebulae'],
         timeline: [
           {
-            year: '2023',
-            title: 'Google Pixel 7a Astrophotography Mód',
-            desc: 'In June 2023, I got a Google Pixel 7a. Its official Camera app had an Astrophotography mode, which kicked off my space journey. I took shots of the night sky in my garden and also tried using our old camcorder with 60x zoom to snap pictures of the Moon and Saturn.',
-            image: ''
+            year: 'June 2023',
+            title: 'The Smartphone Spark: Discovering the Night Sky',
+            desc: 'My journey into the cosmos unexpectedly began when I bought a new phone, the Google Pixel 7a. Because Pixel phones run a "clean" version of Android, they come equipped with the official Google Camera app, which features a dedicated astrophotography mode. Fascinated by this feature, I began taking long-exposure pictures of the night sky right from my backyard just to see what hidden details the sensor could capture. Around the same time, I tried to push my limits by using an old family camera that featured a massive 60x optical zoom (up to 80x digital zoom). I used it to try and photograph the Moon and even get a glimpse of Saturn, but the results were quite poor, which only fueled my desire for proper equipment.'
           },
           {
-            year: '2023 - 2024',
-            title: 'First Telescope & SkyWatcher Star Adventurer GTI',
-            desc: 'For my 20th birthday, I received a Celestron Astromaster 130EQ telescope. I bought a ZWO ASI678MC planetary camera to capture Jupiter and the Moon. Seeking deep-sky objects (DSOs) instead of planetary ones, I upgraded to a SkyWatcher Star Adventurer GTI tracking mount for long exposure astrophotography.',
-            image: ''
+            year: 'Late 2023',
+            title: 'First Real Optics: The 20th Birthday Telescope',
+            desc: 'Noticing my growing fascination with outer space and the starry sky, my parents surprised me for my 20th birthday by buying me my very first telescope: a Celestron Astromaster 130EQ. Armed with proper optics, I spent my nights exploring the sky, tracking down the Moon, planets, and anything else I could find. Eager to capture what I was seeing visually, I soon upgraded my capabilities by purchasing a dedicated planetary camera—the ZWO ASI678MC. With this new setup, I successfully managed to take my first proper images of Jupiter and detailed close-ups of the Moon.'
           },
           {
-            year: '2024 - Present',
-            title: 'DSO Rig, Automation & PixInsight Transition',
-            desc: 'Built a specialized DSO setup: ZWO ASI585MC Pro cooled camera, William Optics RedCat 51 refractor, and a guiding telescope. In 2025, I upgraded to a Proxisky Ragdoll 17 Pro mount, Gemini Astro EAF autofocuser, mini PC control, and fully transitioned to processing my photos in PixInsight. You can check the progress in my astro-gallery.',
-            image: ''
-          }
+            year: '2024',
+            title: 'Entering Deep Space: The Star Adventurer Mount',
+            desc: 'The following year marked a massive shift in my approach as I transitioned from planetary observation to Deep Sky Objects (DSO). I purchased my first motorized tracking mount, the SkyWatcher Star Adventurer GTI, which completely unlocked the ability to take the long exposures necessary to capture faint, distant objects. I quickly realized that imaging distant nebulae and galaxies fascinated me far more than planets. To build a dedicated DSO rig, I gradually overhauled my gear: I bought a cooled astrophotography camera (the ZWO ASI585MC Pro) to eliminate thermal noise and replaced my old telescope with a premium William Optics RedCat 51 refractor telescope, complete with a separate guide scope. With this advanced setup, I successfully captured my very first deep-space nebulae and galaxies.'
+          },
+          {
+            year: '2025',
+            title: 'Hardware Overhaul & Processing Mastery: Building a Remote Rig',
+            desc: 'As my passion grew, 2025 became a year of heavy technical optimization for my DSO setup. I significantly upgraded my tracking capabilities by acquiring a new high-end mount, the Proxisky Ragdoll 17 Pro, and automated my workflows by adding an electronic auto-focuser (Gemini Astro EAF) alongside a dedicated mini PC to run the entire rig smoothly at night. Alongside the physical hardware, my post-processing workflow underwent a massive evolution. I initially started stacking and editing my images using a combination of Deep Sky Stacker and Siril. Later on, I shifted to Deep Sky Stacker combined with PixInsight, before ultimately migrating my entire stacking and processing pipeline completely into PixInsight to achieve publication-grade results.'
+          },
+
+          {
+            year: 'June 2026',
+            title: 'Expanding Horizons: The 10-Inch Planetary Upgrade',
+            desc: 'In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10\'\' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup.'
+          },
+
         ]
       }
     }
