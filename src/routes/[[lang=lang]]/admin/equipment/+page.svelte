@@ -370,7 +370,9 @@
   </form>
 </Dialog>
 
-<section class="mx-auto flex w-full flex-1 flex-col gap-4 p-4 lg:w-[90%] xl:w-[80%]">
+<section
+  class="mx-auto flex w-full flex-1 flex-col gap-4 p-4 pt-10 pb-6 md:pt-16 lg:w-[90%] xl:w-[80%]"
+>
   <div class="text-text-inverse flex w-max gap-1 rounded-md bg-gray-600 p-1 font-bold">
     {@render _switch(_lang.types.title, 'types')}
     {@render _switch(_lang.equipment.title, 'equipment')}

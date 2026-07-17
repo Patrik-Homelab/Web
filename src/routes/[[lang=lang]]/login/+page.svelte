@@ -38,15 +38,30 @@
   }) satisfies FormAction<SubmitFunction, typeof schema, false>;
 </script>
 
-<Form
-  {schema}
-  data={{ username: '', password: '' }}
-  class="m-auto flex w-[70%] max-w-2xl flex-col md:w-[60%] lg:w-[50%]"
-  onAction={enhance}
->
-  <H1 class="mx-auto">{_state.lang.admin.login.title}</H1>
-  <Input label={_state.lang.admin.login.username} name="username" />
-  <Input label={_state.lang.admin.login.password} name="password" type="password" />
+<div class="m-auto flex w-full max-w-md flex-col justify-center px-4 py-8">
+  <!-- Glassmorphic Login Card -->
+  <div
+    class="flex flex-col gap-6 rounded-2xl border border-white/5 bg-slate-950/40 p-8 shadow-2xl backdrop-blur-md"
+  >
+    <Form
+      {schema}
+      data={{ username: '', password: '' }}
+      class="flex w-full flex-col gap-4"
+      onAction={enhance}
+    >
+      <H1 class="mx-auto mb-2 text-center font-bold">{_state.lang.admin.login.title}</H1>
 
-  <Button class="mx-auto" type="submit">{_state.lang.admin.login.submit}</Button>
-</Form>
+      <div class="flex flex-col gap-3">
+        <Input label={_state.lang.admin.login.username} name="username" />
+        <Input label={_state.lang.admin.login.password} name="password" type="password" />
+      </div>
+
+      <Button
+        class="bg-primary hover:bg-primary-600 mx-auto mt-4 cursor-pointer rounded-full px-6 py-2 font-bold text-slate-950 shadow-lg transition-colors"
+        type="submit"
+      >
+        {_state.lang.admin.login.submit}
+      </Button>
+    </Form>
+  </div>
+</div>

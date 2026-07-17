@@ -36,7 +36,8 @@ export default o({
     login: _,
     contact: _,
     about: _,
-    live: _
+    live: _,
+    movies: _
   }),
   adminNavigation: o({
     home: _,
@@ -53,6 +54,7 @@ export default o({
   live_photo: o({
     title: _,
     description: _,
+    loading_description: _,
     inactive: _,
     stats: _,
     current_status: _,
@@ -255,7 +257,8 @@ export default o({
     })
   }),
   about: o({
-    title: _
+    title: _,
+    clickToExplore: _
   }),
   errors: o({
     internal: _,

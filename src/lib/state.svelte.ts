@@ -16,6 +16,7 @@ type State = {
   >;
   path: string;
   userState: UserState;
+  starsEnabled?: boolean;
   meta?: {
     title?: string;
     description?: string;
