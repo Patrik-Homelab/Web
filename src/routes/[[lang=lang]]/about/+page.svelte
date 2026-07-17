@@ -139,13 +139,13 @@
           {card.translation.category}
         </h3>
 
-        <p class="text-text-muted mt-3 text-sm leading-relaxed">
+        <p class="text-text-muted mt-3 text-lg leading-relaxed">
           {card.translation.shortDesc}
         </p>
 
         <!-- Click Action Indicator -->
         <div
-          class="text-text-muted group-hover:text-text-strong mt-6 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase transition-colors duration-300"
+          class="text-text-muted group-hover:text-text-strong mt-6 flex items-center gap-2 text-sm font-semibold tracking-widest uppercase transition-colors duration-300"
         >
           <span>{lang.clickToExplore}</span>
           <i
@@ -170,7 +170,7 @@
           {activeCard.translation.category}
         </h2>
         <p
-          class="text-text-muted mx-auto mt-2 max-w-2xl text-base leading-relaxed italic md:text-lg"
+          class="text-text-muted mx-auto mt-2 max-w-2xl text-lg leading-relaxed italic md:text-xl"
         >
           {activeCard.translation.shortDesc}
         </p>
@@ -225,7 +225,7 @@
                   class="group/item relative rounded-2xl border border-white/5 bg-slate-950/40 p-6 backdrop-blur-md transition-all duration-300 hover:border-white/10 hover:bg-slate-950/65 hover:shadow-[0_0_20px_rgba(255,255,255,0.02)]"
                 >
                   <span
-                    class="mb-3 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-widest shadow-sm {activeCard
+                    class="mb-3 inline-block rounded-full border px-3 py-1 text-sm font-bold tracking-widest shadow-sm md:text-base {activeCard
                       .colors.badge}"
                   >
                     {event.year}
@@ -233,7 +233,7 @@
                   <h4 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
                     {event.title}
                   </h4>
-                  <p class="text-text-muted text-base leading-relaxed">
+                  <p class="text-text-muted text-lg leading-relaxed">
                     {event.desc}
                   </p>
                 </div>
@@ -301,7 +301,7 @@
                   class="group/item relative rounded-2xl border border-white/5 bg-slate-950/40 p-6 backdrop-blur-md transition-all duration-300 hover:border-white/10 hover:bg-slate-950/65 hover:shadow-[0_0_20px_rgba(255,255,255,0.02)]"
                 >
                   <span
-                    class="mb-3 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-widest shadow-sm {activeCard
+                    class="mb-3 inline-block rounded-full border px-3 py-1 text-sm font-bold tracking-widest shadow-sm md:text-base {activeCard
                       .colors.badge}"
                   >
                     {event.year}
@@ -309,7 +309,7 @@
                   <h4 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
                     {event.title}
                   </h4>
-                  <p class="text-text-muted text-base leading-relaxed">
+                  <p class="text-text-muted text-lg leading-relaxed">
                     {event.desc}
                   </p>
                 </div>
