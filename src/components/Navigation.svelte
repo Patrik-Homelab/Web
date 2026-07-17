@@ -27,6 +27,11 @@
       path: '/'
     },
     {
+      name: _state.lang.navigation.about,
+      icon: 'bi-person-badge-fill',
+      path: '/about'
+    },
+    {
       name: _state.lang.navigation.gallery,
       icon: 'bi-image-fill',
       path: '/gallery',

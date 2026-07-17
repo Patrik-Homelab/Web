@@ -97,27 +97,27 @@ export const aboutCards: CardData[] = [
           {
             year: 'Before 2018',
             title: 'The Fork in the Road: Choosing Chemistry vs. Electrical Engineering',
-            desc: 'Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between which high school to choose. My grandfather gave me a pivotal piece of advice: apply to both schools, and if you get accepted to both, choose the more demanding one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika Heyrovského) and two electrical engineering schools in Havířov. When the results of the admissions process came in, I ranked 13th out of 30 accepted students for electrical engineering. On the other hand, I placed 57th out of 60 for the chemistry school—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn\'t easily replicate advanced chemistry labs and experiments at home, it made for a unique educational opportunity. That is how my story at the chemistry high school began.'
+            desc: "Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between which high school to choose. My grandfather gave me a pivotal piece of advice: apply to both schools, and if you get accepted to both, choose the more demanding one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika Heyrovského) and two electrical engineering schools in Havířov. When the results of the admissions process came in, I ranked 13th out of 30 accepted students for electrical engineering. On the other hand, I placed 57th out of 60 for the chemistry school—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn't easily replicate advanced chemistry labs and experiments at home, it made for a unique educational opportunity. That is how my story at the chemistry high school began."
           },
           {
             year: '2018 - 2022',
             title: 'High School: Chemistry, Laboratories, and the Covid Challenge',
-            desc: 'Upon entering my first year of high school, I quickly realized that most of my peers had much more advanced chemistry foundations than I did, and I found myself quite far behind, with organic chemistry being my biggest hurdle. Over the years, I gradually realized that while the laboratory sessions were fun, chemistry as a whole was not entirely what fulfilled me in the long run. The Covid-19 pandemic also had a significant impact on my studies, completely disrupting my routine; online learning usually meant waking up, logging into the system, and either going right back to sleep or playing games with friends. However, I successfully finished school and passed my graduation exam (maturita). I decided to continue on to university—the main reason, besides the degree, was that the academic environment would force me to learn complex topics for which I wouldn\'t find enough inner motivation to study alone at home. I submitted applications to VUT in Brno (Information Technology) and VŠB in Ostrava (Informatics). VUT rejected me based on their comparative entry exams system, and even though they later contacted me about participating in the next round, I decided to enroll at VŠB.'
+            desc: "Upon entering my first year of high school, I quickly realized that most of my peers had much more advanced chemistry foundations than I did, and I found myself quite far behind, with organic chemistry being my biggest hurdle. Over the years, I gradually realized that while the laboratory sessions were fun, chemistry as a whole was not entirely what fulfilled me in the long run. The Covid-19 pandemic also had a significant impact on my studies, completely disrupting my routine; online learning usually meant waking up, logging into the system, and either going right back to sleep or playing games with friends. However, I successfully finished school and passed my graduation exam (maturita). I decided to continue on to university—the main reason, besides the degree, was that the academic environment would force me to learn complex topics for which I wouldn't find enough inner motivation to study alone at home. I submitted applications to VUT in Brno (Information Technology) and VŠB in Ostrava (Informatics). VUT rejected me based on their comparative entry exams system, and even though they later contacted me about participating in the next round, I decided to enroll at VŠB."
           },
           {
             year: '2022 - 2025',
             title: "Bachelor's Degree: Informatics at VŠB-FEI and the Kelvin Project",
-            desc: 'I enrolled at the Faculty of Electrical Engineering and Computer Science (FEI) at VŠB in Ostrava to study Informatics. I successfully completed my three-year bachelor\'s journey by defending my Bachelor\'s thesis titled "Reactive Frontend for e-learning system". As part of this thesis, I participated in the development of the school information system Kelvin. My progress throughout the semesters was occasionally slowed down by the specific nature of the approval processes within the academic open-source project, where it sometimes took several weeks to get reviews on the submitted work. Despite these time complications, I successfully defended my bachelor\'s thesis, passed my final state exams, and earned my Bachelor\'s degree.'
+            desc: "I enrolled at the Faculty of Electrical Engineering and Computer Science (FEI) at VŠB in Ostrava to study Informatics. I successfully completed my three-year bachelor's journey by defending my Bachelor's thesis titled \"Reactive Frontend for e-learning system\". As part of this thesis, I participated in the development of the school information system Kelvin. My progress throughout the semesters was occasionally slowed down by the specific nature of the approval processes within the academic open-source project, where it sometimes took several weeks to get reviews on the submitted work. Despite these time complications, I successfully defended my bachelor's thesis, passed my final state exams, and earned my Bachelor's degree."
           },
           {
             year: '2025 - Present',
             title: "Master's Degree: Computer Graphics and Academic Challenges",
-            desc: 'Continuing on to a Master\'s degree at VŠB was a logical step for me—I knew that another two years of study would broaden my horizons and allow me to earn an engineering degree (Ing.). I chose Informatics, which directly follows the bachelor\'s program, and picked Digital Image Processing and Computer Graphics as my narrow specialization. However, with the massive influx of modern AI tools into education, the studies gained a new dynamic; while AI simplifies many academic tasks, it also makes it harder to maintain the motivation to solve complex problems entirely on one\'s own and dive deep beneath the surface. Nonetheless, I successfully managed my first year of studies and concluded it with a Semester Project on the topic "Classification of Astronomical Photographs". I designed a system that analyzes raw frames from night observations and sorts them based on statistical evaluation and normal data distribution, which helps eliminate low-quality frames ruined by clouds, mist, or atmospheric influences.'
+            desc: "Continuing on to a Master's degree at VŠB was a logical step for me—I knew that another two years of study would broaden my horizons and allow me to earn an engineering degree (Ing.). I chose Informatics, which directly follows the bachelor's program, and picked Digital Image Processing and Computer Graphics as my narrow specialization. However, with the massive influx of modern AI tools into education, the studies gained a new dynamic; while AI simplifies many academic tasks, it also makes it harder to maintain the motivation to solve complex problems entirely on one's own and dive deep beneath the surface. Nonetheless, I successfully managed my first year of studies and concluded it with a Semester Project on the topic \"Classification of Astronomical Photographs\". I designed a system that analyzes raw frames from night observations and sorts them based on statistical evaluation and normal data distribution, which helps eliminate low-quality frames ruined by clouds, mist, or atmospheric influences."
           },
           {
             year: 'Present - Future',
             title: 'Diploma Thesis: Advanced Data Processing in Astrophotography',
-            desc: 'I am currently building directly on the results of my semester project as I prepare my Master\'s Diploma Thesis. I plan to elevate the entire classification system to a higher level by integrating advanced image recognition methods that will sort the night sky frames completely autonomously. The resulting academic project will bridge theoretical knowledge from the field of computer graphics with user-defined qualitative criteria for data purity. The goal is to successfully complete my engineering studies and create a beneficial piece of work that finds real-world application in the processing of astronomical data.'
+            desc: "I am currently building directly on the results of my semester project as I prepare my Master's Diploma Thesis. I plan to elevate the entire classification system to a higher level by integrating advanced image recognition methods that will sort the night sky frames completely autonomously. The resulting academic project will bridge theoretical knowledge from the field of computer graphics with user-defined qualitative criteria for data purity. The goal is to successfully complete my engineering studies and create a beneficial piece of work that finds real-world application in the processing of astronomical data."
           }
         ]
       }
@@ -137,7 +137,8 @@ export const aboutCards: CardData[] = [
       cs: {
         name: 'Codenus',
         category: 'Programování',
-        shortDesc: 'Jak jsem se dostal k programování, moje oblíbené technologie a milníky.',
+        shortDesc:
+          'Jak jsem se dostal k programování, moje oblíbené technologie a milníky.',
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
           {
@@ -197,7 +198,7 @@ export const aboutCards: CardData[] = [
           {
             year: 'Before 2018',
             title: 'The Fork in the Road: Choosing the Harder Path',
-            desc: 'Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between attending an electrical engineering high school to pursue programming or going down the chemistry route. My grandfather gave me a pivotal piece of advice: apply to both, and if you get accepted to both, choose the harder one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika heyrovského) and two electrical schools in Havířov. When the results came in, I ranked 13th out of 30 for electrical engineering, but placed 57th out of 60 for chemistry—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn\'t easily replicate advanced chemistry labs at home, I could always teach myself how to code in my own free time.'
+            desc: "Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between attending an electrical engineering high school to pursue programming or going down the chemistry route. My grandfather gave me a pivotal piece of advice: apply to both, and if you get accepted to both, choose the harder one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika heyrovského) and two electrical schools in Havířov. When the results came in, I ranked 13th out of 30 for electrical engineering, but placed 57th out of 60 for chemistry—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn't easily replicate advanced chemistry labs at home, I could always teach myself how to code in my own free time."
           },
           {
             year: '2016',
@@ -223,17 +224,17 @@ export const aboutCards: CardData[] = [
           {
             year: '2025',
             title: 'The Professional Leap: Profiq Internship & CI/CD Pipelines',
-            desc: 'Immediately after passing my Bachelor\'s state exams, I took a major step into the industry by joining Profiq.com as an intern. This professional environment drastically leveled up my technical and collaborative skills; I gained hands-on experience with React.JS and Google Firebase, while learning to operate smoothly within an agile team using Slack and GitLab. Crucially, this is where I was introduced to production-grade CI/CD deployment pipelines—a practice I valued so much that I now implement it across all of my personal GitHub repositories.'
+            desc: "Immediately after passing my Bachelor's state exams, I took a major step into the industry by joining Profiq.com as an intern. This professional environment drastically leveled up my technical and collaborative skills; I gained hands-on experience with React.JS and Google Firebase, while learning to operate smoothly within an agile team using Slack and GitLab. Crucially, this is where I was introduced to production-grade CI/CD deployment pipelines—a practice I valued so much that I now implement it across all of my personal GitHub repositories."
           },
           {
             year: '2025 - Present',
             title: 'High-Performance Code: Master’s Degree, Rust, & Tauri',
-            desc: 'Continuing my academic path, I enrolled in the Master\'s Informatics program at VŠB, choosing a specialization in Digital Image Processing and Computer Graphics. Admittedly, the sudden rise of mainstream AI tools has made university feel a bit tedious, as AI makes tasks too easy and dampens the motivation to struggle through and deeply understand concepts on your own. To keep myself sharp and push my technical boundaries, I taught myself Rust. By combining Rust with SvelteKit inside the Tauri framework, I unlocked the ability to build incredibly lightweight, high-performance desktop and mobile applications.'
+            desc: "Continuing my academic path, I enrolled in the Master's Informatics program at VŠB, choosing a specialization in Digital Image Processing and Computer Graphics. Admittedly, the sudden rise of mainstream AI tools has made university feel a bit tedious, as AI makes tasks too easy and dampens the motivation to struggle through and deeply understand concepts on your own. To keep myself sharp and push my technical boundaries, I taught myself Rust. By combining Rust with SvelteKit inside the Tauri framework, I unlocked the ability to build incredibly lightweight, high-performance desktop and mobile applications."
           },
           {
             year: '2025 - 2026',
             title: 'Merging Code with the Stars: The Astronomical Classification Project',
-            desc: 'For the conclusion of my first Master\'s year, I merged my programming skills with my passion for astrophotography for my Semester Project: building a custom desktop application for the Classification of Astronomical Photographs. The software automatically parses raw telescope frames from a night of shooting and scores them from 1 (optimal, closest to the statistical center) to 0 (poor data) using normal distribution metrics. This allowed me to automatically filter out frames ruined by mists, clouds, or trailed stars, though the algorithm required heavy manual tuning of constants depending on the specific telescope, camera, and dataset used.'
+            desc: "For the conclusion of my first Master's year, I merged my programming skills with my passion for astrophotography for my Semester Project: building a custom desktop application for the Classification of Astronomical Photographs. The software automatically parses raw telescope frames from a night of shooting and scores them from 1 (optimal, closest to the statistical center) to 0 (poor data) using normal distribution metrics. This allowed me to automatically filter out frames ruined by mists, clouds, or trailed stars, though the algorithm required heavy manual tuning of constants depending on the specific telescope, camera, and dataset used."
           },
           {
             year: 'Present - Future',
@@ -258,7 +259,8 @@ export const aboutCards: CardData[] = [
       cs: {
         name: 'Nebula',
         category: 'Astrofotografie',
-        shortDesc: 'Focení vesmíru: moje dobrodružství při zachycování hlubokého vesmíru.',
+        shortDesc:
+          'Focení vesmíru: moje dobrodružství při zachycování hlubokého vesmíru.',
         tags: ['Vesmír', 'DSO', 'PixInsight', 'Mlhoviny'],
         timeline: [
           {
@@ -278,16 +280,16 @@ export const aboutCards: CardData[] = [
           },
           {
             year: '2025',
-            title: 'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
+            title:
+              'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
             desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.'
           },
 
           {
             year: 'Červen 2026',
             title: 'Rozšiřování obzorů: 10palcový planetární upgrade',
-            desc: 'V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10\'\' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru.'
-          },
-
+            desc: "V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10'' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru."
+          }
         ]
       },
       en: {
@@ -320,9 +322,8 @@ export const aboutCards: CardData[] = [
           {
             year: 'June 2026',
             title: 'Expanding Horizons: The 10-Inch Planetary Upgrade',
-            desc: 'In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10\'\' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup.'
-          },
-
+            desc: "In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10'' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup."
+          }
         ]
       }
     }
@@ -508,7 +509,8 @@ export const moviesPageData = {
   },
   en: {
     title: 'Movies & Series',
-    description: 'Here you will find series and movies I have watched, along with my short reviews.',
+    description:
+      'Here you will find series and movies I have watched, along with my short reviews.',
     movies: [
       {
         title: 'The Falcon and the Winter Soldier',
