@@ -51,6 +51,9 @@
     <H4 class="text-text-muted text-sm leading-relaxed"
       >{appState.lang.live_photo.description}</H4
     >
+    <H4 class="text-primary text-xs leading-relaxed italic"
+      >{appState.lang.live_photo.loading_description}</H4
+    >
   </div>
 
   <!-- Dashboard Grid -->

@@ -8,12 +8,14 @@
   import type { LayoutProps } from './$types';
   import Navigation from '$/components/Navigation.svelte';
   import { page } from '$app/state';
-  import { setState } from '$/lib/state.svelte';
+  import { setState, getState } from '$/lib/state.svelte';
   import { getPath } from '$/lib/lang';
   import Footer from '$/components/Footer.svelte';
   import Starback from 'starback';
 
   let { children, data }: LayoutProps = $props();
+
+  const _state = getState();
 
   API.hydrateFromServer(data.api);
 
@@ -44,24 +46,44 @@
   };
 
   onMount(() => {
-    const starback = Starback.create(canvas, {
-      type: 'dot',
-      quantity: 250,
-      direction: 225,
-      randomOpacity: true,
-      starSize: [0.1, 0.2, 0.3, 0.4],
-      speed: [0.3, 0.5],
-      backgroundColor: '#030304',
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
+    const localStars = localStorage.getItem('starsEnabled') !== 'false';
+    setState({ starsEnabled: localStars });
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
     return () => {
-      starback.destroy();
-
       window.removeEventListener('resize', resizeCanvas);
+    };
+  });
+
+  $effect(() => {
+    const enabled = _state.starsEnabled !== false;
+    let starbackInstance: { destroy: () => void } | null = null;
+
+    if (enabled && canvas) {
+      starbackInstance = Starback.create(canvas, {
+        type: 'dot',
+        quantity: 250,
+        direction: 225,
+        randomOpacity: true,
+        starSize: [0.1, 0.2, 0.3, 0.4],
+        speed: [0.3, 0.5],
+        backgroundColor: '#030304',
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+      resizeCanvas();
+    }
+
+    return () => {
+      if (starbackInstance) {
+        starbackInstance.destroy();
+      }
+      const ctx = canvas?.getContext('2d');
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     };
   });
 </script>

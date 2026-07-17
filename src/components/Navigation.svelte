@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { getState } from '$/lib/state.svelte';
+  import { getState, setState } from '$/lib/state.svelte';
   import type { BootstrapIcon } from '$/types/bootstrap_icons';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { untrack } from 'svelte';
   import Icon from './utility/Icon.svelte';
+  import ClickOutside from '$/components/utility/clickOutside.svelte';
 
   type NavItem = {
     name: string;
@@ -120,6 +121,7 @@
   });
 
   let mobileOpened = $state(false);
+  let dropdownOpen = $state(false);
 
   const filteredNavigation = $derived(
     Navigation.filter((item) => {
@@ -158,7 +160,52 @@
     return undefined;
   });
   const description = $derived(meta?.description ?? _state.lang.default_desc);
+
+  // Toggle background stars and save to localStorage
+  const toggleStars = () => {
+    const nextVal = _state.starsEnabled !== false ? false : true;
+    setState({ starsEnabled: nextVal });
+    localStorage.setItem('starsEnabled', String(nextVal));
+  };
 </script>
+
+{#snippet flag(langKey: string)}
+  {#if langKey === 'cs'}
+    <svg class="inline-block h-3.5 w-5 rounded-xs shadow-sm" viewBox="0 0 3 2">
+      <rect width="3" height="2" fill="#d7141a" />
+      <rect width="3" height="1" fill="#fff" />
+      <polygon points="0,0 1.5,1 0,2" fill="#11457e" />
+    </svg>
+  {:else if langKey === 'en'}
+    <svg class="inline-block h-3.5 w-5 rounded-xs shadow-sm" viewBox="0 0 74 39">
+      <rect width="74" height="39" fill="#b22234" />
+      <path
+        d="M0,3h74M0,9h74M0,15h74M0,21h74M0,27h74M0,33h74"
+        stroke="#fff"
+        stroke-width="3"
+      />
+      <rect width="29.6" height="21" fill="#3c3b6e" />
+      <circle cx="5" cy="4" r="1" fill="#fff" />
+      <circle cx="10" cy="4" r="1" fill="#fff" />
+      <circle cx="15" cy="4" r="1" fill="#fff" />
+      <circle cx="20" cy="4" r="1" fill="#fff" />
+      <circle cx="25" cy="4" r="1" fill="#fff" />
+      <circle cx="7.5" cy="8" r="1" fill="#fff" />
+      <circle cx="12.5" cy="8" r="1" fill="#fff" />
+      <circle cx="17.5" cy="8" r="1" fill="#fff" />
+      <circle cx="22.5" cy="8" r="1" fill="#fff" />
+      <circle cx="5" cy="12" r="1" fill="#fff" />
+      <circle cx="10" cy="12" r="1" fill="#fff" />
+      <circle cx="15" cy="12" r="1" fill="#fff" />
+      <circle cx="20" cy="12" r="1" fill="#fff" />
+      <circle cx="25" cy="12" r="1" fill="#fff" />
+      <circle cx="7.5" cy="16" r="1" fill="#fff" />
+      <circle cx="12.5" cy="16" r="1" fill="#fff" />
+      <circle cx="17.5" cy="16" r="1" fill="#fff" />
+      <circle cx="22.5" cy="16" r="1" fill="#fff" />
+    </svg>
+  {/if}
+{/snippet}
 
 <svelte:head>
   {#if title}
@@ -211,27 +258,61 @@
       {/each}
     </nav>
 
-    <!-- Right: Language Picker & Mobile Menu Trigger -->
-    <div class="flex items-center gap-4">
-      <!-- Language Picker -->
-      <div class="relative flex items-center">
-        <select
-          bind:value={selectedLanguage}
-          class="text-text-strong cursor-pointer rounded-full border border-white/10 bg-slate-900/80 px-4 py-1.5 text-xs font-bold transition-all hover:bg-slate-800/80 focus:outline-none md:text-sm"
+    <!-- Right: Stars Switch, Language Picker & Mobile Menu Trigger -->
+    <div class="flex items-center gap-2.5 md:gap-4">
+      <!-- Stars Toggle Switch -->
+      <button
+        onclick={toggleStars}
+        class="text-text flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-900/80 transition-all duration-200 hover:bg-slate-800/80"
+        title={_state.starsEnabled === false
+          ? 'Enable background stars'
+          : 'Disable background stars'}
+      >
+        <Icon
+          name={_state.starsEnabled === false ? 'bi-star' : 'bi-stars'}
+          class={_state.starsEnabled === false
+            ? 'text-text-muted text-sm'
+            : 'text-primary animate-pulse-slow text-sm'}
+        />
+      </button>
+
+      <!-- Custom Language Dropdown (SVG Flags) -->
+      <ClickOutside clickoutside={() => (dropdownOpen = false)} class="relative">
+        <button
+          onclick={() => (dropdownOpen = !dropdownOpen)}
+          class="text-text-strong flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-4.5 py-1.5 text-xs font-bold transition-all hover:bg-slate-800/80 focus:outline-none md:text-sm"
         >
-          {#each Object.entries(_state.languages) as [langKey, langData] (langKey)}
-            <option value={langKey} class="text-text bg-slate-950"
-              >{langData.flag} {langData.name}</option
-            >
-          {/each}
-        </select>
-      </div>
+          {@render flag(selectedLanguage)}
+          <span class="hidden sm:inline">{_state.languages[selectedLanguage].name}</span>
+          <span class="inline uppercase sm:hidden">{selectedLanguage}</span>
+          <Icon name="bi-chevron-down" class="text-text-muted text-[9px]" />
+        </button>
+
+        {#if dropdownOpen}
+          <div
+            class="absolute right-0 z-50 mt-2 flex w-36 origin-top-right flex-col gap-0.5 rounded-xl border border-white/10 bg-slate-950/95 p-1 shadow-2xl backdrop-blur-xl"
+          >
+            {#each Object.entries(_state.languages) as [langKey, langData] (langKey)}
+              <button
+                onclick={() => {
+                  selectedLanguage = langKey;
+                  dropdownOpen = false;
+                }}
+                class="text-text hover:text-text-strong flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-bold transition-all hover:bg-white/5"
+              >
+                {@render flag(langKey)}
+                <span>{langData.name}</span>
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </ClickOutside>
 
       <!-- Hamburger Menu (Mobile Only) -->
       <button
         onclick={() => (mobileOpened = true)}
         aria-label="Toggle Menu"
-        class="text-text flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-2xl transition-colors duration-200 hover:bg-white/5 md:hidden"
+        class="text-text flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xl transition-colors duration-200 hover:bg-white/5 md:hidden"
       >
         <Icon name="bi-list" />
       </button>
@@ -262,20 +343,14 @@
   {/if}
 </header>
 
-<!-- Mobile Fullscreen / Slide Drawer overlay -->
+<!-- Mobile Fullscreen Slide Overlay -->
 {#if mobileOpened}
-  <!-- Backdrop -->
   <div
-    role="presentation"
-    onclick={() => (mobileOpened = false)}
-    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden"
-  ></div>
-
-  <!-- Drawer -->
-  <div
-    class="fixed top-0 right-0 z-50 flex h-screen w-80 flex-col border-l border-white/10 bg-slate-950/95 p-6 shadow-2xl backdrop-blur-xl md:hidden"
+    class="fixed inset-0 z-50 flex h-screen w-screen flex-col bg-slate-950/98 p-6 shadow-2xl backdrop-blur-2xl md:hidden"
   >
-    <div class="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+    <div
+      class="mx-auto mb-10 flex w-full max-w-xl items-center justify-between border-b border-white/10 pb-4"
+    >
       <span class="font-ephesis text-primary-text text-3xl font-bold">Patrik Mintěl</span>
       <button
         onclick={() => (mobileOpened = false)}
@@ -286,38 +361,41 @@
       </button>
     </div>
 
-    <!-- Mobile Navigation Items -->
-    <nav class="font-poppins flex flex-col gap-3">
+    <!-- Centered Fullscreen Mobile Menu Items -->
+    <nav
+      class="font-poppins mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-8 pb-16"
+    >
       {#each filteredNavigation as item, index (index)}
         {@const isActive = _isActive(item)}
         <a
           onclick={() => (mobileOpened = false)}
           href="/{selectedLanguage}{item.path}"
           class={[
-            'flex items-center gap-3 rounded-xl border px-4 py-3 text-lg font-bold transition-all',
+            'flex w-full max-w-xs items-center justify-center gap-3 rounded-full border px-8 py-3.5 text-center text-xl font-bold transition-all',
             isActive
               ? 'bg-primary/15 text-primary border-primary/25 shadow-lg'
               : 'text-text-muted hover:text-text border-transparent hover:bg-white/5'
           ].join(' ')}
         >
-          <Icon name={item.icon} class="text-xl" />
+          <Icon name={item.icon} class="text-2xl" />
           <span>{item.name}</span>
         </a>
       {/each}
 
       {#if _state.userState.logged && _state.path.startsWith('/admin')}
-        <div class="my-4 border-t border-white/10 pt-4">
-          <span class="text-text-muted px-4 text-xs font-bold tracking-wider uppercase"
+        <div class="mt-4 w-full max-w-xs border-t border-white/10 pt-6 text-center">
+          <span
+            class="text-text-muted mb-3 block text-xs font-bold tracking-wider uppercase"
             >Admin Panel</span
           >
-          <div class="mt-2 flex flex-col gap-2">
+          <div class="flex flex-col items-center gap-3">
             {#each filteredAdminNavigation as item, index (index)}
               {@const isActive = _isActive(item)}
               <a
                 onclick={() => (mobileOpened = false)}
                 href="/{selectedLanguage}{item.path}"
                 class={[
-                  'flex items-center gap-3 rounded-xl border px-4 py-2.5 text-base font-bold transition-all',
+                  'flex w-full items-center justify-center gap-3 rounded-full border px-6 py-2.5 text-base font-bold transition-all',
                   isActive
                     ? 'bg-primary/20 text-primary border-primary/20'
                     : 'text-text-muted hover:text-text border-transparent hover:bg-white/5'

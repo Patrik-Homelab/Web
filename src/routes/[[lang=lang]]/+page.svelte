@@ -93,18 +93,6 @@
   <div
     class="flex w-full flex-col items-center text-center lg:w-1/2 lg:items-start lg:text-left"
   >
-    <!-- Hello Badge -->
-    <div
-      class="border-primary/20 bg-primary/10 text-primary mb-3 flex items-center gap-1.5 rounded-full border px-4 py-1 text-xs font-bold tracking-wider uppercase"
-    >
-      <span class="bg-primary h-2 w-2 animate-ping rounded-full"></span>
-      <span
-        >{_state.selectedLang === 'cs'
-          ? 'Dostupný k projektům'
-          : 'Available for work'}</span
-      >
-    </div>
-
     <!-- Name Signature -->
     <h1
       class="font-poppins from-primary-400 via-secondary to-primary-text bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
@@ -114,17 +102,8 @@
 
     <!-- Precision Age Ticker (Telemetry Card) -->
     <div
-      class="my-6 flex w-full max-w-sm flex-col gap-2 rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-left font-mono shadow-2xl backdrop-blur-md"
+      class="my-6 flex w-full max-w-sm items-center justify-center rounded-2xl border border-white/10 bg-slate-950/80 p-4 font-mono shadow-2xl backdrop-blur-md"
     >
-      <div
-        class="text-text-muted flex items-center justify-between border-b border-white/5 pb-2 text-[10px] font-bold tracking-widest uppercase"
-      >
-        <span class="flex items-center gap-1">
-          <Icon name="bi-activity" class="text-primary text-xs" />
-          {_state.lang.main.age} telemetry
-        </span>
-        <span class="text-secondary animate-pulse">● running</span>
-      </div>
       <div class="flex items-baseline gap-0.5">
         <span class="text-text-strong text-2xl font-bold sm:text-3xl"
           >{ageParts.integer}</span
@@ -132,9 +111,6 @@
         <span class="text-primary text-2xl font-medium">.</span>
         <span class="text-text-muted text-lg font-medium tracking-tight sm:text-xl"
           >{ageParts.decimal}</span
-        >
-        <span class="text-text-muted ml-2 text-xs uppercase"
-          >{_state.selectedLang === 'cs' ? 'let' : 'yrs'}</span
         >
       </div>
     </div>

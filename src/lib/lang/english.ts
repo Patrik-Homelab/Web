@@ -32,6 +32,8 @@ export default lang.parse({
     title: 'Astro Window',
     description:
       'If imaging is currently in progress, you will see the latest image from the camera and statistics from my equipment here.',
+    loading_description:
+      'Wait a moment for the data to load, sometimes it takes a while :)',
     inactive: 'Imaging not active',
     stats: 'Statistics',
     current_status: 'Current Status',

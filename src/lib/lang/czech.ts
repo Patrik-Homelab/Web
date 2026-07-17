@@ -32,6 +32,7 @@ export default lang.parse({
     title: 'Astro Okénko',
     description:
       'Pokud aktuálně probíhá focení, zde uvidíš aktuální snímek z kamery a statistiky z mého vybavení.',
+    loading_description: 'Chvíli vyčkej, než se data načtou, občas to trvá :)',
     inactive: 'Focení neprobíhá',
     stats: 'Statistiky',
     current_status: 'Aktuální stav',
