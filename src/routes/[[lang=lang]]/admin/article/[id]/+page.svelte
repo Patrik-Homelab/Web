@@ -280,11 +280,13 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       return sign * (dAbs + m / 60.0 + s / 3600.0);
     };
     const parseFov = (fovStr: string) => {
-      const match = fovStr.match(/(\d+)d\s+(\d+)'\s+([\d.]+)"/);
-      if (match) {
-        const d = parseFloat(match[1]);
-        const m = parseFloat(match[2]);
-        const s = parseFloat(match[3]);
+      const dMatch = fovStr.match(/(\d+)\s*d/);
+      const mMatch = fovStr.match(/(\d+)\s*'/);
+      const sMatch = fovStr.match(/([\d.]+)\s*"/);
+      const d = dMatch ? parseFloat(dMatch[1]) : 0;
+      const m = mMatch ? parseFloat(mMatch[1]) : 0;
+      const s = sMatch ? parseFloat(sMatch[1]) : 0;
+      if (mMatch || sMatch || dMatch) {
         return d + m / 60.0 + s / 3600.0;
       }
       return null;
@@ -314,14 +316,33 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
       parsed = true;
     }
 
+    let wVal: number | null = null;
+    let hVal: number | null = null;
+
     if (fovMatch) {
-      const wVal = parseFov(fovMatch[1]);
-      const hVal = parseFov(fovMatch[2]);
-      if (wVal !== null && hVal !== null) {
-        fovWidth = parseFloat(wVal.toFixed(5));
-        fovHeight = parseFloat(hVal.toFixed(5));
-        parsed = true;
+      wVal = parseFov(fovMatch[1]);
+      hVal = parseFov(fovMatch[2]);
+    }
+
+    if (wVal === null || hVal === null) {
+      const resRegex = /Resolution\s*\.+\s*([\d.]+)/i;
+      const resMatch = platesolveText.match(resRegex);
+      const projRegex = /Projection origin\s*\.+\s*\[\s*([\d.]+)\s+([\d.]+)\s*\]\s*px/i;
+      const projMatch = platesolveText.match(projRegex);
+
+      if (resMatch && projMatch) {
+        const resolution = parseFloat(resMatch[1]);
+        const originX = parseFloat(projMatch[1]);
+        const originY = parseFloat(projMatch[2]);
+        wVal = (originX * 2 * resolution) / 3600;
+        hVal = (originY * 2 * resolution) / 3600;
       }
+    }
+
+    if (wVal !== null && hVal !== null) {
+      fovWidth = parseFloat(wVal.toFixed(5));
+      fovHeight = parseFloat(hVal.toFixed(5));
+      parsed = true;
     }
 
     if (rotMatch) {
