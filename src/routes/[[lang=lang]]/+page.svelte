@@ -37,13 +37,13 @@
 </script>
 
 <div
-  class="mx-auto flex w-[90%] max-w-5xl flex-col items-center justify-center gap-10 pt-10 pb-12 md:pt-16 lg:flex-row lg:gap-16 xl:gap-24"
+  class="mx-auto flex w-[90%] max-w-7xl flex-col items-center justify-center gap-10 pt-10 pb-12 md:pt-16 lg:flex-row lg:gap-16 xl:gap-24"
 >
   <!-- Left Side: Profile Picture with Orbital Rings -->
   <div class="relative flex items-center justify-center">
     <!-- Outer orbiting dot pathway -->
     <div
-      class="border-primary/10 animate-spin-slow absolute h-[320px] w-[320px] rounded-full border border-dashed sm:h-[380px] sm:w-[380px]"
+      class="border-primary/10 animate-spin-slow absolute h-[360px] w-[360px] rounded-full border border-dashed sm:h-[440px] sm:w-[440px]"
     >
       <div
         class="bg-primary absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full shadow-[0_0_10px_var(--color-primary)]"
@@ -52,7 +52,7 @@
 
     <!-- Medium glow pathway -->
     <div
-      class="border-secondary/20 absolute h-[290px] w-[290px] animate-[spin_10s_linear_infinite_reverse] rounded-full border border-dashed sm:h-[340px] sm:w-[340px]"
+      class="border-secondary/20 absolute h-[320px] w-[320px] animate-[spin_10s_linear_infinite_reverse] rounded-full border border-dashed sm:h-[390px] sm:w-[390px]"
     >
       <div
         class="bg-secondary absolute top-1/2 -left-1.5 h-2 w-2 -translate-y-1/2 rounded-full shadow-[0_0_8px_var(--color-secondary)]"
@@ -61,12 +61,12 @@
 
     <!-- Inner pulsing gradient glow backdrop -->
     <div
-      class="from-primary to-secondary animate-pulse-slow absolute h-[250px] w-[250px] rounded-full bg-gradient-to-tr opacity-20 blur-xl sm:h-[300px] sm:w-[300px]"
+      class="from-primary to-secondary animate-pulse-slow absolute h-[280px] w-[280px] rounded-full bg-gradient-to-tr opacity-20 blur-xl sm:h-[350px] sm:w-[350px]"
     ></div>
 
     <!-- Actual profile image frame -->
     <div
-      class="relative z-10 h-[240px] w-[240px] overflow-hidden rounded-full border-4 border-white/10 bg-slate-900 shadow-2xl transition-transform duration-500 hover:scale-102 sm:h-[280px] sm:w-[280px]"
+      class="relative z-10 h-[280px] w-[280px] overflow-hidden rounded-full border-4 border-white/10 bg-slate-900 shadow-2xl transition-transform duration-500 hover:scale-102 sm:h-[340px] sm:w-[340px]"
     >
       <picture>
         <source
@@ -91,7 +91,7 @@
 
   <!-- Right Side: Info Panel -->
   <div
-    class="flex w-full flex-col items-center text-center lg:w-1/2 lg:items-start lg:text-left"
+    class="flex w-full flex-col items-center text-center lg:w-[62%] lg:items-start lg:text-left"
   >
     <!-- Name Signature -->
     <h1
@@ -117,7 +117,7 @@
 
     <!-- Bio / Description -->
     <div
-      class="font-ubuntu text-text-muted text-base leading-relaxed md:text-lg lg:text-xl"
+      class="font-ubuntu text-text-muted text-lg leading-relaxed md:text-xl lg:text-2xl"
     >
       <RichText text={_state.lang.main.text} />
     </div>

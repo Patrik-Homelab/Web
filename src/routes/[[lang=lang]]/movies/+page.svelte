@@ -13,7 +13,7 @@
 >
   <div class="mb-12 text-center">
     <H1>{data.title}</H1>
-    <p class="text-text-muted mx-auto mt-3 max-w-2xl text-base italic md:text-lg">
+    <p class="text-text-muted mx-auto mt-3 max-w-2xl text-lg italic md:text-xl">
       {data.description}
     </p>
     <div
@@ -35,7 +35,7 @@
         <div class="flex items-start justify-between gap-4">
           <div>
             <span
-              class="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-[10px] font-bold tracking-widest text-red-400 uppercase"
+              class="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-xs font-bold tracking-widest text-red-400 uppercase lg:text-sm"
               >{movie.type}</span
             >
             <h4
@@ -43,17 +43,19 @@
             >
               {movie.title}
             </h4>
-            <p class="text-text-muted mt-1 font-mono text-xs">{movie.year}</p>
+            <p class="text-text-muted mt-1 font-mono text-sm lg:text-base">
+              {movie.year}
+            </p>
           </div>
           <span
-            class="flex shrink-0 items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/5 px-2.5 py-0.5 text-xs font-bold text-amber-300 shadow-sm"
+            class="flex shrink-0 items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/5 px-2.5 py-0.5 text-sm font-bold text-amber-300 shadow-sm lg:text-base"
           >
             <i class="bi bi-star-fill text-amber-400"></i>
             {movie.rating}
           </span>
         </div>
         <p
-          class="text-text-muted mt-5 flex-1 border-t border-white/5 pt-4 text-sm leading-relaxed italic"
+          class="text-text-muted mt-5 flex-1 border-t border-white/5 pt-4 text-lg leading-relaxed italic"
         >
           "{movie.review}"
         </p>

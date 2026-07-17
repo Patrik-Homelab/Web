@@ -98,7 +98,9 @@
   ] as const satisfies Platform[];
 </script>
 
-<section class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-10 pb-6 md:pt-16">
+<section
+  class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-10 pb-6 md:pt-16 2xl:max-w-[80%]"
+>
   <!-- Section Title -->
   <H1 class="mx-auto mb-10 text-center">{lang.title}</H1>
 
@@ -109,8 +111,8 @@
         href={platform.url}
         target="_blank"
         class={[
-          'group flex min-h-[260px] w-full cursor-pointer flex-col items-center justify-between gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-6 shadow-xl backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]',
-          'sm:w-[45%] md:w-[30%] lg:w-[22%]',
+          'group flex min-h-[210px] w-full min-w-[360px] cursor-pointer flex-col items-center justify-between gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-6 shadow-xl backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]',
+          'sm:w-[48%] md:w-[31.5%] lg:w-[24%]',
           platform.glowClass
         ].join(' ')}
       >
@@ -130,25 +132,25 @@
         <!-- Platform Info -->
         <div class="flex w-full flex-col items-center gap-1.5 text-center">
           <h2
-            class="font-poppins text-text-strong text-lg font-bold transition-colors group-hover:text-white"
+            class="font-poppins text-text-strong text-xl font-bold transition-colors group-hover:text-white lg:text-2xl"
           >
             {platform.name}
           </h2>
           <div
-            class="text-text-muted group-hover:text-text-strong rounded-full border border-white/10 bg-white/5 px-3 py-0.5 font-mono text-xs font-bold transition-all duration-300 group-hover:bg-white/10"
+            class="text-text-muted group-hover:text-text-strong rounded-full border border-white/10 bg-white/5 px-3 py-0.5 font-mono text-sm font-bold transition-all duration-300 group-hover:bg-white/10 lg:text-base"
           >
             {platform.tag}
           </div>
         </div>
 
         <!-- Description Paragraph -->
-        <h3 class="text-text-muted max-w-[180px] text-center text-xs leading-relaxed">
+        <h3 class="text-text-muted max-w-[220px] text-center text-lg leading-relaxed">
           {resolveTranslation(platform.descriptionKey, _state.lang)}
         </h3>
 
         <!-- Call to Action Indicator -->
         <div
-          class="text-text-muted group-hover:text-primary mt-2 flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase transition-colors"
+          class="text-text-muted group-hover:text-primary mt-2 flex items-center gap-1 text-xs font-bold tracking-widest uppercase transition-colors lg:text-sm"
         >
           <span>
             {platform.button === 'visit'

@@ -44,7 +44,9 @@
   });
 </script>
 
-<section class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pt-10 pb-6 md:pt-16">
+<section
+  class="mx-auto flex w-full max-w-[1400px] flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
+>
   <!-- Page Header -->
   <div class="flex flex-col gap-2">
     <H1 class="text-left font-bold">{appState.lang.live_photo.title}</H1>
@@ -57,9 +59,9 @@
   </div>
 
   <!-- Dashboard Grid -->
-  <div class="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-3">
-    <!-- Camera Viewfinder (Left 2 columns) -->
-    <div class="flex flex-col gap-4 lg:col-span-2">
+  <div class="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-4">
+    <!-- Camera Viewfinder (Left 3 columns) -->
+    <div class="flex flex-col gap-4 lg:col-span-3">
       <div
         class="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl border border-white/5 bg-slate-950/80 shadow-2xl"
       >

@@ -53,7 +53,7 @@
 
 {#snippet badge(text: string)}
   <div
-    class="text-text-muted hover:text-text rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs font-semibold transition-colors duration-200 hover:bg-white/10"
+    class="text-text-muted hover:text-text rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-sm font-semibold transition-colors duration-200 hover:bg-white/10"
   >
     {text}
   </div>
@@ -107,7 +107,7 @@
         >{_langDynamic[post.title]}</H2
       >
 
-      <p class="text-text-muted line-clamp-2 text-sm leading-relaxed">
+      <p class="text-text-muted line-clamp-2 text-lg leading-relaxed">
         {_langDynamic[post.description]}
       </p>
 
@@ -123,7 +123,7 @@
 
       <!-- Footer Info -->
       <div
-        class="text-text-muted mt-auto flex items-center justify-between border-t border-white/5 pt-3 text-xs"
+        class="text-text-muted mt-auto flex items-center justify-between border-t border-white/5 pt-3 text-sm"
       >
         <div>
           <Icon name="bi-calendar" class="mr-1" />
@@ -150,9 +150,9 @@
 {#snippet smallPostCard(post: (typeof data.posts)[number])}
   <a
     href="/{_state.selectedLang}/gallery/{post.id}"
-    class="group hover:border-primary/25 flex w-full flex-col overflow-hidden rounded-xl border border-white/5 bg-slate-950/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] sm:w-[calc(50%_-_0.5rem)] md:w-[calc(33.33%_-_0.75rem)] lg:max-w-[280px]"
+    class="group hover:border-primary/25 flex w-full flex-col overflow-hidden rounded-xl border border-white/5 bg-slate-950/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] sm:w-[calc(50%_-_0.5rem)] md:w-[calc(33.33%_-_0.75rem)] lg:max-w-[320px]"
   >
-    <div class="relative h-36 overflow-hidden">
+    <div class="relative h-44 overflow-hidden">
       <Image
         class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         name={post.images[0].name}
@@ -175,12 +175,12 @@
     </div>
     <div class="flex flex-col gap-1.5 p-3.5">
       <h3
-        class="text-text-strong group-hover:text-primary truncate text-sm font-bold transition-colors duration-200"
+        class="text-text-strong group-hover:text-primary truncate text-base font-bold transition-colors duration-200 lg:text-lg"
       >
         {_langDynamic[post.title]}
       </h3>
       <div
-        class="text-text-muted mt-1 flex items-center justify-between border-t border-white/5 pt-2 text-[11px] font-medium"
+        class="text-text-muted mt-1 flex items-center justify-between border-t border-white/5 pt-2 text-xs font-medium lg:text-sm"
       >
         <span>
           <Icon name="bi-calendar" class="mr-0.5" />
@@ -188,7 +188,7 @@
         </span>
         <span class="text-primary flex items-center gap-0.5 group-hover:underline">
           {_lang.readMore}
-          <Icon name="bi-arrow-right" class="text-[9px]" />
+          <Icon name="bi-arrow-right" class="text-[11px]" />
         </span>
       </div>
     </div>

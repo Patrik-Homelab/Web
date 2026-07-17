@@ -141,7 +141,7 @@
 </svelte:head>
 
 <section
-  class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
+  class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
 >
   <!-- Back Button Link -->
   <a
@@ -158,20 +158,20 @@
 
     <!-- High-Tech Telemetry Ribbon -->
     <div
-      class="text-text-muted flex flex-wrap gap-4 rounded-xl border border-white/5 bg-slate-950/40 p-3 text-xs font-semibold backdrop-blur-md"
+      class="text-text-muted flex flex-wrap gap-4 rounded-xl border border-white/5 bg-slate-950/40 p-3 text-base font-semibold backdrop-blur-md"
     >
-      <div class="flex items-center gap-1">
-        <Icon name="bi-calendar" class="text-primary text-[10px]" />
+      <div class="flex items-center gap-1.5">
+        <Icon name="bi-calendar" class="text-primary text-sm" />
         <span>{_lang.created}:</span>
         <span class="text-text-strong">{formatDate(data.post.created_at, false)}</span>
       </div>
-      <div class="flex items-center gap-1">
-        <Icon name="bi-clock-history" class="text-primary text-[10px]" />
+      <div class="flex items-center gap-1.5">
+        <Icon name="bi-clock-history" class="text-primary text-sm" />
         <span>{_lang.updated}:</span>
         <span class="text-text-strong">{formatDate(data.post.updated_at, false)}</span>
       </div>
-      <div class="flex items-center gap-1">
-        <Icon name="bi-hourglass-split" class="text-primary text-[10px]" />
+      <div class="flex items-center gap-1.5">
+        <Icon name="bi-hourglass-split" class="text-primary text-sm" />
         <span>{_lang.totalExposure}:</span>
         <span class="text-primary-text font-mono font-bold"
           >{sToHHMM(
@@ -187,7 +187,7 @@
   <!-- Dashboard Grid -->
   <div class="flex flex-col gap-8 xl:flex-row">
     <!-- Left Column: Astro Telemetry Panels (1/3rd width) -->
-    <div class="flex flex-col gap-6 xl:w-1/3">
+    <div class="flex flex-col gap-6 xl:w-[28%]">
       <!-- Main Photo Frame Carousel -->
       <div
         class="flex aspect-[5/4] flex-col justify-between overflow-hidden rounded-2xl border border-white/5 bg-slate-950/40 p-4 shadow-2xl backdrop-blur-md"
@@ -239,7 +239,7 @@
         </div>
 
         <span
-          class="text-text-muted mt-2 truncate px-2 text-center text-xs font-semibold"
+          class="text-text-muted mt-2 truncate px-2 text-center text-base font-semibold"
         >
           {_langDynamic[data.post.images[selectedImage].alt_text]}
         </span>
@@ -255,7 +255,9 @@
       <div
         class="flex flex-col gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-md"
       >
-        <H3 class="text-text-strong border-b border-white/5 pb-2 text-lg font-bold">
+        <H3
+          class="text-text-strong border-b border-white/5 pb-2 text-xl font-bold lg:text-2xl"
+        >
           <Icon name="bi-tools" class="text-primary mr-1.5" />
           <span>{_lang.equipment}</span>
         </H3>
@@ -265,7 +267,7 @@
               <a
                 href={equipment.link}
                 target="_blank"
-                class="group flex items-center justify-between rounded-xl border border-transparent bg-white/5 px-4 py-2 text-sm font-semibold transition-all duration-300 hover:border-white/10 hover:bg-white/10"
+                class="group flex items-center justify-between rounded-xl border border-transparent bg-white/5 px-4 py-2 text-base font-semibold transition-all duration-300 hover:border-white/10 hover:bg-white/10 lg:text-lg"
               >
                 <span class="text-text-strong group-hover:text-primary transition-colors"
                   >{equipment.name}</span
@@ -284,7 +286,9 @@
       <div
         class="flex flex-col gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-md"
       >
-        <H3 class="text-text-strong border-b border-white/5 pb-2 text-lg font-bold">
+        <H3
+          class="text-text-strong border-b border-white/5 pb-2 text-xl font-bold lg:text-2xl"
+        >
           <Icon name="bi-camera-video" class="text-primary mr-1.5" />
           <span>{_lang.exposureSummary}</span>
         </H3>
@@ -312,17 +316,18 @@
               ].join(' ')}
             >
               <div
-                class="text-text-muted flex items-center gap-1 text-[10px] font-bold tracking-wider uppercase"
+                class="text-text-muted flex items-center gap-1 text-xs font-bold tracking-wider uppercase lg:text-sm"
               >
                 {#if type === 'light'}<span
                     class="bg-primary h-1.5 w-1.5 animate-ping rounded-full"
                   ></span>{/if}
                 <span>{_state.lang.frames[type]}</span>
               </div>
-              <span class="text-text-strong mt-0.5 font-mono text-base font-extrabold"
+              <span
+                class="text-text-strong mt-0.5 font-mono text-lg font-extrabold lg:text-xl"
                 >{sToHHMM(totalSeconds)}</span
               >
-              <span class="text-text-muted text-[10px] font-semibold"
+              <span class="text-text-muted text-xs font-semibold lg:text-sm"
                 >{count} {resolveLanguagable(_lang.framesCount, count)}</span
               >
             </div>
@@ -335,13 +340,15 @@
         <div
           class="flex flex-col gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-md"
         >
-          <H3 class="text-text-strong border-b border-white/5 pb-2 text-lg font-bold">
+          <H3
+            class="text-text-strong border-b border-white/5 pb-2 text-xl font-bold lg:text-2xl"
+          >
             <Icon name="bi-compass" class="text-primary mr-1.5" />
             <span>{_lang.skyMap}</span>
           </H3>
 
           {#if data.objectTranslationUuid}
-            <div class="flex items-center gap-2 text-sm font-semibold">
+            <div class="flex items-center gap-2 text-base font-semibold lg:text-lg">
               <span class="text-text-muted">{_lang.object}:</span>
               <span
                 class="bg-primary/20 text-primary border-primary/25 rounded-full border px-3 py-0.5 font-bold"
@@ -353,7 +360,7 @@
 
           {#if data.post.ra !== null && data.post.dec !== null}
             <div
-              class="grid grid-cols-2 gap-2 rounded-xl border border-white/5 bg-white/5 p-3 font-mono text-xs font-semibold"
+              class="grid grid-cols-2 gap-2 rounded-xl border border-white/5 bg-white/5 p-3 font-mono text-sm font-semibold lg:text-base"
             >
               <div>
                 <span class="text-text-muted">RA:</span>
@@ -398,7 +405,7 @@
     </div>
 
     <!-- Right Column: Navigation Tabs & Tab Content (2/3rd width) -->
-    <div class="flex flex-col gap-6 xl:w-2/3">
+    <div class="flex flex-col gap-6 xl:w-[72%]">
       <!-- Section Tab Switcher (Segmented Pill Control) -->
       <div
         class="flex rounded-full border border-white/15 bg-slate-950/60 p-1 font-semibold shadow-2xl backdrop-blur-md"
