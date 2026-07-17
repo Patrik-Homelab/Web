@@ -1,11 +1,11 @@
 <script lang="ts">
+  import ClickOutside from '$/components/utility/clickOutside.svelte';
   import { getState, setState } from '$/lib/state.svelte';
   import type { BootstrapIcon } from '$/types/bootstrap_icons';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { untrack } from 'svelte';
   import Icon from './utility/Icon.svelte';
-  import ClickOutside from '$/components/utility/clickOutside.svelte';
 
   type NavItem = {
     name: string;
@@ -235,12 +235,12 @@
 <!-- Floating Glassmorphic Header Container -->
 <header class="fixed top-4 left-1/2 z-50 w-max max-w-[95%] -translate-x-1/2 px-2">
   <div
-    class="flex h-16 items-center justify-between gap-4 rounded-full border border-white/10 bg-slate-950/60 px-4 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:gap-6 sm:px-6"
+    class="flex min-h-[4rem] flex-row items-center justify-between gap-4 rounded-[2rem] border border-white/10 bg-slate-950/60 px-4 py-3.5 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:gap-6 sm:px-6"
   >
     <!-- Left: Brand / Title -->
     <a
       href="/{selectedLanguage}/"
-      class="flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-90"
+      class="flex shrink-0 items-center gap-2 align-middle transition-opacity duration-200 hover:opacity-90"
     >
       <span
         class="font-ephesis text-primary-text text-3xl font-bold tracking-wide whitespace-nowrap"
@@ -249,24 +249,24 @@
     </a>
 
     <!-- Center: Desktop Navigation -->
-    <nav
-      class="font-poppins hidden items-center gap-1.5 text-sm font-semibold lg:ml-8 lg:flex lg:gap-2.5 lg:text-base xl:ml-12"
-    >
-      {#each filteredNavigation as item, index (index)}
-        {@const isActive = _isActive(item)}
-        <a
-          href="/{selectedLanguage}{item.path}"
-          class={[
-            'flex items-center gap-2 rounded-full border px-4 py-2 transition-all duration-300 ease-in-out',
-            isActive
-              ? 'bg-primary/15 text-primary border-primary/25 shadow-[0_0_15px_rgba(var(--color-primary-500),0.1)]'
-              : 'text-text-muted hover:text-text border-transparent hover:bg-white/5'
-          ].join(' ')}
-        >
-          <Icon name={item.icon} class="text-lg" />
-          <span class="whitespace-nowrap">{item.name}</span>
-        </a>
-      {/each}
+    <nav class="font-poppins hidden items-center lg:ml-8 lg:flex xl:ml-12">
+      <div class="flex flex-wrap items-center justify-center gap-x-1.5 lg:gap-x-2.5">
+        {#each filteredNavigation as item, index (index)}
+          {@const isActive = _isActive(item)}
+          <a
+            href="/{selectedLanguage}{item.path}"
+            class={[
+              'flex items-center gap-2 rounded-full border px-4 py-2 transition-all duration-300 ease-in-out',
+              isActive
+                ? 'bg-primary/15 text-primary border-primary/25 shadow-[0_0_15px_rgba(var(--color-primary-500),0.1)]'
+                : 'text-text-muted hover:text-text border-transparent hover:bg-white/5'
+            ].join(' ')}
+          >
+            <Icon name={item.icon} class="text-lg" />
+            <span class="whitespace-nowrap">{item.name}</span>
+          </a>
+        {/each}
+      </div>
     </nav>
 
     <!-- Right: Stars Switch, Language Picker & Mobile Menu Trigger -->

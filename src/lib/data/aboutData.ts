@@ -150,17 +150,22 @@ export const aboutCards: CardData[] = [
             year: '2016',
             title: 'První jiskra: Drag-and-Drop rozvržení',
             desc: 'Moje úplně první zkušenost s webovým vývojem začala ještě před nástupem na střední školu. Tehdy jsem začal experimentovat s jednoduchým webovým designem a strukturou stránek, přičemž jsem zkoušel klikat v drag-and-drop nástroji WYSIWYG Web Builder, abych vůbec dostal do ruky cit pro to, jak se jednotlivé prvky na obrazovce skládají k sobě.',
-            image: '/images/webBuilder.jpg'
+            thumbnail: '/images/webBuilder.jpg',
+            image: '/images/webBuilder_hr.jpg'
           },
           {
             year: '2018 - 2022',
             title: 'Tajný programátor: Středoškolské laboratoře a samostudium',
-            desc: 'Hned v prváku na chemické škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy než já a s chemií (hlavně s tou organickou) jsem docela bojoval. Postupně jsem zjišťoval, že laboratoře jsou sice fajn, ale chemie jako taková mě úplně nenaplňuje. Zlom přišel s pandemií Covid-19, která úplně rozbila běžnou rutinu – výuka se přesunula do online prostoru, což většinou znamenalo ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Já jsem ale tento čas doma využil k tomu, že jsem se začal intenzivně a tvrdohlavě učit programovat. Mezi lety 2018 a 2020 jsem se zaměřil na tvorbu svých prvních osobních webů a v letech 2020 až 2022 se mi podařilo úspěšně upevnit své programátorské základy. Střední školu jsem sice úspěšně odmaturoval, ale věděl jsem, že chci jít dál cestou IT.'
+            desc: 'Hned v prváku na chemické škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy než já a s chemií (hlavně s tou organickou) jsem docela bojoval. Postupně jsem zjišťoval, že laboratoře jsou sice fajn, ale chemie jako taková mě úplně nenaplňuje. Zlom přišel s pandemií Covid-19, která úplně rozbila běžnou rutinu – výuka se přesunula do online prostoru, což většinou znamenalo ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Já jsem ale tento čas doma využil k tomu, že jsem se začal intenzivně a tvrdohlavě učit programovat. Mezi lety 2018 a 2020 jsem se zaměřil na tvorbu svých prvních osobních webů a v letech 2020 až 2022 se mi podařilo úspěšně upevnit své programátorské základy. Střední školu jsem sice úspěšně odmaturoval, ale věděl jsem, že chci jít dál cestou IT.',
+            thumbnail: '/images/oldPage.png',
+            image: '/images/oldPage_hr.png'
           },
           {
             year: '2022',
             title: 'Rozšiřování ekosystému: DiscordJS a SvelteKit',
-            desc: 'Tento rok byl pro můj technologický stack klíčový, protože jsem se posunul od úplných základních stavebních bloků k modernímu javascriptovému ekosystému. Výrazně jsem rozšířil své obzory, když jsem kompletně pronikl do **SvelteKit** a začal vyvíjet vlastní automatizační boty pomocí **DiscordJS**.'
+            desc: 'Tento rok byl pro můj technologický stack klíčový, protože jsem se posunul od úplných základních stavebních bloků k modernímu javascriptovému ekosystému. Výrazně jsem rozšířil své obzory, když jsem kompletně pronikl do **SvelteKit** a začal vyvíjet vlastní automatizační boty pomocí **DiscordJS**.',
+            thumbnail: '/images/djs.png',
+            image: '/images/djs_hr.png'
           },
           {
             year: '2022 - 2025',
@@ -204,17 +209,22 @@ export const aboutCards: CardData[] = [
             year: '2016',
             title: 'The Early Spark: Drag-and-Drop Layouts',
             desc: 'My very first exposure to web development actually began slightly before high school. I started experimenting with basic web design and layouts, tinkering with a drag-and-drop WYSIWYG Web Builder to get a feel for how elements came together on a screen.',
-            image: '/images/webBuilder.jpg'
+            image: '/images/webBuilder_hr.jpg',
+            thumbnail: '/images/webBuilder.jpg'
           },
           {
             year: '2018 - 2022',
             title: 'The Secret Programmer: High School Labs & Self-Education',
-            desc: 'Upon entering high school, I quickly realized my peers had much more advanced chemistry foundations than I did, and I found myself struggling to catch up, particularly with organic chemistry. When the Covid-19 pandemic hit, it completely disrupted my routine; school shifted to online learning, which usually meant waking up, logging into class, and either going right back to sleep or playing games with friends. However, I used my free time at home to relentlessly teach myself programming. Between 2018 and 2020, I focused on building early personal websites, and from 2020 to 2022, I successfully solidified my core coding foundations.'
+            desc: 'Upon entering high school, I quickly realized my peers had much more advanced chemistry foundations than I did, and I found myself struggling to catch up, particularly with organic chemistry. When the Covid-19 pandemic hit, it completely disrupted my routine; school shifted to online learning, which usually meant waking up, logging into class, and either going right back to sleep or playing games with friends. However, I used my free time at home to relentlessly teach myself programming. Between 2018 and 2020, I focused on building early personal websites, and from 2020 to 2022, I successfully solidified my core coding foundations.',
+            image: '/images/oldPage_hr.png',
+            thumbnail: '/images/oldPage.png'
           },
           {
             year: '2022',
             title: 'Expanding the Ecosystem: DiscordJS & SvelteKit',
-            desc: 'This was a massive breakout year for my self-taught development stack as I transitioned away from basic building blocks and dove headfirst into modern JavaScript ecosystems. I expanded my toolkit significantly by mastering **SvelteKit** and developing custom automation bots using **DiscordJS**.'
+            desc: 'This was a massive breakout year for my self-taught development stack as I transitioned away from basic building blocks and dove headfirst into modern JavaScript ecosystems. I expanded my toolkit significantly by mastering **SvelteKit** and developing custom automation bots using **DiscordJS**.',
+            image: '/images/djs_hr.png',
+            thumbnail: '/images/djs.png'
           },
           {
             year: '2022 - 2025',
@@ -266,29 +276,38 @@ export const aboutCards: CardData[] = [
           {
             year: 'Červen 2023',
             title: 'Mobilní jiskra: Objevování noční oblohy',
-            desc: 'Moje cesta do hlubin vesmíru začala víceméně nečekaně, když jsem si v červnu 2023 pořídil nový telefon Google Pixel 7a. Výhodou telefonů řady Pixel je, že běžnou verzi Androidu doplňuje i oficiální aplikace Google Fotoaparát disponující specializovaným astrofotografickým módem. Fascinován touto funkcí jsem začal ze své zahrady zkoušet fotit noční oblohu na dlouhé expozice, abych zjistil, jaké skryté detaily dokáže mobilní senzor zachytit. Přibližně ve stejné době jsem se pokusil posunout své limity pomocí staré rodinné kamery, která nabízela obrovský 60násobný optický zoom (až 80násobný digitální). Pokusil jsem se s ní vyfotit Měsíc a aspoň trochu zachytit Saturn, ale výsledky byly poměrně slabé, což ve mně pouze probudilo touhu po skutečném astronomickém vybavení.'
+            desc: 'Moje cesta do hlubin vesmíru začala víceméně nečekaně, když jsem si v červnu 2023 pořídil nový telefon Google Pixel 7a. Výhodou telefonů řady Pixel je, že běžnou verzi Androidu doplňuje i oficiální aplikace Google Fotoaparát disponující specializovaným astrofotografickým módem. Fascinován touto funkcí jsem začal ze své zahrady zkoušet fotit noční oblohu na dlouhé expozice, abych zjistil, jaké skryté detaily dokáže mobilní senzor zachytit. Přibližně ve stejné době jsem se pokusil posunout své limity pomocí staré rodinné kamery, která nabízela obrovský 60násobný optický zoom (až 80násobný digitální). Pokusil jsem se s ní vyfotit Měsíc a aspoň trochu zachytit Saturn, ale výsledky byly poměrně slabé, což ve mně pouze probudilo touhu po skutečném astronomickém vybavení.',
+            image: '/images/night_sky.jpg'
           },
           {
             year: 'Konec roku 2023',
             title: 'První skutečná optika: Teleskop k 20. narozeninám',
-            desc: 'Rodiče si postupně všimli mé rostoucí fascinace vesmírem a hvězdnou oblohou, a proto mě k mým 20. narozeninám překvapili koupí mého úplně prvního teleskopu – Celestron Astromaster 130EQ. Vyzbrojen skutečnou optikou jsem začal trávit noci pozorováním oblohy, vyhledáváním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem chtěl vizuální zážitky také zdokumentovat, brzy jsem své možnosti rozšířil nákupem dedikované planetární kamery ZWO ASI678MC a začal zkoušet skutečné fotografování. S touto novou sestavou se mi podařilo úspěšně vyfotit Jupiter a pořídit detailní snímky Měsíce.'
+            desc: 'Rodiče si postupně všimli mé rostoucí fascinace vesmírem a hvězdnou oblohou, a proto mě k mým 20. narozeninám překvapili koupí mého úplně prvního teleskopu – Celestron Astromaster 130EQ. Vyzbrojen skutečnou optikou jsem začal trávit noci pozorováním oblohy, vyhledáváním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem chtěl vizuální zážitky také zdokumentovat, brzy jsem své možnosti rozšířil nákupem dedikované planetární kamery ZWO ASI678MC a začal zkoušet skutečné fotografování. S touto novou sestavou se mi podařilo úspěšně vyfotit Jupiter a pořídit detailní snímky Měsíce.',
+            image:
+              'https://patrick115.eu/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
           },
           {
             year: '2024',
             title: 'Vstup do hlubokého vesmíru: Montáž Star Adventurer',
-            desc: 'Následující rok znamenal obrovský posun v mém přístupu, protože jsem přešel od pozorování planet k objektům hlubokého vesmíru (DSO). Pořídil jsem si svoji první motorizovanou rovníkovou montáž SkyWatcher Star Adventurer GTI, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem si uvědomil, že focení vzdálených mlhovin a galaxií mě fascinuje mnohem více než planety. Abych si vybudoval specializovaný DSO setup, postupně jsem kompletně obměnil výbavu: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro pro eliminaci tepelného šumu a starý teleskop nahradil prémiovým refraktorem William Optics RedCat 51 s naváděcím dalekohledem. S touto pokročilou sestavou jsem úspěšně vyfotit své první mlhoviny, galaxie a další objekty.'
+            desc: 'Následující rok znamenal obrovský posun v mém přístupu, protože jsem přešel od pozorování planet k objektům hlubokého vesmíru (DSO). Pořídil jsem si svoji první motorizovanou rovníkovou montáž SkyWatcher Star Adventurer GTI, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem si uvědomil, že focení vzdálených mlhovin a galaxií mě fascinuje mnohem více než planety. Abych si vybudoval specializovaný DSO setup, postupně jsem kompletně obměnil výbavu: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro pro eliminaci tepelného šumu a starý teleskop nahradil prémiovým refraktorem William Optics RedCat 51 s naváděcím dalekohledem. S touto pokročilou sestavou jsem úspěšně vyfotit své první mlhoviny, galaxie a další objekty.',
+            image:
+              'https://patrick115.eu/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
           },
           {
             year: '2025',
             title:
               'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
-            desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.'
+            desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.',
+            image:
+              'https://patrick115.eu/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
           },
 
           {
             year: 'Červen 2026',
             title: 'Rozšiřování obzorů: 10palcový planetární upgrade',
-            desc: "V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10'' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru."
+            desc: "V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10'' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru.",
+            image:
+              'https://patrick115.eu/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
           }
         ]
       },
@@ -301,28 +320,37 @@ export const aboutCards: CardData[] = [
           {
             year: 'June 2023',
             title: 'The Smartphone Spark: Discovering the Night Sky',
-            desc: 'My journey into the cosmos unexpectedly began when I bought a new phone, the Google Pixel 7a. Because Pixel phones run a "clean" version of Android, they come equipped with the official Google Camera app, which features a dedicated astrophotography mode. Fascinated by this feature, I began taking long-exposure pictures of the night sky right from my backyard just to see what hidden details the sensor could capture. Around the same time, I tried to push my limits by using an old family camera that featured a massive 60x optical zoom (up to 80x digital zoom). I used it to try and photograph the Moon and even get a glimpse of Saturn, but the results were quite poor, which only fueled my desire for proper equipment.'
+            desc: 'My journey into the cosmos unexpectedly began when I bought a new phone, the Google Pixel 7a. Because Pixel phones run a "clean" version of Android, they come equipped with the official Google Camera app, which features a dedicated astrophotography mode. Fascinated by this feature, I began taking long-exposure pictures of the night sky right from my backyard just to see what hidden details the sensor could capture. Around the same time, I tried to push my limits by using an old family camera that featured a massive 60x optical zoom (up to 80x digital zoom). I used it to try and photograph the Moon and even get a glimpse of Saturn, but the results were quite poor, which only fueled my desire for proper equipment.',
+            image: '/images/night_sky.jpg'
           },
           {
             year: 'Late 2023',
             title: 'First Real Optics: The 20th Birthday Telescope',
-            desc: 'Noticing my growing fascination with outer space and the starry sky, my parents surprised me for my 20th birthday by buying me my very first telescope: a Celestron Astromaster 130EQ. Armed with proper optics, I spent my nights exploring the sky, tracking down the Moon, planets, and anything else I could find. Eager to capture what I was seeing visually, I soon upgraded my capabilities by purchasing a dedicated planetary camera—the ZWO ASI678MC. With this new setup, I successfully managed to take my first proper images of Jupiter and detailed close-ups of the Moon.'
+            desc: 'Noticing my growing fascination with outer space and the starry sky, my parents surprised me for my 20th birthday by buying me my very first telescope: a Celestron Astromaster 130EQ. Armed with proper optics, I spent my nights exploring the sky, tracking down the Moon, planets, and anything else I could find. Eager to capture what I was seeing visually, I soon upgraded my capabilities by purchasing a dedicated planetary camera—the ZWO ASI678MC. With this new setup, I successfully managed to take my first proper images of Jupiter and detailed close-ups of the Moon.',
+            image:
+              'https://patrick115.eu/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
           },
           {
             year: '2024',
             title: 'Entering Deep Space: The Star Adventurer Mount',
-            desc: 'The following year marked a massive shift in my approach as I transitioned from planetary observation to Deep Sky Objects (DSO). I purchased my first motorized tracking mount, the SkyWatcher Star Adventurer GTI, which completely unlocked the ability to take the long exposures necessary to capture faint, distant objects. I quickly realized that imaging distant nebulae and galaxies fascinated me far more than planets. To build a dedicated DSO rig, I gradually overhauled my gear: I bought a cooled astrophotography camera (the ZWO ASI585MC Pro) to eliminate thermal noise and replaced my old telescope with a premium William Optics RedCat 51 refractor telescope, complete with a separate guide scope. With this advanced setup, I successfully captured my very first deep-space nebulae and galaxies.'
+            desc: 'The following year marked a massive shift in my approach as I transitioned from planetary observation to Deep Sky Objects (DSO). I purchased my first motorized tracking mount, the SkyWatcher Star Adventurer GTI, which completely unlocked the ability to take the long exposures necessary to capture faint, distant objects. I quickly realized that imaging distant nebulae and galaxies fascinated me far more than planets. To build a dedicated DSO rig, I gradually overhauled my gear: I bought a cooled astrophotography camera (the ZWO ASI585MC Pro) to eliminate thermal noise and replaced my old telescope with a premium William Optics RedCat 51 refractor telescope, complete with a separate guide scope. With this advanced setup, I successfully captured my very first deep-space nebulae and galaxies.',
+            image:
+              'https://patrick115.eu/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
           },
           {
             year: '2025',
             title: 'Hardware Overhaul & Processing Mastery: Building a Remote Rig',
-            desc: 'As my passion grew, 2025 became a year of heavy technical optimization for my DSO setup. I significantly upgraded my tracking capabilities by acquiring a new high-end mount, the Proxisky Ragdoll 17 Pro, and automated my workflows by adding an electronic auto-focuser (Gemini Astro EAF) alongside a dedicated mini PC to run the entire rig smoothly at night. Alongside the physical hardware, my post-processing workflow underwent a massive evolution. I initially started stacking and editing my images using a combination of Deep Sky Stacker and Siril. Later on, I shifted to Deep Sky Stacker combined with PixInsight, before ultimately migrating my entire stacking and processing pipeline completely into PixInsight to achieve publication-grade results.'
+            desc: 'As my passion grew, 2025 became a year of heavy technical optimization for my DSO setup. I significantly upgraded my tracking capabilities by acquiring a new high-end mount, the Proxisky Ragdoll 17 Pro, and automated my workflows by adding an electronic auto-focuser (Gemini Astro EAF) alongside a dedicated mini PC to run the entire rig smoothly at night. Alongside the physical hardware, my post-processing workflow underwent a massive evolution. I initially started stacking and editing my images using a combination of Deep Sky Stacker and Siril. Later on, I shifted to Deep Sky Stacker combined with PixInsight, before ultimately migrating my entire stacking and processing pipeline completely into PixInsight to achieve publication-grade results.',
+            image:
+              'https://patrick115.eu/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
           },
 
           {
             year: 'June 2026',
             title: 'Expanding Horizons: The 10-Inch Planetary Upgrade',
-            desc: "In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10'' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup."
+            desc: "In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10'' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup.",
+            image:
+              'https://patrick115.eu/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
           }
         ]
       }
