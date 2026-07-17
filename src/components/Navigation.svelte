@@ -230,16 +230,17 @@
     <!-- Left: Brand / Title -->
     <a
       href="/{selectedLanguage}/"
-      class="flex items-center gap-2 transition-opacity duration-200 hover:opacity-90"
+      class="flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-90"
     >
-      <span class="font-ephesis text-primary-text text-3xl font-bold tracking-wide"
+      <span
+        class="font-ephesis text-primary-text text-3xl font-bold tracking-wide whitespace-nowrap"
         >Patrik Mintěl</span
       >
     </a>
 
     <!-- Center: Desktop Navigation -->
     <nav
-      class="font-poppins hidden items-center gap-1 text-sm font-semibold md:flex lg:gap-2 lg:text-base"
+      class="font-poppins hidden items-center gap-1.5 text-sm font-semibold lg:ml-8 lg:flex lg:gap-2.5 lg:text-base xl:ml-12"
     >
       {#each filteredNavigation as item, index (index)}
         {@const isActive = _isActive(item)}
@@ -253,13 +254,13 @@
           ].join(' ')}
         >
           <Icon name={item.icon} class="text-lg" />
-          <span>{item.name}</span>
+          <span class="whitespace-nowrap">{item.name}</span>
         </a>
       {/each}
     </nav>
 
     <!-- Right: Stars Switch, Language Picker & Mobile Menu Trigger -->
-    <div class="flex items-center gap-2.5 md:gap-4">
+    <div class="flex shrink-0 items-center gap-2.5 lg:gap-4">
       <!-- Stars Toggle Switch -->
       <button
         onclick={toggleStars}
@@ -277,10 +278,10 @@
       </button>
 
       <!-- Custom Language Dropdown (SVG Flags) -->
-      <ClickOutside clickoutside={() => (dropdownOpen = false)} class="relative">
+      <ClickOutside clickoutside={() => (dropdownOpen = false)} class="relative shrink-0">
         <button
           onclick={() => (dropdownOpen = !dropdownOpen)}
-          class="text-text-strong flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-4.5 py-1.5 text-xs font-bold transition-all hover:bg-slate-800/80 focus:outline-none md:text-sm"
+          class="text-text-strong flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-4.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all hover:bg-slate-800/80 focus:outline-none md:text-sm"
         >
           {@render flag(selectedLanguage)}
           <span class="hidden sm:inline">{_state.languages[selectedLanguage].name}</span>
@@ -312,7 +313,7 @@
       <button
         onclick={() => (mobileOpened = true)}
         aria-label="Toggle Menu"
-        class="text-text flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xl transition-colors duration-200 hover:bg-white/5 md:hidden"
+        class="text-text flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xl transition-colors duration-200 hover:bg-white/5 lg:hidden"
       >
         <Icon name="bi-list" />
       </button>
@@ -336,7 +337,7 @@
           ].join(' ')}
         >
           <Icon name={item.icon} class="text-sm" />
-          <span>{item.name}</span>
+          <span class="whitespace-nowrap">{item.name}</span>
         </a>
       {/each}
     </div>
@@ -346,7 +347,7 @@
 <!-- Mobile Fullscreen Slide Overlay -->
 {#if mobileOpened}
   <div
-    class="fixed inset-0 z-50 flex h-screen w-screen flex-col bg-slate-950/98 p-6 shadow-2xl backdrop-blur-2xl md:hidden"
+    class="fixed inset-0 z-50 flex h-screen w-screen flex-col bg-slate-950/98 p-6 shadow-2xl backdrop-blur-2xl lg:hidden"
   >
     <div
       class="mx-auto mb-10 flex w-full max-w-xl items-center justify-between border-b border-white/10 pb-4"

@@ -21,7 +21,7 @@ module.exports = {
                         '--tw-prose-pre-bg': 'var(--color-surface)',
                         '--tw-prose-th-borders': 'var(--color-divider)',
                         '--tw-prose-td-borders': 'var(--color-border)',
-                        '--tw-prose-invert-body': 'var(--color-text-inverse)',
+                        '--tw-prose-invert-body': 'var(--color-text)',
                         '--tw-prose-invert-headings': 'var(--color-text-strong)',
                         '--tw-prose-invert-lead': 'var(--color-text-muted)',
                         '--tw-prose-invert-links': 'var(--color-primary-text)',
@@ -33,7 +33,7 @@ module.exports = {
                         '--tw-prose-invert-quote-borders': 'var(--color-divider)',
                         '--tw-prose-invert-captions': 'var(--color-text-muted)',
                         '--tw-prose-invert-code': 'var(--color-primary-text)',
-                        '--tw-prose-invert-pre-code': 'var(--color-text-inverse)',
+                        '--tw-prose-invert-pre-code': 'var(--color-text)',
                         '--tw-prose-invert-pre-bg': 'oklch(0.05 0.003 260)',
                         '--tw-prose-invert-th-borders': 'var(--color-divider)',
                         '--tw-prose-invert-td-borders': 'var(--color-border)'
