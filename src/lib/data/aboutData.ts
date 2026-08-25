@@ -142,11 +142,6 @@ export const aboutCards: CardData[] = [
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
           {
-            year: 'Před rokem 2018',
-            title: 'Rozcestí: Volba té těžší cesty',
-            desc: 'Od základní školy mě neskutečně bavila matematika a chemie, což mě postavilo před těžké rozhodování, zda jít na elektrotechnickou střední školu a vydat se cestou programování, nebo zvolit chemii. Můj děda mi tehdy dal zásadní radu: podat si přihlášku na obě a pokud mě vezmou na obě, vybrat si tu těžší. Podal jsem si tedy přihlášky na Střední školu chemickou akademika Heyrovského v Ostravě a na dvě elektrotechnické školy v Havířově. Když přišly výsledky, na elektrotechnice jsem skončil na 13. místě z 30 přijímaných. Na chemické škole jsem se umístil na 57. místě ze 60 – od čáry neúspěchu mě dělilo jen pár desetin bodu, takže jsem se dostal jen tak tak. Vybral jsem si chemii s vědomím, že pokročilé chemické laboratoře si doma nezařídím, ale programovat se můžu v klidu učit sám ve volném čase. Tím začal můj příběh na chemické střední škole.'
-          },
-          {
             year: '2016',
             title: 'První jiskra: Drag-and-Drop rozvržení',
             desc: 'Moje úplně první zkušenost s webovým vývojem začala ještě před nástupem na střední školu. Tehdy jsem začal experimentovat s jednoduchým webovým designem a strukturou stránek, přičemž jsem zkoušel klikat v drag-and-drop nástroji WYSIWYG Web Builder, abych vůbec dostal do ruky cit pro to, jak se jednotlivé prvky na obrazovce skládají k sobě.',
@@ -200,11 +195,6 @@ export const aboutCards: CardData[] = [
         shortDesc: 'How I learned to code, my favorite stacks, and tech milestones.',
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
-          {
-            year: 'Before 2018',
-            title: 'The Fork in the Road: Choosing the Harder Path',
-            desc: "Since elementary school, I was deeply drawn to mathematics and chemistry, which left me torn between attending an electrical engineering high school to pursue programming or going down the chemistry route. My grandfather gave me a pivotal piece of advice: apply to both, and if you get accepted to both, choose the harder one. Following this, I applied to the Chemistry High School in Ostrava (Střední škola chemická akademika heyrovského) and two electrical schools in Havířov. When the results came in, I ranked 13th out of 30 for electrical engineering, but placed 57th out of 60 for chemistry—barely making the cut by a few fractions of a point. I chose the chemistry school, knowing that while I couldn't easily replicate advanced chemistry labs at home, I could always teach myself how to code in my own free time."
-          },
           {
             year: '2016',
             title: 'The Early Spark: Drag-and-Drop Layouts',

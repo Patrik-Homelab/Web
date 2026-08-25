@@ -35,8 +35,8 @@
       icon: 'bi-envelope',
       name: 'Email',
       button: 'send',
-      tag: 'info@patrick115.eu',
-      url: 'mailto:info@patrick115.eu',
+      tag: 'patrik@mintel.cz',
+      url: 'mailto:patrik@mintel.cz',
       descriptionKey: 'contact.descriptions.email',
       glowClass:
         'hover:border-primary/35 hover:shadow-[0_0_30px_rgba(var(--color-primary-500),0.15)]',
