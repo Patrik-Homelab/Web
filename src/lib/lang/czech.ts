@@ -6,6 +6,7 @@ export default lang.parse({
     'Ahoj, jsem Patrik, student a programátor, který se ve volném čase věnuje astrofotografování. Věnuji se tvorbě webových stránek a aplikací ve frameworku SvelteKit. Nebráním se tvorbě jiných aplikací, například v NodeJS, nebo jiných frameworkcích, jako jsou Vue.js, nebo React.',
   yes: 'Ano',
   no: 'Ne',
+  cancel: 'Zrušit',
   language: 'Jazyk',
   navigation: {
     home: 'Domů',
@@ -20,7 +21,8 @@ export default lang.parse({
   adminNavigation: {
     home: 'Panel',
     equipment: 'Vybavení',
-    articles: 'Články'
+    articles: 'Články',
+    movies: 'Filmy'
   },
   error: {
     title: 'Chyba',
@@ -246,7 +248,59 @@ export default lang.parse({
           calculateFov: 'Vypočítat FOV z techniky'
         }
       }
+    },
+    movies: {
+      title: 'Filmy a Seriály',
+      addTitle: 'Přidat film / seriál',
+      editTitle: {
+        title: 'Úprava filmu / seriálu #%1',
+        button: 'Upravit'
+      },
+      delete: {
+        question: 'Opravdu chceš smazat tento film / seriál?'
+      },
+      success: 'Film / seriál byl úspěšně přidán!',
+      editSuccess: 'Film / seriál byl úspěšně upraven!',
+      deleteSuccess: 'Film / seriál byl úspěšně smazán!',
+      empty: 'Žádné filmy ani seriály nebyly přidány.',
+      fields: {
+        titleCs: 'Název (CZ)',
+        titleEn: 'Název (EN)',
+        type: 'Typ',
+        movie: 'Film',
+        series: 'Seriál',
+        releaseYear: 'Rok vydání',
+        rating: 'Hodnocení (0 - 5)',
+        addedAt: 'Datum přidání',
+        reviewCs: 'Recenze (CZ)',
+        reviewEn: 'Recenze (EN)',
+        button: 'Uložit'
+      }
     }
+  },
+  movies: {
+    title: 'Filmy a Seriály',
+    description: 'Zde najdeš seriály a filmy, které jsem zhlédl, a moje krátké recenze.',
+    searchPlaceholder: 'Hledat film, seriál nebo text v recenzi...',
+    allTypes: 'Všechny typy',
+    series: 'Seriály',
+    movie: 'Filmy',
+    allRatings: 'Všechna hodnocení',
+    allYears: 'Všechny roky',
+    sortBy: 'Řadit podle',
+    sortAddedDesc: 'Nejnověji přidané',
+    sortAddedAsc: 'Nejstarší přidané',
+    sortRatingDesc: 'Nejvyšší hodnocení',
+    sortRatingAsc: 'Nejnižší hodnocení',
+    sortYearDesc: 'Rok vydání (nejnovější)',
+    sortYearAsc: 'Rok vydání (nejstarší)',
+    sortTitleAsc: 'Název (A-Z)',
+    filterStars: 'Hvězdičky',
+    filterYear: 'Rok vydání',
+    filterType: 'Typ',
+    resetFilters: 'Resetovat filtry',
+    emptySearch: 'Nebyly nalezeny žádné filmy ani seriály odpovídající filtrům.',
+    addedOn: 'Přidáno'
   },
   gallery: {
     title: 'Astro-Galerie',
@@ -334,6 +388,10 @@ export default lang.parse({
       noDescrption: 'Musíš zadat popisek článku.',
       noContent: 'Musíš zadat obsah článku.',
       noAltText: 'Musíš zadat popisek obrázku.'
+    },
+    movies: {
+      form: 'Vyplň prosím všechna povinná pole správně.',
+      notFound: 'Film / seriál nebyl nalezen.'
     }
   },
   equipmentType: {
