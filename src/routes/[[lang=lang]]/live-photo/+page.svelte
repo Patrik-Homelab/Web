@@ -81,7 +81,7 @@
 
         <!-- Tech Overlay Info -->
         <div
-          class="text-primary-text pointer-events-none absolute top-4 left-10 z-20 flex items-center gap-1.5 font-mono text-[9px] tracking-widest uppercase"
+          class="text-primary-text pointer-events-none absolute top-4 left-10 z-0 flex items-center gap-1.5 font-mono text-[9px] tracking-widest uppercase"
         >
           <span
             class={[
@@ -93,7 +93,7 @@
         </div>
 
         <div
-          class="text-text-muted pointer-events-none absolute right-10 bottom-4 z-20 font-mono text-[9px] tracking-wider uppercase"
+          class="text-text-muted pointer-events-none absolute right-10 bottom-4 z-0 font-mono text-[9px] tracking-wider uppercase"
         >
           {liveData?.imageInfo?.Date
             ? new Date(liveData.imageInfo.Date).toLocaleString()
@@ -102,21 +102,12 @@
 
         <!-- Central scope crosshair -->
         <div
-          class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center opacity-25"
+          class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-25"
         >
           <div class="bg-primary h-6 w-[1px]"></div>
           <div class="bg-primary h-[1px] w-6"></div>
           <div class="border-primary absolute h-8 w-8 rounded-full border"></div>
         </div>
-
-        <!-- Status display or image -->
-        <span
-          class="text-text-muted z-0 px-4 text-center font-mono text-sm tracking-wider uppercase"
-        >
-          {liveData?.active
-            ? liveData?.currentAction || appState.lang.live_photo.inactive
-            : appState.lang.live_photo.inactive}
-        </span>
 
         {#if liveData?.active && liveData?.showImage}
           <img
