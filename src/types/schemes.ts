@@ -116,3 +116,15 @@ export const articleSchema = (lang: keyof typeof languages) =>
       }, z.number().nullable())
       .optional()
   });
+
+export const movieSchema = () =>
+  z.object({
+    id: z.coerce.number().optional(),
+    title: z.string().min(1),
+    type: z.enum(['movie', 'series']),
+    release_year: z.coerce.number().int().min(1900).max(2100),
+    rating: z.coerce.number().min(0).max(5),
+    added_at: z.coerce.date(),
+    review: z.string().min(1),
+    image: z.string().nullable().optional()
+  });

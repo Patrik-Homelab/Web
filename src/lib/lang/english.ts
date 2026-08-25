@@ -6,6 +6,7 @@ export default lang.parse({
     'Hello, I am Patrik, a student and programmer who enjoys astrophotography in my free time. I create websites and applications using the SvelteKit framework. I am open to creating other applications, for example in NodeJS or other frameworks like Vue.js or React.',
   yes: 'Yes',
   no: 'No',
+  cancel: 'Cancel',
   language: 'Language',
   navigation: {
     home: 'Home',
@@ -20,7 +21,8 @@ export default lang.parse({
   adminNavigation: {
     home: 'Dashboard',
     equipment: 'Equipment',
-    articles: 'Articles'
+    articles: 'Articles',
+    movies: 'Movies'
   },
   error: {
     title: 'Error',
@@ -247,7 +249,60 @@ export default lang.parse({
           calculateFov: 'Calculate FOV from specs'
         }
       }
+    },
+    movies: {
+      title: 'Movies & Series',
+      addTitle: 'Add Movie / Series',
+      editTitle: {
+        title: 'Edit Movie / Series #%1',
+        button: 'Save'
+      },
+      delete: {
+        question: 'Are you sure you want to delete this movie / series?'
+      },
+      success: 'Movie / series added successfully!',
+      editSuccess: 'Movie / series updated successfully!',
+      deleteSuccess: 'Movie / series deleted successfully!',
+      empty: 'No movies or series added yet.',
+      fields: {
+        titleCs: 'Title (CZ)',
+        titleEn: 'Title (EN)',
+        type: 'Type',
+        movie: 'Movie',
+        series: 'Series',
+        releaseYear: 'Release Year',
+        rating: 'Rating (0 - 5)',
+        addedAt: 'Added Date',
+        reviewCs: 'Review (CZ)',
+        reviewEn: 'Review (EN)',
+        button: 'Save'
+      }
     }
+  },
+  movies: {
+    title: 'Movies & Series',
+    description:
+      'Here you will find series and movies I have watched, along with my short reviews.',
+    searchPlaceholder: 'Search movie, series, or review content...',
+    allTypes: 'All Types',
+    series: 'Series',
+    movie: 'Movies',
+    allRatings: 'All Ratings',
+    allYears: 'All Years',
+    sortBy: 'Sort by',
+    sortAddedDesc: 'Recently Added',
+    sortAddedAsc: 'Oldest Added',
+    sortRatingDesc: 'Highest Rating',
+    sortRatingAsc: 'Lowest Rating',
+    sortYearDesc: 'Release Year (Newest)',
+    sortYearAsc: 'Release Year (Oldest)',
+    sortTitleAsc: 'Title (A-Z)',
+    filterStars: 'Stars',
+    filterYear: 'Release Year',
+    filterType: 'Type',
+    resetFilters: 'Reset Filters',
+    emptySearch: 'No movies or series match your filters.',
+    addedOn: 'Added'
   },
   gallery: {
     title: 'Astro-Gallery',
@@ -335,6 +390,10 @@ export default lang.parse({
       noDescrption: 'You need to enter article description.',
       noContent: 'You need to enter article content.',
       noAltText: 'You need to enter image description.'
+    },
+    movies: {
+      form: 'Please fill in all required fields correctly.',
+      notFound: 'Movie / series not found.'
     }
   },
   equipmentType: {

@@ -28,6 +28,7 @@ export default o({
   default_desc: _,
   yes: _,
   no: _,
+  cancel: _,
   language: _,
   navigation: o({
     home: _,
@@ -42,7 +43,8 @@ export default o({
   adminNavigation: o({
     home: _,
     equipment: _,
-    articles: _
+    articles: _,
+    movies: _
   }),
   error: o({
     title: _,
@@ -215,7 +217,59 @@ export default o({
           calculateFov: _
         })
       })
+    }),
+    movies: o({
+      title: _,
+      addTitle: _,
+      editTitle: o({
+        title: _,
+        button: _
+      }),
+      delete: o({
+        question: _
+      }),
+      success: _,
+      editSuccess: _,
+      deleteSuccess: _,
+      empty: _,
+      fields: o({
+        titleCs: _,
+        titleEn: _,
+        type: _,
+        movie: _,
+        series: _,
+        releaseYear: _,
+        rating: _,
+        addedAt: _,
+        reviewCs: _,
+        reviewEn: _,
+        button: _
+      })
     })
+  }),
+  movies: o({
+    title: _,
+    description: _,
+    searchPlaceholder: _,
+    allTypes: _,
+    series: _,
+    movie: _,
+    allRatings: _,
+    allYears: _,
+    sortBy: _,
+    sortAddedDesc: _,
+    sortAddedAsc: _,
+    sortRatingDesc: _,
+    sortRatingAsc: _,
+    sortYearDesc: _,
+    sortYearAsc: _,
+    sortTitleAsc: _,
+    filterStars: _,
+    filterYear: _,
+    filterType: _,
+    resetFilters: _,
+    emptySearch: _,
+    addedOn: _
   }),
   gallery: o({
     title: _,
@@ -290,6 +344,10 @@ export default o({
       noDescrption: _,
       noContent: _,
       noAltText: _
+    }),
+    movies: o({
+      form: _,
+      notFound: _
     })
   }),
   equipmentType: o({

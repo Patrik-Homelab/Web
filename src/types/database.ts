@@ -91,6 +91,19 @@ export interface Visitors {
   user_agent: string;
 }
 
+export interface Movie {
+  added_at: Date;
+  created_at: Generated<Date>;
+  id: Generated<number>;
+  image: Generated<string | null>;
+  rating: number;
+  release_year: number;
+  review: string;
+  title: string;
+  type: string;
+  updated_at: Generated<Date>;
+}
+
 export interface DB {
   account: Account;
   article: Article;
@@ -100,6 +113,7 @@ export interface DB {
   equipment_type: EquipmentType;
   exposure: Exposure;
   gallery_image: GalleryImage;
+  movie: Movie;
   translations: Translations;
   visitors: Visitors;
 }

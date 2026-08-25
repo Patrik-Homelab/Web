@@ -82,6 +82,12 @@
       icon: 'bi-journal-text',
       path: '/admin/article',
       matchStart: true
+    },
+    {
+      name: _state.lang.adminNavigation.movies,
+      icon: 'bi-film',
+      path: '/admin/movies',
+      matchStart: true
     }
   ] satisfies AdminItem[]);
 
