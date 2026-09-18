@@ -66,11 +66,19 @@
   >
     <!-- Card Image Header -->
     <div class="relative h-1/2 flex-1/2 overflow-hidden">
-      <Image
-        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        name={post.images[0].name}
-        alt={_langDynamic[post.images[0].alt_text]}
-      />
+      {#if post.images[0]}
+        <Image
+          class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          name={post.images[0].name}
+          alt={_langDynamic[post.images[0].alt_text] || ''}
+        />
+      {:else}
+        <div
+          class="text-text-muted flex h-full w-full items-center justify-center bg-slate-900"
+        >
+          <Icon name="bi-image" class="text-3xl opacity-40" />
+        </div>
+      {/if}
       <!-- Top Badges Overlay -->
       <div
         class="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/50 to-transparent p-4"
@@ -153,11 +161,19 @@
     class="group hover:border-primary/25 flex w-full flex-col overflow-hidden rounded-xl border border-white/5 bg-slate-950/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] sm:w-[calc(50%_-_0.5rem)] md:w-[calc(33.33%_-_0.75rem)] lg:max-w-[320px]"
   >
     <div class="relative h-44 overflow-hidden">
-      <Image
-        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        name={post.images[0].name}
-        alt={_langDynamic[post.images[0].alt_text]}
-      />
+      {#if post.images[0]}
+        <Image
+          class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          name={post.images[0].name}
+          alt={_langDynamic[post.images[0].alt_text] || ''}
+        />
+      {:else}
+        <div
+          class="text-text-muted flex h-full w-full items-center justify-center bg-slate-900"
+        >
+          <Icon name="bi-image" class="text-3xl opacity-40" />
+        </div>
+      {/if}
       <div class="absolute top-2 right-2">
         <div
           class="text-text-strong flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/70 px-2 py-0.5 text-[10px] font-bold shadow-md backdrop-blur-md"
