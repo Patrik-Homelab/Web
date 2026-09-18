@@ -55,9 +55,19 @@ export default [
     }
   }),
   loggedProcedure.DELETE.input(z.string()).query(async ({ input }) => {
-    const path = Path.join(FILE_FOLDER, input);
+    const safeBaseName = Path.basename(input);
+    const resolvedFolder = Path.resolve(FILE_FOLDER);
+    const targetPath = Path.resolve(FILE_FOLDER, safeBaseName);
 
-    if (!(await isFile(path))) {
+    if (safeBaseName !== input || !targetPath.startsWith(resolvedFolder + Path.sep)) {
+      return {
+        status: false,
+        code: 400,
+        message: 'upload.invalidFile' satisfies ErrorPath
+      } satisfies ErrorApiResponse;
+    }
+
+    if (!(await isFile(targetPath))) {
       return {
         status: false,
         code: 404,
@@ -65,7 +75,7 @@ export default [
       } satisfies ErrorApiResponse;
     }
 
-    await fs.unlink(path);
+    await fs.unlink(targetPath);
 
     return {
       status: true
