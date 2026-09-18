@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { H1, H4 } from '$/components/headers';
+  import { H1 } from '$/components/headers';
   import { API } from '$/lib/api';
   import type { LiveStatus } from '$/lib/server/nina';
   import { getState } from '$/lib/state.svelte';
@@ -45,17 +45,22 @@
 </script>
 
 <section
-  class="mx-auto flex w-full max-w-[1400px] flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
+  class="relative mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-6 px-4 pt-10 pb-12 sm:px-6 lg:px-8"
 >
+  <!-- Ambient background glow behind live indicator -->
+  <div
+    class="bg-primary/5 absolute top-12 left-1/2 -z-10 h-72 w-full max-w-3xl -translate-x-1/2 rounded-full blur-3xl filter"
+  ></div>
+
   <!-- Page Header -->
   <div class="flex flex-col gap-2">
     <H1 class="text-left font-bold">{appState.lang.live_photo.title}</H1>
-    <H4 class="text-text-muted text-sm leading-relaxed"
-      >{appState.lang.live_photo.description}</H4
-    >
-    <H4 class="text-primary text-xs leading-relaxed italic"
-      >{appState.lang.live_photo.loading_description}</H4
-    >
+    <p class="text-text-muted text-sm leading-relaxed">
+      {appState.lang.live_photo.description}
+    </p>
+    <p class="text-primary text-xs leading-relaxed italic">
+      {appState.lang.live_photo.loading_description}
+    </p>
   </div>
 
   <!-- Dashboard Grid -->

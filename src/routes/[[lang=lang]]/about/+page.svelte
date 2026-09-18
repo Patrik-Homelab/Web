@@ -132,12 +132,12 @@
         </div>
 
         <!-- Category Heading (Name removed as requested, category promoted) -->
-        <h3
+        <h2
           class="group-hover:text-text-strong mt-1 text-3xl font-bold tracking-wide transition-colors duration-300 {card
             .colors.text}"
         >
           {card.translation.category}
-        </h3>
+        </h2>
 
         <p class="text-text-muted mt-3 text-lg leading-relaxed">
           {card.translation.shortDesc}
@@ -270,9 +270,9 @@
                   >
                     {event.year}
                   </span>
-                  <h4 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
+                  <h3 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
                     {event.title}
-                  </h4>
+                  </h3>
                   <p class="text-text-muted text-lg leading-relaxed">
                     {event.desc}
                   </p>
@@ -346,9 +346,9 @@
                   >
                     {event.year}
                   </span>
-                  <h4 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
+                  <h3 class="text-text-strong mb-3 text-xl font-bold md:text-2xl">
                     {event.title}
-                  </h4>
+                  </h3>
                   <p class="text-text-muted text-lg leading-relaxed">
                     {event.desc}
                   </p>

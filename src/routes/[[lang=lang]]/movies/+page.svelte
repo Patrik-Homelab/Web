@@ -316,11 +316,11 @@
                 >
                   {movie.type === 'movie' ? _lang.movie : _lang.series}
                 </span>
-                <h4
+                <h2
                   class="text-text-strong group-hover:text-primary mt-2.5 text-xl leading-tight font-bold transition-colors duration-200"
                 >
                   {movie.title}
-                </h4>
+                </h2>
                 <div
                   class="text-text-muted mt-1.5 flex items-center gap-3 font-mono text-xs"
                 >
