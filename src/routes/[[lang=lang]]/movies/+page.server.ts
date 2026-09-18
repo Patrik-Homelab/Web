@@ -33,7 +33,14 @@ export const load = (async ({ parent }) => {
             m.added_at instanceof Date
               ? m.added_at.toISOString().split('T')[0]
               : String(m.added_at).split('T')[0]
-        }))
+        })),
+        meta: {
+          title: parentData.lang.navigation.movies,
+          description:
+            lang === 'cs'
+              ? 'Filmy a seriály, které jsem viděl, včetně hodnocení a recenzí.'
+              : 'Movies and TV series I have watched, including personal reviews and ratings.'
+        }
       };
     }
   } catch {
@@ -54,6 +61,13 @@ export const load = (async ({ parent }) => {
       review: m.review,
       image: null as string | null,
       added_at: m.added_at || '2022-09-10'
-    }))
+    })),
+    meta: {
+      title: parentData.lang.navigation.movies,
+      description:
+        lang === 'cs'
+          ? 'Filmy a seriály, které jsem viděl, včetně hodnocení a recenzí.'
+          : 'Movies and TV series I have watched, including personal reviews and ratings.'
+    }
   };
 }) satisfies PageServerLoad;

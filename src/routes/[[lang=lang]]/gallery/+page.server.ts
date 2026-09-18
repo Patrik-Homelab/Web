@@ -2,7 +2,7 @@ import { gatherTranslations } from '$/lib/server/functions';
 import { conn } from '$/lib/server/variables';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent }) => {
+export const load = (async ({ parent, url }) => {
   const parentData = await parent();
 
   const posts = await conn
@@ -52,6 +52,17 @@ export const load = (async ({ parent }) => {
         ...objects.map((obj) => obj.name as string)
       ],
       parentData.selectedLang
-    )
+    ),
+    meta: {
+      title: parentData.lang.navigation.gallery,
+      description:
+        parentData.selectedLang === 'cs'
+          ? 'Galerie astrofotografií - mlhoviny, galaxie, hvězdokupy a noční obloha.'
+          : 'Astrophotography gallery - nebulae, galaxies, star clusters, and deep sky objects.',
+      image:
+        images.length > 0
+          ? `${url.origin}/image/${images[0].name}?format=jpg&quality=75`
+          : undefined
+    }
   };
 }) satisfies PageServerLoad;

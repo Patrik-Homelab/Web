@@ -156,6 +156,46 @@
     {/each}
   </div>
 
+  <!-- Semantic Timeline for Search Engines & Screen Readers -->
+  {#if !activeCategory}
+    <div class="sr-only">
+      {#each cards as c (c.id)}
+        <h2>{c.translation.category}</h2>
+        <p>{c.translation.shortDesc}</p>
+        <ol>
+          {#each c.translation.timeline as ev, idx (idx)}
+            <li>
+              <h3>{ev.title} ({ev.year})</h3>
+              <p>{ev.desc}</p>
+            </li>
+          {/each}
+        </ol>
+      {/each}
+    </div>
+  {/if}
+
+  <noscript>
+    <div class="mx-auto my-12 w-full max-w-4xl space-y-12">
+      {#each cards as c (c.id)}
+        <div class="rounded-2xl border border-white/10 bg-black/40 p-6">
+          <h2 class="text-primary mb-2 text-2xl font-bold">
+            {c.translation.category}
+          </h2>
+          <p class="text-text-muted mb-6">{c.translation.shortDesc}</p>
+          <div class="space-y-6">
+            {#each c.translation.timeline as ev, idx (idx)}
+              <div class="border-primary/50 border-l-2 pl-4">
+                <span class="text-primary text-sm font-semibold">{ev.year}</span>
+                <h3 class="text-text-strong text-lg font-bold">{ev.title}</h3>
+                <p class="text-text-muted text-sm">{ev.desc}</p>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/each}
+    </div>
+  </noscript>
+
   <!-- INLINE TIMELINE VIEW -->
   {#if activeCategory && activeCard}
     <div
