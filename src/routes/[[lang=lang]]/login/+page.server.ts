@@ -6,8 +6,14 @@ import { getUserState, redirect } from '$/lib/server/functions';
 export const load = (async ({ cookies, url }) => {
   const userState = getUserState(cookies);
   if (userState.logged) {
-    if (url.searchParams.get('next')) {
-      _redirect(302, url.searchParams.get('next')!);
+    const nextParam = url.searchParams.get('next');
+    if (
+      nextParam &&
+      nextParam.startsWith('/') &&
+      !nextParam.startsWith('//') &&
+      !nextParam.includes('\\')
+    ) {
+      _redirect(302, nextParam);
     } else {
       redirect(302, '/admin');
     }
