@@ -11,7 +11,7 @@ export const load = (async ({ params, parent, url }) => {
     .where('id', '=', params.id)
     .executeTakeFirst();
   if (!post) {
-    return redirect(302, '/gallery');
+    return redirect(302, '/gallery', params.lang);
   }
 
   const images = await conn

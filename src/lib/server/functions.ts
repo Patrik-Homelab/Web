@@ -17,7 +17,6 @@ import { promisify } from 'node:util';
 import { v4 } from 'uuid';
 import type z from 'zod';
 import { languages } from '../lang';
-import { getState } from '../state.svelte';
 import { conn, jwt } from './variables';
 
 const FILE_FOLDER = env.FILE_FOLDER;
@@ -48,9 +47,8 @@ export const getUserState = (cookies: Cookies): UserState => {
 
 type Params = Parameters<typeof _redirect>;
 
-export const redirect = (status: Params[0], location: Params[1]) => {
-  const state = getState();
-  _redirect(status, `/${state.selectedLang || 'cs'}${location}`);
+export const redirect = (status: Params[0], location: Params[1], lang: string = 'cs') => {
+  _redirect(status, `/${lang}${location}`);
 };
 
 export const isDirectory = async (path: string) => {

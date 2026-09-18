@@ -3,7 +3,7 @@ import { type Actions, redirect as _redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getUserState, redirect } from '$/lib/server/functions';
 
-export const load = (async ({ cookies, url }) => {
+export const load = (async ({ cookies, url, params }) => {
   const userState = getUserState(cookies);
   if (userState.logged) {
     const nextParam = url.searchParams.get('next');
@@ -15,7 +15,7 @@ export const load = (async ({ cookies, url }) => {
     ) {
       _redirect(302, nextParam);
     } else {
-      redirect(302, '/admin');
+      redirect(302, '/admin', params.lang);
     }
   }
 }) satisfies PageServerLoad;
