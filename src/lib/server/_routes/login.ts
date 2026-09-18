@@ -7,8 +7,46 @@ import bcrypt from 'bcrypt';
 import { procedure } from '../api';
 import { conn, jwt } from '../variables';
 
+// Rate limiting: max 5 failed attempts per 5 minutes per IP
+const loginAttempts = new Map<string, { count: number; resetAt: number }>();
+
+const checkRateLimit = (ip: string): boolean => {
+  const now = Date.now();
+  const entry = loginAttempts.get(ip);
+  if (!entry || entry.resetAt < now) {
+    return true;
+  }
+  return entry.count < 5;
+};
+
+const recordFailedAttempt = (ip: string) => {
+  const now = Date.now();
+  const entry = loginAttempts.get(ip);
+  if (!entry || entry.resetAt < now) {
+    loginAttempts.set(ip, { count: 1, resetAt: now + 5 * 60 * 1000 });
+  } else {
+    entry.count += 1;
+  }
+};
+
+const clearFailedAttempts = (ip: string) => {
+  loginAttempts.delete(ip);
+};
+
 export default procedure.POST.input(FormDataInput).query(
-  async ({ input, ev: { cookies } }) => {
+  async ({ input, ev: { cookies, getClientAddress, request } }) => {
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      getClientAddress?.() ||
+      'unknown';
+
+    if (!checkRateLimit(ip)) {
+      return fail(401, {
+        status: false,
+        message: 'login.form' satisfies ErrorPath
+      } satisfies ActionsResponse);
+    }
+
     const username = input.get('username') as string | null;
     const password = input.get('password') as string | null;
     const COOKIE_EXPIRE = env.COOKIE_EXPIRE;
@@ -26,19 +64,17 @@ export default procedure.POST.input(FormDataInput).query(
       .where('username', '=', username)
       .executeTakeFirst();
 
-    if (!data) {
+    const isPasswordValid = data ? await bcrypt.compare(password, data.password) : false;
+
+    if (!data || !isPasswordValid) {
+      recordFailedAttempt(ip);
       return fail(401, {
         status: false,
-        message: 'login.username' satisfies ErrorPath
+        message: 'login.form' satisfies ErrorPath
       } satisfies ActionsResponse);
     }
 
-    if (!bcrypt.compareSync(password, data.password)) {
-      return fail(401, {
-        status: false,
-        message: 'login.password' satisfies ErrorPath
-      } satisfies ActionsResponse);
-    }
+    clearFailedAttempts(ip);
 
     const userData = {
       ...data,
