@@ -18,11 +18,12 @@ export default {
       const response = await result.response;
       return { text: response.text() };
     } catch (e) {
+       
       console.error('Gemini Error:', e);
       throw new MiddleWareError({
         status: false,
         code: 500,
-        message: 'Failed to generate content: ' + (e as Error)?.message
+        message: 'Failed to generate content'
       });
     }
   })
