@@ -45,11 +45,14 @@ export default procedure.POST.input(FormDataInput).query(
       password: undefined
     };
 
-    const session = jwt.setCookie(userData);
+    const session = jwt.setCookie(userData, COOKIE_EXPIRE);
 
     cookies.set('session', session, {
       path: '/',
-      maxAge: COOKIE_EXPIRE
+      maxAge: COOKIE_EXPIRE,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     });
 
     return {

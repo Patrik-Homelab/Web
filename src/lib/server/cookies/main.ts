@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import path, { dirname } from 'path';
 import JSONdb from 'simple-json-db';
 import { fileURLToPath } from 'url';
@@ -89,16 +89,28 @@ export class JWTCookies {
     this.key = key;
   }
 
-  setCookie(value: object | string | Buffer) {
-    return jwt.sign(value, this.key);
+  setCookie(value: object | string | Buffer, expiresIn?: SignOptions['expiresIn']) {
+    if (
+      typeof value === 'object' &&
+      !(value instanceof Buffer) &&
+      expiresIn !== undefined
+    ) {
+      return jwt.sign(value, this.key, {
+        expiresIn,
+        algorithm: 'HS256'
+      });
+    }
+    return jwt.sign(value, this.key, {
+      algorithm: 'HS256'
+    });
   }
 
   getCookie<T>(token: string): T | null {
     try {
-      return jwt.verify(token, this.key) as T;
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.error('Invalid token:', error);
+      return jwt.verify(token, this.key, {
+        algorithms: ['HS256']
+      }) as T;
+    } catch {
       return null;
     }
   }
