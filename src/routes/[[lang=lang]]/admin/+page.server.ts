@@ -3,20 +3,19 @@ import { sql } from 'kysely';
 import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
-  const today = await conn
+  const todayResult = await conn
     .selectFrom('visitors')
-    .select('id')
-    .where(sql<Date>`DATE(date)`, '=', sql<Date>`CURDATE()`)
-    .groupBy('ip')
-    .execute();
+    .select(sql<number>`COUNT(DISTINCT ip)`.as('count'))
+    .where('date', '>=', sql<Date>`CURDATE()`)
+    .where('date', '<', sql<Date>`DATE_ADD(CURDATE(), INTERVAL 1 DAY)`)
+    .executeTakeFirst();
 
-  const week = await conn
+  const weekResult = await conn
     .selectFrom('visitors')
-    .select('id')
-    .where(sql<Date>`WEEK(date, 1)`, '=', sql<Date>`WEEK(CURDATE(), 1)`)
-    .where(sql<Date>`YEAR(date)`, '=', sql<Date>`YEAR(CURDATE())`)
-    .groupBy('ip')
-    .execute();
+    .select(sql<number>`COUNT(DISTINCT ip)`.as('count'))
+    .where('date', '>=', sql<Date>`DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)`)
+    .where('date', '<', sql<Date>`DATE_ADD(CURDATE(), INTERVAL 1 DAY)`)
+    .executeTakeFirst();
 
   const weekGraph = await conn
     .selectFrom((eb) =>
@@ -35,8 +34,8 @@ export const load = (async () => {
     .execute();
 
   return {
-    today: today.length,
-    week: week.length,
+    today: Number(todayResult?.count ?? 0),
+    week: Number(weekResult?.count ?? 0),
     weekGraph
   };
 }) satisfies PageServerLoad;
