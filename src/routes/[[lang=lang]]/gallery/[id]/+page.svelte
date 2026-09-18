@@ -267,6 +267,7 @@
               <a
                 href={equipment.link}
                 target="_blank"
+                rel="noopener noreferrer"
                 class="group flex items-center justify-between rounded-xl border border-transparent bg-white/5 px-4 py-2 text-base font-semibold transition-all duration-300 hover:border-white/10 hover:bg-white/10 lg:text-lg"
               >
                 <span class="text-text-strong group-hover:text-primary transition-colors"
@@ -537,6 +538,7 @@
                     href={equipment.link}
                     class="hover:text-primary text-text-muted flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs transition-all duration-200 hover:bg-white/10"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <Icon name="bi-box-arrow-up-right" />
                   </a>

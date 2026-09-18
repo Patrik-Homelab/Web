@@ -110,6 +110,7 @@
       <a
         href={platform.url}
         target="_blank"
+        rel="noopener noreferrer"
         class={[
           'group flex min-h-[210px] w-full min-w-[360px] cursor-pointer flex-col items-center justify-between gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-6 shadow-xl backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]',
           'sm:w-[48%] md:w-[31.5%] lg:w-[24%]',
