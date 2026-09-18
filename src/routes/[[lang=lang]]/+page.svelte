@@ -36,6 +36,10 @@
   });
 </script>
 
+<svelte:head>
+  <link rel="preload" as="image" href="/images/Image-400.webp" type="image/webp" />
+</svelte:head>
+
 <div
   class="mx-auto flex w-[90%] max-w-7xl flex-col items-center justify-center gap-10 pt-10 pb-12 md:pt-16 lg:flex-row lg:gap-16 xl:gap-24"
 >
@@ -82,7 +86,11 @@
         <img
           src="/images/Image-400.jpg"
           alt="Patrik Mintěl Profile"
-          loading="lazy"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          width="340"
+          height="340"
           class="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
         />
       </picture>
