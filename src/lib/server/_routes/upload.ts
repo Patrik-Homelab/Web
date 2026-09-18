@@ -6,7 +6,7 @@ import fs from 'node:fs/promises';
 import Path from 'node:path';
 import { z } from 'zod';
 import { loggedProcedure } from '../api';
-import { isFile, uploadFile } from '../functions';
+import { cleanupImageCache, isFile, uploadFile } from '../functions';
 
 const FILE_FOLDER = env.FILE_FOLDER;
 
@@ -76,6 +76,7 @@ export default [
     }
 
     await fs.unlink(targetPath);
+    await cleanupImageCache(input);
 
     return {
       status: true

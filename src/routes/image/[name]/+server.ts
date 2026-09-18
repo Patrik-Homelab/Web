@@ -197,7 +197,9 @@ export const GET = (async ({ params, url, request }) => {
 
       const imageBuffer = await image.toBuffer();
       await fs.writeFile(cachePath, imageBuffer);
-      memoryCache.set(cachePath, imageBuffer);
+      if (imageBuffer.length <= 10 * 1024 * 1024) {
+        memoryCache.set(cachePath, imageBuffer);
+      }
     }
 
     filePath = cachePath;
@@ -224,18 +226,9 @@ export const GET = (async ({ params, url, request }) => {
     });
   }
 
-  // Stream the file for non-cached content
+  // Stream the file for non-cached content directly from disk
   const fileStream = createReadStream(filePath);
   const webStream = nodeStreamToWebStream(fileStream);
-
-  // Read and cache the file in the background for future requests
-  fs.readFile(filePath)
-    .then((buffer) => {
-      memoryCache.set(filePath, buffer);
-    })
-    .catch(() => {
-      // Silently ignore background caching errors - the file was already streamed successfully
-    });
 
   return new Response(webStream, {
     headers: getCacheHeaders(fileExtension, fileInfo.size, etag)

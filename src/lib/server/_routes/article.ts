@@ -9,7 +9,12 @@ import Path from 'node:path';
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import { loggedProcedure } from '../api';
-import { insertTranslations, parseFormData, updateTranslations } from '../functions';
+import {
+  cleanupImageCache,
+  insertTranslations,
+  parseFormData,
+  updateTranslations
+} from '../functions';
 import { conn } from '../variables';
 
 const FILE_FOLDER = env.FILE_FOLDER;
@@ -388,9 +393,12 @@ export default [
         .where('article_id', '=', input)
         .execute();
       await trx.deleteFrom('gallery_image').where('article_id', '=', input).execute();
-      //remove images
+      //remove images and cache
       const imgPaths = images.map((img) => Path.join(FILE_FOLDER, img.name));
-      await Promise.all(imgPaths.map(async (path) => fs.unlink(path).catch(() => {})));
+      await Promise.all([
+        ...imgPaths.map((path) => fs.unlink(path).catch(() => {})),
+        ...images.map((img) => cleanupImageCache(img.name))
+      ]);
 
       await trx.deleteFrom('article').where('id', '=', input).execute();
 
@@ -400,6 +408,7 @@ export default [
         status: true
       } satisfies Response;
     } catch (err) {
+       
       console.error(err);
 
       await trx.rollback().execute();

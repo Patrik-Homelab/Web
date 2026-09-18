@@ -240,3 +240,21 @@ export const updateTranslations = async <
 
   return somethingUpdated;
 };
+
+export const cleanupImageCache = async (imageFileName: string) => {
+  try {
+    const cacheDir = '.cache';
+    if (!(await isDirectory(cacheDir))) return;
+    const base = Path.basename(imageFileName);
+    const files = await fs.readdir(cacheDir);
+    const relatedFiles = files.filter(
+      (f) => f.startsWith(`${base}.scale-`) || f.startsWith(`${base}.`)
+    );
+    await Promise.all(
+      relatedFiles.map((f) => fs.unlink(Path.join(cacheDir, f)).catch(() => {}))
+    );
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to cleanup image cache:', err);
+  }
+};
