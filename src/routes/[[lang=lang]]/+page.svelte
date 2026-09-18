@@ -26,12 +26,38 @@
   });
 
   onMount(() => {
-    const intervalId = setInterval(() => {
-      age = getAge();
-    }, 50);
+    let intervalId: NodeJS.Timeout | null = null;
+
+    const startTicker = () => {
+      if (!intervalId) {
+        age = getAge();
+        intervalId = setInterval(() => {
+          age = getAge();
+        }, 50);
+      }
+    };
+
+    const stopTicker = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopTicker();
+      } else {
+        startTicker();
+      }
+    };
+
+    startTicker();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      clearInterval(intervalId);
+      stopTicker();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   });
 </script>

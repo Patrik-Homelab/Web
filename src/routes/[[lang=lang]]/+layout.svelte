@@ -37,6 +37,7 @@
   });
 
   let canvas: HTMLCanvasElement;
+  let isVisible = $state(true);
 
   const resizeCanvas = () => {
     if (canvas) {
@@ -49,16 +50,25 @@
     const localStars = localStorage.getItem('starsEnabled') !== 'false';
     setState({ starsEnabled: localStars });
 
+    const handleVisibility = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', resizeCanvas);
     };
   });
 
   $effect(() => {
-    const enabled = _state.starsEnabled !== false;
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const enabled = _state.starsEnabled !== false && !prefersReducedMotion && isVisible;
     let starbackInstance: { destroy: () => void } | null = null;
 
     if (enabled && canvas) {
