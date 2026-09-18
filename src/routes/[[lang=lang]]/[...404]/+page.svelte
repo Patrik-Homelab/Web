@@ -12,6 +12,7 @@
 <svelte:head>
   <title>{title}</title>
   <meta property="og:title" content={title} />
+  <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
 <div class="m-auto">

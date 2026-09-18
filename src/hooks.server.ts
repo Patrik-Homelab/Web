@@ -23,5 +23,13 @@ export const handle = (async ({ event, resolve }) => {
     });
   }
 
+  if (event.locals.is404) {
+    return new Response(response.body, {
+      status: 404,
+      statusText: 'Not Found',
+      headers: response.headers
+    });
+  }
+
   return response;
 }) satisfies Handle;
