@@ -5,6 +5,12 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     plugins: [tailwindcss(), sveltekit()],
     server: {
-        allowedHosts: ['pc.patrick115.eu', 'patrick115.eu']
+        allowedHosts: [
+            'patrik.mintel.cz',
+            'mintel.cz',
+            'pc.patrick115.eu',
+            'patrick115.eu',
+            'localhost'
+        ]
     }
 });

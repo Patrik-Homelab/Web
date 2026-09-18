@@ -273,31 +273,27 @@ export const aboutCards: CardData[] = [
             year: 'Konec roku 2023',
             title: 'První skutečná optika: Teleskop k 20. narozeninám',
             desc: 'Rodiče si postupně všimli mé rostoucí fascinace vesmírem a hvězdnou oblohou, a proto mě k mým 20. narozeninám překvapili koupí mého úplně prvního teleskopu – Celestron Astromaster 130EQ. Vyzbrojen skutečnou optikou jsem začal trávit noci pozorováním oblohy, vyhledáváním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem chtěl vizuální zážitky také zdokumentovat, brzy jsem své možnosti rozšířil nákupem dedikované planetární kamery ZWO ASI678MC a začal zkoušet skutečné fotografování. S touto novou sestavou se mi podařilo úspěšně vyfotit Jupiter a pořídit detailní snímky Měsíce.',
-            image:
-              'https://patrick115.eu/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
+            image: '/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
           },
           {
             year: '2024',
             title: 'Vstup do hlubokého vesmíru: Montáž Star Adventurer',
             desc: 'Následující rok znamenal obrovský posun v mém přístupu, protože jsem přešel od pozorování planet k objektům hlubokého vesmíru (DSO). Pořídil jsem si svoji první motorizovanou rovníkovou montáž SkyWatcher Star Adventurer GTI, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem si uvědomil, že focení vzdálených mlhovin a galaxií mě fascinuje mnohem více než planety. Abych si vybudoval specializovaný DSO setup, postupně jsem kompletně obměnil výbavu: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro pro eliminaci tepelného šumu a starý teleskop nahradil prémiovým refraktorem William Optics RedCat 51 s naváděcím dalekohledem. S touto pokročilou sestavou jsem úspěšně vyfotit své první mlhoviny, galaxie a další objekty.',
-            image:
-              'https://patrick115.eu/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
+            image: '/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
           },
           {
             year: '2025',
             title:
               'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
             desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.',
-            image:
-              'https://patrick115.eu/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
+            image: '/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
           },
 
           {
             year: 'Červen 2026',
             title: 'Rozšiřování obzorů: 10palcový planetární upgrade',
             desc: "V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10'' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru.",
-            image:
-              'https://patrick115.eu/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
+            image: '/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
           }
         ]
       },
@@ -317,30 +313,26 @@ export const aboutCards: CardData[] = [
             year: 'Late 2023',
             title: 'First Real Optics: The 20th Birthday Telescope',
             desc: 'Noticing my growing fascination with outer space and the starry sky, my parents surprised me for my 20th birthday by buying me my very first telescope: a Celestron Astromaster 130EQ. Armed with proper optics, I spent my nights exploring the sky, tracking down the Moon, planets, and anything else I could find. Eager to capture what I was seeing visually, I soon upgraded my capabilities by purchasing a dedicated planetary camera—the ZWO ASI678MC. With this new setup, I successfully managed to take my first proper images of Jupiter and detailed close-ups of the Moon.',
-            image:
-              'https://patrick115.eu/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
+            image: '/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
           },
           {
             year: '2024',
             title: 'Entering Deep Space: The Star Adventurer Mount',
             desc: 'The following year marked a massive shift in my approach as I transitioned from planetary observation to Deep Sky Objects (DSO). I purchased my first motorized tracking mount, the SkyWatcher Star Adventurer GTI, which completely unlocked the ability to take the long exposures necessary to capture faint, distant objects. I quickly realized that imaging distant nebulae and galaxies fascinated me far more than planets. To build a dedicated DSO rig, I gradually overhauled my gear: I bought a cooled astrophotography camera (the ZWO ASI585MC Pro) to eliminate thermal noise and replaced my old telescope with a premium William Optics RedCat 51 refractor telescope, complete with a separate guide scope. With this advanced setup, I successfully captured my very first deep-space nebulae and galaxies.',
-            image:
-              'https://patrick115.eu/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
+            image: '/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
           },
           {
             year: '2025',
             title: 'Hardware Overhaul & Processing Mastery: Building a Remote Rig',
             desc: 'As my passion grew, 2025 became a year of heavy technical optimization for my DSO setup. I significantly upgraded my tracking capabilities by acquiring a new high-end mount, the Proxisky Ragdoll 17 Pro, and automated my workflows by adding an electronic auto-focuser (Gemini Astro EAF) alongside a dedicated mini PC to run the entire rig smoothly at night. Alongside the physical hardware, my post-processing workflow underwent a massive evolution. I initially started stacking and editing my images using a combination of Deep Sky Stacker and Siril. Later on, I shifted to Deep Sky Stacker combined with PixInsight, before ultimately migrating my entire stacking and processing pipeline completely into PixInsight to achieve publication-grade results.',
-            image:
-              'https://patrick115.eu/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
+            image: '/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
           },
 
           {
             year: 'June 2026',
             title: 'Expanding Horizons: The 10-Inch Planetary Upgrade',
             desc: "In June 2026, I decided to revisit my roots in planetary and lunar imaging with a massive hardware addition. I newly purchased a powerful planetary telescope—the Skywatcher Flextube 10'' GoTo. This massive light bucket allows me to track and capture highly detailed planetary and lunar views with precision, creating a perfect balance alongside my dedicated wide-field deep-sky imaging setup.",
-            image:
-              'https://patrick115.eu/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
+            image: '/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
           }
         ]
       }
