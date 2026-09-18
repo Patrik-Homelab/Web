@@ -100,11 +100,7 @@ function nodeStreamToWebStream(nodeStream: Readable): ReadableStream<Uint8Array>
 }
 
 export const GET = (async ({ params, url, request }) => {
-  if (!params.name) {
-    error(400, 'Name is required');
-  }
-
-  if (params.name.includes('..')) {
+  if (!params.name || Path.basename(params.name) !== params.name) {
     error(400, 'Bad request');
   }
 
@@ -127,6 +123,7 @@ export const GET = (async ({ params, url, request }) => {
   let fileExtension = Path.extname(filePath).substring(1).toLowerCase();
   let modified = false;
   let scale = 100;
+  let quality = DEFAULT_IMAGE_QUALITY;
 
   if (searchParams.has('format')) {
     const format = searchParams.get('format')!;
@@ -138,20 +135,23 @@ export const GET = (async ({ params, url, request }) => {
     modified = true;
   }
 
-  if (searchParams.has('scale')) {
-    const downscale = searchParams.get('scale')!;
-    try {
-      const downScale = parseInt(downscale);
-      if (downScale > 100 || downScale < 0) {
-        error(400, 'Bad request');
-      }
-
-      modified = true;
-      scale = downScale;
-      //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_) {
+  if (searchParams.has('quality')) {
+    const q = Number(searchParams.get('quality'));
+    if (!Number.isInteger(q) || q > 100 || q < 10) {
       error(400, 'Bad request');
     }
+    quality = q;
+    modified = true;
+  }
+
+  if (searchParams.has('scale')) {
+    const downScale = Number(searchParams.get('scale'));
+    if (!Number.isInteger(downScale) || downScale > 100 || downScale <= 0) {
+      error(400, 'Bad request');
+    }
+
+    modified = true;
+    scale = downScale;
   }
 
   if (modified) {
@@ -159,7 +159,7 @@ export const GET = (async ({ params, url, request }) => {
       await fs.mkdir(CACHE_FOLDER);
     }
 
-    const cacheModifiedName = `${Path.basename(params.name)}.scale-${scale}.${fileExtension}`;
+    const cacheModifiedName = `${Path.basename(params.name)}.scale-${scale}.q-${quality}.${fileExtension}`;
     const cachePath = Path.join(CACHE_FOLDER, cacheModifiedName);
 
     // Check if we need to generate the cached version
@@ -171,7 +171,7 @@ export const GET = (async ({ params, url, request }) => {
         sharp.PngOptions &
         sharp.WebpOptions &
         sharp.TiffOptions = {
-        quality: DEFAULT_IMAGE_QUALITY
+        quality
       };
 
       switch (fileExtension) {
