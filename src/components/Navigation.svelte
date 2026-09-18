@@ -91,34 +91,6 @@
     }
   ] satisfies AdminItem[]);
 
-  const getNavItem = (path: string): NavItem | AdminItem | null => {
-    const mainNav =
-      Navigation.find((item) => {
-        if (item.matchStart) {
-          return path.startsWith(item.path);
-        }
-        return item.path === path;
-      }) || null;
-    if (mainNav) {
-      return mainNav;
-    }
-
-    const adminNav = AdminNavigation.find((item) => {
-      if (item.matchStart) {
-        return path.startsWith(item.path);
-      }
-      return path === item.path;
-    });
-
-    if (adminNav) {
-      return adminNav;
-    }
-
-    return null;
-  };
-
-  const currentItem = $derived(getNavItem(_state.path));
-
   let selectedLanguage = $state(_state.selectedLang);
   $effect(() => {
     let target = `/${selectedLanguage}${_state.path}`;
@@ -163,19 +135,6 @@
     }
     return _state.path === item.path;
   };
-
-  const meta = $derived(page.data.meta ?? _state.meta);
-
-  const title = $derived.by(() => {
-    if (meta?.title) {
-      return `${meta.title} | ${page.url.host}`;
-    }
-    if (currentItem) {
-      return `${currentItem.name} | ${page.url.host}`;
-    }
-    return undefined;
-  });
-  const description = $derived(meta?.description ?? _state.lang.default_desc);
 
   // Toggle background stars and save to localStorage
   const toggleStars = () => {
@@ -222,21 +181,6 @@
     </svg>
   {/if}
 {/snippet}
-
-<svelte:head>
-  {#if title}
-    <title>{title}</title>
-    <meta property="og:title" content={title} />
-  {/if}
-  <meta name="description" content={description} />
-  <meta property="og:type" content={meta?.type ?? 'website'} />
-  <meta property="og:description" content={description} />
-  <meta property="og:url" content={page.url.toString()} />
-  <meta
-    property="og:image"
-    content={meta?.image ?? `${page.url.origin}/images/PFP.jpg`}
-  />
-</svelte:head>
 
 <!-- Floating Glassmorphic Header Container -->
 <header class="fixed top-4 left-1/2 z-50 w-max max-w-[95%] -translate-x-1/2 px-2">

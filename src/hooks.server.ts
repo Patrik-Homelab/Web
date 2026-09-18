@@ -3,7 +3,9 @@ import { getClientIp } from './lib/server/network';
 import { logVisitor } from './lib/server/visitorLogger';
 
 export const handle = (async ({ event, resolve }) => {
-  const response = await resolve(event);
+  const response = await resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('%lang%', event.params.lang || 'cs')
+  });
   const path = event.url.pathname;
 
   const disallowedPaths = ['/api'];

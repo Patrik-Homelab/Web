@@ -8,3 +8,4 @@ export { default as Image } from './Image.svelte';
 export { default as Link } from './Link.svelte';
 export { default as Markdown } from './Markdown.svelte';
 export { default as RichText } from './RichText.svelte';
+export { default as SEO } from './SEO.svelte';

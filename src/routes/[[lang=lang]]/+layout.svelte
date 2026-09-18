@@ -7,6 +7,7 @@
   import { onMount } from 'svelte';
   import type { LayoutProps } from './$types';
   import Navigation from '$/components/Navigation.svelte';
+  import SEO from '$/components/utility/SEO.svelte';
   import { page } from '$app/state';
   import { setState, getState } from '$/lib/state.svelte';
   import { getPath } from '$/lib/lang';
@@ -97,6 +98,8 @@
     };
   });
 </script>
+
+<SEO />
 
 <canvas bind:this={canvas} class="fixed inset-0 -z-10 h-full w-full overflow-hidden"
 ></canvas>
