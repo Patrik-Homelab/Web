@@ -5,6 +5,7 @@ import { FormDataInput } from '@patrick115/sveltekitapi';
 import { fail } from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
 import { procedure } from '../api';
+import { getClientIp } from '../network';
 import { conn, jwt } from '../variables';
 
 // Rate limiting: max 5 failed attempts per 5 minutes per IP
@@ -35,10 +36,7 @@ const clearFailedAttempts = (ip: string) => {
 
 export default procedure.POST.input(FormDataInput).query(
   async ({ input, ev: { cookies, getClientAddress, request } }) => {
-    const ip =
-      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      getClientAddress?.() ||
-      'unknown';
+    const ip = getClientIp(request, getClientAddress);
 
     if (!checkRateLimit(ip)) {
       return fail(401, {
