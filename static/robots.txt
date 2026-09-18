@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cs/admin
+Disallow: /cs/admin/
+Disallow: /en/admin
+Disallow: /en/admin/
+
+Sitemap: https://patrik.mintel.cz/sitemap.xml
+Sitemap: https://patrick115.eu/sitemap.xml
