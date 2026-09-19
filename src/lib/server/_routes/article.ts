@@ -408,7 +408,6 @@ export default [
         status: true
       } satisfies Response;
     } catch (err) {
-       
       console.error(err);
 
       await trx.rollback().execute();

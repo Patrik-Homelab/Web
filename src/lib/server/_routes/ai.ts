@@ -18,7 +18,6 @@ export default {
       const response = await result.response;
       return { text: response.text() };
     } catch (e) {
-       
       console.error('Gemini Error:', e);
       throw new MiddleWareError({
         status: false,
