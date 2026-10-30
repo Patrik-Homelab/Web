@@ -39,6 +39,9 @@
   let aladinInstance: {
     addOverlay: (overlay: unknown) => void;
     setFoV: (fov: number) => void;
+    gotoRaDec: (ra: number, dec: number) => void;
+    on: (event: string, callback: (...args: unknown[]) => void) => void;
+    getBaseImageLayer?: () => unknown;
     [key: string]: unknown;
   } | null = null;
   let aladinLoading = $state(false);
@@ -47,6 +50,59 @@
     const ra = data.post.ra;
     const dec = data.post.dec;
     let cancelled = false;
+    let t1: ReturnType<typeof setTimeout> | undefined;
+    let t2: ReturnType<typeof setTimeout> | undefined;
+    let t3: ReturnType<typeof setTimeout> | undefined;
+    let resizeObserver: ResizeObserver | null = null;
+
+    let userInteracted = false;
+    const markUserInteracted = () => {
+      userInteracted = true;
+    };
+
+    function computeTargetFov(): number {
+      if (!aladinContainer) return 2.0;
+      const rect = aladinContainer.getBoundingClientRect();
+      const widthPx = rect.width > 0 ? rect.width : aladinContainer.clientWidth || 305;
+      const heightPx =
+        rect.height > 0 ? rect.height : aladinContainer.clientHeight || 250;
+      const aspect = widthPx / heightPx;
+
+      if (data.post.fov_width && data.post.fov_height) {
+        const fw = data.post.fov_width;
+        const fh = data.post.fov_height;
+        const rot = data.post.fov_rotation || 0;
+        const rotRad = (rot * Math.PI) / 180;
+
+        // Compute maximum rotated bounding extents in sky degrees
+        const spanX = fw * Math.abs(Math.cos(rotRad)) + fh * Math.abs(Math.sin(rotRad));
+        const spanY = fw * Math.abs(Math.sin(rotRad)) + fh * Math.abs(Math.cos(rotRad));
+
+        // Aladin's FoV parameter defines the horizontal FoV (fovX).
+        // Vertical FoV is fovX / aspect.
+        // Fit both axes with comfortable margin around the captured rectangle
+        const minFovX = Math.max(spanX, spanY * aspect);
+        return Number((minFovX * 1.58).toFixed(4));
+      } else if (data.post.fov_width) {
+        return Number((data.post.fov_width * Math.max(1, aspect) * 1.58).toFixed(4));
+      }
+      return 2.0;
+    }
+
+    function applyTargetView() {
+      if (cancelled || !aladinInstance || !aladinContainer) return;
+      const fov = computeTargetFov();
+      aladinInstance.setFoV(fov);
+      if (ra !== null && dec !== null) {
+        aladinInstance.gotoRaDec(ra as number, dec as number);
+      }
+    }
+
+    const handleLayerAdded = () => {
+      if (!userInteracted) {
+        applyTargetView();
+      }
+    };
 
     if (browser && ra !== null && dec !== null && aladinContainer) {
       aladinLoading = true;
@@ -59,6 +115,9 @@
             aladin: (...args: unknown[]) => {
               addOverlay: (overlay: unknown) => void;
               setFoV: (fov: number) => void;
+              gotoRaDec: (ra: number, dec: number) => void;
+              on: (event: string, callback: (...args: unknown[]) => void) => void;
+              getBaseImageLayer?: () => unknown;
               [key: string]: unknown;
             };
             graphicOverlay: (...args: unknown[]) => { add: (shape: unknown) => void };
@@ -68,41 +127,11 @@
           await A.init;
           if (cancelled || !aladinContainer) return;
 
-          // Compute target FOV so the captured camera frame fits comfortably inside viewport
-          const rect = aladinContainer.getBoundingClientRect();
-          const widthPx =
-            rect.width > 0 ? rect.width : aladinContainer.clientWidth || 350;
-          const heightPx =
-            rect.height > 0 ? rect.height : aladinContainer.clientHeight || 250;
-          const aspect = widthPx / heightPx;
-
-          let targetFov = 2.0;
-          if (data.post.fov_width && data.post.fov_height) {
-            const fw = data.post.fov_width;
-            const fh = data.post.fov_height;
-            const rot = data.post.fov_rotation || 0;
-            const rotRad = (rot * Math.PI) / 180;
-
-            // Compute maximum rotated bounding extents in sky degrees
-            const spanX =
-              fw * Math.abs(Math.cos(rotRad)) + fh * Math.abs(Math.sin(rotRad));
-            const spanY =
-              fw * Math.abs(Math.sin(rotRad)) + fh * Math.abs(Math.cos(rotRad));
-
-            // Aladin's FoV parameter defines the horizontal FoV (fovX).
-            // Vertical FoV is fovX / aspect.
-            // Fit both axes with ~45% margin around the captured rectangle
-            const minFovX = Math.max(spanX, spanY * aspect);
-            targetFov = Number((minFovX * 1.8).toFixed(4));
-          } else if (data.post.fov_width) {
-            targetFov = Number(
-              (data.post.fov_width * Math.max(1, aspect) * 1.8).toFixed(4)
-            );
-          }
+          const initialFov = computeTargetFov();
 
           aladinInstance = A.aladin(aladinContainer, {
             survey: 'https://skies.esac.esa.int/DSSColor',
-            fov: targetFov,
+            fov: initialFov,
             target: `${ra} ${dec}`,
             showReticle: false,
             showZoomControl: true,
@@ -110,8 +139,50 @@
             showFullscreenControl: false
           });
 
-          // Explicitly set FoV to guarantee it applies
-          aladinInstance.setFoV(targetFov);
+          // Intercept layer additions and survey properties load (which defaults to initialFov: 2)
+          aladinInstance.on('stackChanged', handleLayerAdded);
+          aladinContainer.addEventListener('AL:Layer.added', handleLayerAdded);
+
+          // Track manual interaction so user zooming/panning is preserved
+          aladinContainer.addEventListener('pointerdown', markUserInteracted, {
+            passive: true
+          });
+          aladinContainer.addEventListener('wheel', markUserInteracted, {
+            passive: true
+          });
+          aladinContainer.addEventListener('touchstart', markUserInteracted, {
+            passive: true
+          });
+          aladinContainer.addEventListener('keydown', markUserInteracted, {
+            passive: true
+          });
+
+          // Intercept the HiPS survey layer so when properties are fetched, it retains our target FOV
+          const baseLayer = aladinInstance.getBaseImageLayer?.() as
+            | {
+                _addToView?: (arg: unknown) => unknown;
+                initialFov?: number;
+                initialRa?: number;
+                initialDec?: number;
+              }
+            | undefined;
+
+          if (baseLayer && typeof baseLayer._addToView === 'function') {
+            const origAddToView = baseLayer._addToView;
+            baseLayer._addToView = function (arg: unknown) {
+              this.initialFov = computeTargetFov();
+              this.initialRa = ra as number;
+              this.initialDec = dec as number;
+              const res = origAddToView.call(this, arg);
+              if (!userInteracted) {
+                applyTargetView();
+              }
+              return res;
+            };
+          }
+
+          // Initial enforcement
+          applyTargetView();
 
           if (data.post.fov_width && data.post.fov_height) {
             const width = data.post.fov_width;
@@ -154,12 +225,29 @@
             overlay.add(polygon);
           }
 
-          // Reinforce FoV on next frame after canvas layout settles
+          // Keep FOV adapted if container dimensions resize (e.g. mobile/desktop switch)
+          if (typeof ResizeObserver !== 'undefined' && aladinContainer) {
+            resizeObserver = new ResizeObserver(() => {
+              if (!userInteracted) {
+                applyTargetView();
+              }
+            });
+            resizeObserver.observe(aladinContainer);
+          }
+
+          // Staggered reinforcement for initial settle
           requestAnimationFrame(() => {
-            if (!cancelled && aladinInstance) {
-              aladinInstance.setFoV(targetFov);
-            }
+            if (!userInteracted) applyTargetView();
           });
+          t1 = setTimeout(() => {
+            if (!userInteracted) applyTargetView();
+          }, 150);
+          t2 = setTimeout(() => {
+            if (!userInteracted) applyTargetView();
+          }, 400);
+          t3 = setTimeout(() => {
+            if (!userInteracted) applyTargetView();
+          }, 1000);
         } catch (e) {
           // eslint-disable-next-line no-console
           console.error('Failed to initialize Aladin Lite:', e);
@@ -173,6 +261,19 @@
 
     return () => {
       cancelled = true;
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+      if (aladinContainer) {
+        aladinContainer.removeEventListener('pointerdown', markUserInteracted);
+        aladinContainer.removeEventListener('wheel', markUserInteracted);
+        aladinContainer.removeEventListener('touchstart', markUserInteracted);
+        aladinContainer.removeEventListener('keydown', markUserInteracted);
+        aladinContainer.removeEventListener('AL:Layer.added', handleLayerAdded);
+      }
       aladinInstance = null;
     };
   });
