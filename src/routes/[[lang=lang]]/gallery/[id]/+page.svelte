@@ -36,7 +36,11 @@
   }
 
   let aladinContainer = $state<HTMLDivElement | null>(null);
-  let aladinInstance: unknown = null;
+  let aladinInstance: {
+    addOverlay: (overlay: unknown) => void;
+    setFoV: (fov: number) => void;
+    [key: string]: unknown;
+  } | null = null;
   let aladinLoading = $state(false);
 
   $effect(() => {
@@ -52,7 +56,11 @@
           const aladinModule = await import('aladin-lite');
           const A = aladinModule.default as unknown as {
             init: Promise<void>;
-            aladin: (...args: unknown[]) => unknown;
+            aladin: (...args: unknown[]) => {
+              addOverlay: (overlay: unknown) => void;
+              setFoV: (fov: number) => void;
+              [key: string]: unknown;
+            };
             graphicOverlay: (...args: unknown[]) => { add: (shape: unknown) => void };
             polygon: (...args: unknown[]) => unknown;
           };
@@ -60,15 +68,50 @@
           await A.init;
           if (cancelled || !aladinContainer) return;
 
+          // Compute target FOV so the captured camera frame fits comfortably inside viewport
+          const rect = aladinContainer.getBoundingClientRect();
+          const widthPx =
+            rect.width > 0 ? rect.width : aladinContainer.clientWidth || 350;
+          const heightPx =
+            rect.height > 0 ? rect.height : aladinContainer.clientHeight || 250;
+          const aspect = widthPx / heightPx;
+
+          let targetFov = 2.0;
+          if (data.post.fov_width && data.post.fov_height) {
+            const fw = data.post.fov_width;
+            const fh = data.post.fov_height;
+            const rot = data.post.fov_rotation || 0;
+            const rotRad = (rot * Math.PI) / 180;
+
+            // Compute maximum rotated bounding extents in sky degrees
+            const spanX =
+              fw * Math.abs(Math.cos(rotRad)) + fh * Math.abs(Math.sin(rotRad));
+            const spanY =
+              fw * Math.abs(Math.sin(rotRad)) + fh * Math.abs(Math.cos(rotRad));
+
+            // Aladin's FoV parameter defines the horizontal FoV (fovX).
+            // Vertical FoV is fovX / aspect.
+            // Fit both axes with ~45% margin around the captured rectangle
+            const minFovX = Math.max(spanX, spanY * aspect);
+            targetFov = Number((minFovX * 1.8).toFixed(4));
+          } else if (data.post.fov_width) {
+            targetFov = Number(
+              (data.post.fov_width * Math.max(1, aspect) * 1.8).toFixed(4)
+            );
+          }
+
           aladinInstance = A.aladin(aladinContainer, {
             survey: 'https://skies.esac.esa.int/DSSColor',
-            fov: (data.post.fov_width || 1) * 2,
+            fov: targetFov,
             target: `${ra} ${dec}`,
             showReticle: false,
             showZoomControl: true,
             showLayersControl: false,
             showFullscreenControl: false
           });
+
+          // Explicitly set FoV to guarantee it applies
+          aladinInstance.setFoV(targetFov);
 
           if (data.post.fov_width && data.post.fov_height) {
             const width = data.post.fov_width;
@@ -81,7 +124,6 @@
               color: '#f75b00',
               lineWidth: 2
             });
-            // @ts-expect-error aladinInstance is typed as unknown
             aladinInstance.addOverlay(overlay);
 
             const rad = Math.PI / 180;
@@ -111,6 +153,13 @@
             const polygon = A.polygon(corners);
             overlay.add(polygon);
           }
+
+          // Reinforce FoV on next frame after canvas layout settles
+          requestAnimationFrame(() => {
+            if (!cancelled && aladinInstance) {
+              aladinInstance.setFoV(targetFov);
+            }
+          });
         } catch (e) {
           // eslint-disable-next-line no-console
           console.error('Failed to initialize Aladin Lite:', e);
