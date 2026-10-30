@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import H1 from '$/components/headers/H1.svelte';
   import H2 from '$/components/headers/H2.svelte';
   import H3 from '$/components/headers/H3.svelte';
@@ -36,109 +37,97 @@
 
   let aladinContainer = $state<HTMLDivElement | null>(null);
   let aladinInstance: unknown = null;
+  let aladinLoading = $state(false);
 
   $effect(() => {
     const ra = data.post.ra;
     const dec = data.post.dec;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    if (ra !== null && dec !== null && aladinContainer) {
-      const checkAndInit = () => {
-        const globalA = (
-          window as unknown as {
-            A?: {
-              init: Promise<void>;
-              aladin: (...args: unknown[]) => unknown;
-              graphicOverlay: (...args: unknown[]) => { add: (shape: unknown) => void };
-              polygon: (...args: unknown[]) => unknown;
-            };
-          }
-        ).A;
-        if (globalA && globalA.init) {
-          // A.init resolves when WASM module compilation is complete in v3
-          globalA.init.then(() => {
-            try {
-              if (!aladinContainer) return;
-              aladinInstance = globalA.aladin(aladinContainer, {
-                survey: 'P/DSS2/color',
-                fov: (data.post.fov_width || 1) * 2,
-                target: `${ra} ${dec}`,
-                showReticle: false,
-                showZoomControl: true,
-                showLayersControl: false,
-                showFullscreenControl: false
-              });
+    let cancelled = false;
 
-              if (data.post.fov_width && data.post.fov_height) {
-                const width = data.post.fov_width;
-                const height = data.post.fov_height;
-                const rot = data.post.fov_rotation || 0;
-                const raVal = ra as number;
-                const decVal = dec as number;
+    if (browser && ra !== null && dec !== null && aladinContainer) {
+      aladinLoading = true;
+      (async () => {
+        try {
+          // @ts-expect-error aladin-lite does not provide typescript types
+          const aladinModule = await import('aladin-lite');
+          const A = aladinModule.default as unknown as {
+            init: Promise<void>;
+            aladin: (...args: unknown[]) => unknown;
+            graphicOverlay: (...args: unknown[]) => { add: (shape: unknown) => void };
+            polygon: (...args: unknown[]) => unknown;
+          };
+          if (cancelled || !aladinContainer) return;
+          await A.init;
+          if (cancelled || !aladinContainer) return;
 
-                const overlay = globalA.graphicOverlay({
-                  color: '#f75b00',
-                  lineWidth: 2
-                });
-                // @ts-expect-error aladinInstance is typed as unknown
-                aladinInstance.addOverlay(overlay);
-
-                const rad = Math.PI / 180;
-                const cosDec = Math.cos(decVal * rad) || 1;
-
-                const rotateAndScale = (x: number, y: number, angleDeg: number) => {
-                  const angleRad = -angleDeg * rad;
-                  const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
-                  const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-                  // Convert sky degrees to coordinate degrees for the RA component
-                  return [rx / cosDec, ry];
-                };
-
-                const halfW = width / 2;
-                const halfH = height / 2;
-
-                const corners = [
-                  [-halfW, -halfH],
-                  [halfW, -halfH],
-                  [halfW, halfH],
-                  [-halfW, halfH]
-                ].map(([x, y]) => {
-                  const [dRa, dDec] = rotateAndScale(x, y, rot);
-                  return [raVal + dRa, decVal + dDec];
-                });
-
-                const polygon = globalA.polygon(corners);
-                overlay.add(polygon);
-              }
-            } catch (e) {
-              // eslint-disable-next-line no-console
-              console.error('Failed to initialize Aladin Lite:', e);
-            }
+          aladinInstance = A.aladin(aladinContainer, {
+            survey: 'https://skies.esac.esa.int/DSSColor',
+            fov: (data.post.fov_width || 1) * 2,
+            target: `${ra} ${dec}`,
+            showReticle: false,
+            showZoomControl: true,
+            showLayersControl: false,
+            showFullscreenControl: false
           });
-        } else {
-          timeoutId = setTimeout(checkAndInit, 100);
-        }
-      };
 
-      checkAndInit();
+          if (data.post.fov_width && data.post.fov_height) {
+            const width = data.post.fov_width;
+            const height = data.post.fov_height;
+            const rot = data.post.fov_rotation || 0;
+            const raVal = ra as number;
+            const decVal = dec as number;
+
+            const overlay = A.graphicOverlay({
+              color: '#f75b00',
+              lineWidth: 2
+            });
+            // @ts-expect-error aladinInstance is typed as unknown
+            aladinInstance.addOverlay(overlay);
+
+            const rad = Math.PI / 180;
+            const cosDec = Math.cos(decVal * rad) || 1;
+
+            const rotateAndScale = (x: number, y: number, angleDeg: number) => {
+              const angleRad = -angleDeg * rad;
+              const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
+              const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
+              // Convert sky degrees to coordinate degrees for the RA component
+              return [rx / cosDec, ry];
+            };
+
+            const halfW = width / 2;
+            const halfH = height / 2;
+
+            const corners = [
+              [-halfW, -halfH],
+              [halfW, -halfH],
+              [halfW, halfH],
+              [-halfW, halfH]
+            ].map(([x, y]) => {
+              const [dRa, dDec] = rotateAndScale(x, y, rot);
+              return [raVal + dRa, decVal + dDec];
+            });
+
+            const polygon = A.polygon(corners);
+            overlay.add(polygon);
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to initialize Aladin Lite:', e);
+        } finally {
+          if (!cancelled) {
+            aladinLoading = false;
+          }
+        }
+      })();
     }
+
     return () => {
-      if (timeoutId !== null) {
-        clearTimeout(timeoutId);
-      }
+      cancelled = true;
+      aladinInstance = null;
     };
   });
 </script>
-
-<svelte:head>
-  <link
-    rel="stylesheet"
-    href="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.css"
-  />
-  <script
-    src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js"
-    charset="utf-8"
-  ></script>
-</svelte:head>
 
 <section
   class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
@@ -395,6 +384,16 @@
               style="height: 250px;"
             >
               <div bind:this={aladinContainer} class="h-full w-full bg-black"></div>
+              {#if aladinLoading}
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+                >
+                  <Icon
+                    name="bi-arrow-repeat"
+                    class="text-primary animate-spin text-2xl"
+                  />
+                </div>
+              {/if}
               <!-- Virtual coordinate grid frame mask overlay -->
               <div
                 class="pointer-events-none absolute inset-2 rounded border border-white/5"
