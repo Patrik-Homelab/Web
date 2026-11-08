@@ -1,4 +1,4 @@
-<script module>
+<script lang="ts" module>
   import { languages } from '../../lib/lang/index';
 
   type Language = keyof typeof languages;
