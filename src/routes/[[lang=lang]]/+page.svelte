@@ -75,7 +75,7 @@
         age = getAge();
         intervalId = setInterval(() => {
           age = getAge();
-        }, 80);
+        }, 110);
       }
     };
 
@@ -117,20 +117,24 @@
   <!-- 1. CENTERED HEADER: Name -> Age Ticker -->
   <div class="flex flex-col items-center text-center">
     <h1
+      style="contain: layout paint;"
       class="font-poppins from-primary-400 via-secondary to-primary-text bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
     >
       Patrik Mintěl
     </h1>
 
     <div
-      class="mt-4 flex w-full max-w-xs items-center justify-center rounded-2xl border border-white/10 bg-slate-950/80 px-5 py-3 font-mono shadow-2xl backdrop-blur-md sm:max-w-sm"
+      aria-label="{ageParts.integer} years"
+      style="contain: layout paint;"
+      class="mt-4 flex w-full max-w-xs items-center justify-center rounded-2xl border border-white/10 bg-slate-950/85 px-5 py-3 font-mono shadow-2xl sm:max-w-sm"
     >
-      <div class="flex items-baseline gap-0.5">
+      <div aria-hidden="true" class="flex items-baseline gap-0.5 tabular-nums">
         <span class="text-text-strong text-2xl font-bold sm:text-3xl"
           >{ageParts.integer}</span
         >
         <span class="text-primary text-2xl font-medium">.</span>
-        <span class="text-text-muted text-lg font-medium tracking-tight sm:text-xl"
+        <span
+          class="text-text-muted inline-block w-[12ch] text-left text-lg font-medium tracking-tight sm:text-xl"
           >{ageParts.decimal}</span
         >
       </div>
@@ -145,7 +149,8 @@
     <div class="order-2 flex flex-col gap-4 xl:order-1">
       {#each bioParagraphs.slice(0, 2) as paragraph, idx (idx)}
         <div
-          class="font-ubuntu text-text-muted rounded-2xl border border-white/10 bg-slate-950/60 p-5 text-base leading-relaxed shadow-xl backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-slate-950/80 {idx ===
+          style="contain: layout paint;"
+          class="font-ubuntu text-text-muted rounded-2xl border border-white/10 bg-slate-950/80 p-5 text-base leading-relaxed shadow-xl transition-colors duration-300 hover:border-white/20 hover:bg-slate-950/90 {idx ===
           0
             ? 'xl:translate-x-4'
             : 'xl:-translate-x-1'}"
@@ -164,7 +169,8 @@
     <div class="order-3 flex flex-col gap-4">
       {#each bioParagraphs.slice(2, 4) as paragraph, idx (idx)}
         <div
-          class="font-ubuntu text-text-muted rounded-2xl border border-white/10 bg-slate-950/60 p-5 text-base leading-relaxed shadow-xl backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-slate-950/80 {idx ===
+          style="contain: layout paint;"
+          class="font-ubuntu text-text-muted rounded-2xl border border-white/10 bg-slate-950/80 p-5 text-base leading-relaxed shadow-xl transition-colors duration-300 hover:border-white/20 hover:bg-slate-950/90 {idx ===
           0
             ? 'xl:-translate-x-4'
             : 'xl:translate-x-1'}"
@@ -179,7 +185,8 @@
   <div class="mt-6 flex w-full max-w-2xl flex-col items-center gap-6 text-center">
     {#if bioParagraphs[4]}
       <div
-        class="font-ubuntu text-text-muted w-full rounded-2xl border border-white/10 bg-slate-950/60 px-6 py-4 text-base leading-relaxed shadow-xl backdrop-blur-md sm:text-lg"
+        style="contain: layout paint;"
+        class="font-ubuntu text-text-muted w-full rounded-2xl border border-white/10 bg-slate-950/80 px-6 py-4 text-base leading-relaxed shadow-xl sm:text-lg"
       >
         <RichText text={bioParagraphs[4]} />
       </div>

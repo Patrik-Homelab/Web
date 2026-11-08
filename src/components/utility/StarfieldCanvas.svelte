@@ -8,8 +8,8 @@
     x: number;
     y: number;
     radius: number;
+    paletteIdx: number;
     color: string;
-    glowColor: string;
     baseAlpha: number;
     twinkleAmp: number;
     twinkleSpeed: number;
@@ -32,15 +32,6 @@
     size: number;
   }
 
-  interface NebulaCloud {
-    xRatio: number;
-    yRatio: number;
-    radiusRatio: number;
-    colorInner: string;
-    colorOuter: string;
-    parallax: number;
-  }
-
   // Realistic Harvard spectral classification star colors (O, B, A, F, G, K, M)
   const SPECTRAL_PALETTE = [
     { color: '#9bb0ff', glow: 'rgba(155, 176, 255, 0.45)', weight: 0.1 }, // O/B blue-white
@@ -51,44 +42,17 @@
     { color: '#ffbd7f', glow: 'rgba(255, 189, 127, 0.45)', weight: 0.05 } // M amber-red
   ];
 
-  const NEBULA_CLOUDS: NebulaCloud[] = [
-    {
-      xRatio: 0.22,
-      yRatio: 0.32,
-      radiusRatio: 0.38,
-      colorInner: 'rgba(234, 88, 12, 0.045)',
-      colorOuter: 'rgba(234, 88, 12, 0)',
-      parallax: 14
-    },
-    {
-      xRatio: 0.78,
-      yRatio: 0.26,
-      radiusRatio: 0.42,
-      colorInner: 'rgba(56, 189, 248, 0.04)',
-      colorOuter: 'rgba(56, 189, 248, 0)',
-      parallax: 20
-    },
-    {
-      xRatio: 0.55,
-      yRatio: 0.75,
-      radiusRatio: 0.45,
-      colorInner: 'rgba(168, 85, 247, 0.035)',
-      colorOuter: 'rgba(168, 85, 247, 0)',
-      parallax: 10
-    }
-  ];
-
   let canvas: HTMLCanvasElement;
   let isVisible = $state(true);
 
-  function pickSpectralColor() {
+  function pickSpectralColorIndex(): number {
     const r = Math.random();
     let acc = 0;
-    for (const item of SPECTRAL_PALETTE) {
-      acc += item.weight;
-      if (r <= acc) return item;
+    for (let i = 0; i < SPECTRAL_PALETTE.length; i++) {
+      acc += SPECTRAL_PALETTE[i].weight;
+      if (r <= acc) return i;
     }
-    return SPECTRAL_PALETTE[2];
+    return 2;
   }
 
   onMount(() => {
@@ -122,64 +86,78 @@
 
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap background starfield DPR at 1.5 to save massive mobile fill-rate without losing sharpness
+    let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
     let stars: Star[] = [];
     let shootingStars: ShootingStar[] = [];
-    let nebulaCanvas: HTMLCanvasElement | null = null;
+    let starSprites: HTMLCanvasElement[] = [];
 
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
     let currentMouseY = 0;
 
-    const updateNebula = () => {
-      nebulaCanvas = document.createElement('canvas');
-      nebulaCanvas.width = Math.floor(width * dpr);
-      nebulaCanvas.height = Math.floor(height * dpr);
-      const nCtx = nebulaCanvas.getContext('2d');
-      if (!nCtx) return;
-      nCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const maxDim = Math.max(width, height);
-      for (const cloud of NEBULA_CLOUDS) {
-        const cx = width * cloud.xRatio;
-        const cy = height * cloud.yRatio;
-        const r = maxDim * cloud.radiusRatio;
-        const grad = nCtx.createRadialGradient(cx, cy, 0, cx, cy, r);
-        grad.addColorStop(0, cloud.colorInner);
-        grad.addColorStop(1, cloud.colorOuter);
-        nCtx.fillStyle = grad;
-        nCtx.fillRect(0, 0, width, height);
-      }
+    // Pre-render 6 tiny spectral star sprites (core + halo) once so per-frame star rendering uses fast blits
+    const buildStarSprites = () => {
+      const spriteRadiusCss = 8; // covers halo up to 2.6x radius
+      const sizePx = Math.ceil(spriteRadiusCss * 2 * dpr);
+      starSprites = SPECTRAL_PALETTE.map((item) => {
+        const sCanvas = document.createElement('canvas');
+        sCanvas.width = sizePx;
+        sCanvas.height = sizePx;
+        const sCtx = sCanvas.getContext('2d');
+        if (!sCtx) return sCanvas;
+
+        sCtx.setTransform(dpr, 0, 0, dpr, spriteRadiusCss * dpr, spriteRadiusCss * dpr);
+
+        // Soft halo
+        const haloGrad = sCtx.createRadialGradient(0, 0, 0.5, 0, 0, 5.2);
+        haloGrad.addColorStop(0, item.glow);
+        haloGrad.addColorStop(1, 'rgba(0,0,0,0)');
+        sCtx.fillStyle = haloGrad;
+        sCtx.beginPath();
+        sCtx.arc(0, 0, 5.2, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Crisp core
+        sCtx.fillStyle = item.color;
+        sCtx.beginPath();
+        sCtx.arc(0, 0, 2.0, 0, Math.PI * 2);
+        sCtx.fill();
+
+        return sCanvas;
+      });
     };
 
     const createStars = () => {
-      const count = Math.min(240, Math.max(80, Math.floor((width * height) / 9000)));
+      const count = Math.min(180, Math.max(70, Math.floor((width * height) / 11000)));
       stars = Array.from({ length: count }, (_, idx) => {
         const layerRoll = Math.random();
-        const layer = layerRoll < 0.55 ? 0 : layerRoll < 0.85 ? 1 : 2;
-        const spectral = pickSpectralColor();
+        const layer = layerRoll < 0.58 ? 0 : layerRoll < 0.86 ? 1 : 2;
+        const paletteIdx = pickSpectralColorIndex();
+        const spectral = SPECTRAL_PALETTE[paletteIdx];
         const isBright = layer === 2 && idx % 7 === 0;
         const radius =
           layer === 0
-            ? 0.45 + Math.random() * 0.55
+            ? 0.55 + Math.random() * 0.55
             : layer === 1
-              ? 0.85 + Math.random() * 0.75
+              ? 0.85 + Math.random() * 0.7
               : isBright
-                ? 1.7 + Math.random() * 0.85
-                : 1.2 + Math.random() * 0.65;
+                ? 1.65 + Math.random() * 0.8
+                : 1.15 + Math.random() * 0.6;
 
-        const driftSpeed = (layer + 1) * 0.045;
+        const driftSpeed = (layer + 1) * 0.04;
         return {
           x: Math.random() * width,
           y: Math.random() * height,
           radius,
+          paletteIdx,
           color: spectral.color,
-          glowColor: spectral.glow,
           baseAlpha:
             layer === 0 ? 0.35 + Math.random() * 0.35 : 0.6 + Math.random() * 0.35,
           twinkleAmp: 0.15 + Math.random() * 0.3,
-          twinkleSpeed: 0.8 + Math.random() * 2.4,
+          twinkleSpeed: 0.8 + Math.random() * 2.2,
           twinklePhase: Math.random() * Math.PI * 2,
           layer,
           hasSpikes: isBright,
@@ -192,11 +170,11 @@
     const updateCanvasSize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      updateNebula();
+      buildStarSprites();
       createStars();
     };
 
@@ -207,7 +185,6 @@
     };
 
     const spawnShootingStar = () => {
-      // Spawn from upper/right quadrant streaking diagonally down-left or down-right
       const goLeft = Math.random() > 0.25;
       const startX = goLeft
         ? width * (0.25 + Math.random() * 0.75)
@@ -216,7 +193,7 @@
       const angle = goLeft
         ? (Math.PI * (135 + (Math.random() * 22 - 11))) / 180
         : (Math.PI * (35 + (Math.random() * 22 - 11))) / 180;
-      const speed = 11 + Math.random() * 8;
+      const speed = 13 + Math.random() * 9;
       const palette = ['#f8fafc', '#bae6fd', '#fde68a'];
       shootingStars.push({
         x: startX,
@@ -225,7 +202,7 @@
         vy: Math.sin(angle) * speed,
         length: 85 + Math.random() * 75,
         life: 0,
-        maxLife: 42 + Math.floor(Math.random() * 30),
+        maxLife: 32 + Math.floor(Math.random() * 22),
         color: palette[Math.floor(Math.random() * palette.length)],
         size: 1.4 + Math.random() * 0.9
       });
@@ -237,27 +214,33 @@
 
     let rafId = 0;
     let lastTime = performance.now();
-    let nextMeteorTimer = 1.8 + Math.random() * 3.5;
+    let lastDrawTime = 0;
+    let nextMeteorTimer = 2.0 + Math.random() * 3.5;
+
+    // Cap background starfield at ~30 FPS to avoid unnecessary mobile GPU composites
+    const minFrameInterval = 1000 / 30;
 
     const render = (now: number) => {
-      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      rafId = requestAnimationFrame(render);
+
+      const elapsed = now - lastDrawTime;
+      if (elapsed < minFrameInterval) {
+        return;
+      }
+
+      const dt = Math.min(0.08, (now - lastTime) / 1000);
       lastTime = now;
+      lastDrawTime = now;
       const timeSec = now * 0.001;
 
       // Smooth mouse parallax interpolation
-      currentMouseX += (targetMouseX - currentMouseX) * 0.05;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+      currentMouseX += (targetMouseX - currentMouseX) * 0.06;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.06;
 
-      // Clear with deep space background
-      ctx.fillStyle = '#030305';
-      ctx.fillRect(0, 0, width, height);
+      // Clear transparent canvas (nebula & deep-space backdrop live on static CSS background!)
+      ctx.clearRect(0, 0, width, height);
 
-      // 1. Render pre-computed deep-space nebula clouds
-      if (nebulaCanvas) {
-        ctx.drawImage(nebulaCanvas, 0, 0, width, height);
-      }
-
-      // 2. Render multi-temperature twinkling stars
+      // 1. Render multi-temperature twinkling stars
       for (const star of stars) {
         star.x += star.vx;
         star.y += star.vy;
@@ -282,43 +265,48 @@
           0.08,
           Math.min(1, star.baseAlpha + twinkle * star.twinkleAmp)
         );
-
-        // Soft halo for brighter mid/near stars
-        if (star.layer >= 1) {
-          ctx.beginPath();
-          ctx.arc(drawX, drawY, star.radius * 2.6, 0, Math.PI * 2);
-          ctx.fillStyle = star.glowColor;
-          ctx.globalAlpha = alpha * 0.35;
-          ctx.fill();
-        }
-
-        // Core star dot
-        ctx.beginPath();
-        ctx.arc(drawX, drawY, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
         ctx.globalAlpha = alpha;
-        ctx.fill();
 
-        // Subtle astrophotography Newtonian diffraction spikes on bright foreground stars
-        if (star.hasSpikes) {
-          const spikeLen = star.radius * (4.2 + twinkle * 1.1);
-          ctx.strokeStyle = star.color;
-          ctx.lineWidth = 0.65;
-          ctx.globalAlpha = alpha * 0.55;
-          ctx.beginPath();
-          ctx.moveTo(drawX - spikeLen, drawY);
-          ctx.lineTo(drawX + spikeLen, drawY);
-          ctx.moveTo(drawX, drawY - spikeLen);
-          ctx.lineTo(drawX, drawY + spikeLen);
-          ctx.stroke();
+        if (star.layer === 0) {
+          // Fast sub-pixel square for tiny distant background stars (avoids trig arc paths)
+          const d = star.radius * 1.8;
+          ctx.fillStyle = star.color;
+          ctx.fillRect(drawX - d * 0.5, drawY - d * 0.5, d, d);
+        } else {
+          // Pre-rendered spectral sprite (halo + core in single drawImage)
+          const sprite = starSprites[star.paletteIdx];
+          if (sprite) {
+            const halfSpan = star.radius * 4;
+            ctx.drawImage(
+              sprite,
+              drawX - halfSpan,
+              drawY - halfSpan,
+              halfSpan * 2,
+              halfSpan * 2
+            );
+          }
+
+          // Subtle astrophotography Newtonian diffraction spikes on bright foreground stars
+          if (star.hasSpikes) {
+            const spikeLen = star.radius * (4.2 + twinkle * 1.1);
+            ctx.strokeStyle = star.color;
+            ctx.lineWidth = 0.65;
+            ctx.globalAlpha = alpha * 0.55;
+            ctx.beginPath();
+            ctx.moveTo(drawX - spikeLen, drawY);
+            ctx.lineTo(drawX + spikeLen, drawY);
+            ctx.moveTo(drawX, drawY - spikeLen);
+            ctx.lineTo(drawX, drawY + spikeLen);
+            ctx.stroke();
+          }
         }
       }
 
-      // 3. Spawn & render shooting stars / meteors
+      // 2. Spawn & render shooting stars / meteors
       nextMeteorTimer -= dt;
       if (nextMeteorTimer <= 0 && shootingStars.length < 2) {
         spawnShootingStar();
-        nextMeteorTimer = 3.2 + Math.random() * 5.2;
+        nextMeteorTimer = 3.5 + Math.random() * 5.5;
       }
 
       for (let i = shootingStars.length - 1; i >= 0; i--) {
@@ -350,7 +338,6 @@
         ctx.lineTo(tailX, tailY);
         ctx.stroke();
 
-        // Glowing meteor head
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.arc(m.x, m.y, m.size * 1.15, 0, Math.PI * 2);
@@ -368,7 +355,6 @@
       }
 
       ctx.globalAlpha = 1;
-      rafId = requestAnimationFrame(render);
     };
 
     rafId = requestAnimationFrame(render);
@@ -384,5 +370,6 @@
 
 <canvas
   bind:this={canvas}
+  style="contain: strict; background: radial-gradient(circle at 22% 32%, rgba(234, 88, 12, 0.045), transparent 42%), radial-gradient(circle at 78% 26%, rgba(56, 189, 248, 0.04), transparent 45%), radial-gradient(circle at 55% 75%, rgba(168, 85, 247, 0.035), transparent 48%), #030305;"
   class="pointer-events-none fixed inset-0 -z-10 h-full w-full overflow-hidden"
 ></canvas>
