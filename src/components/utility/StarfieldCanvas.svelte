@@ -126,15 +126,35 @@
 
     let stars: Star[] = [];
     let shootingStars: ShootingStar[] = [];
+    let nebulaCanvas: HTMLCanvasElement | null = null;
 
-    // Normalized mouse coordinates [-0.5, 0.5] and smoothed values
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
     let currentMouseY = 0;
 
+    const updateNebula = () => {
+      nebulaCanvas = document.createElement('canvas');
+      nebulaCanvas.width = Math.floor(width * dpr);
+      nebulaCanvas.height = Math.floor(height * dpr);
+      const nCtx = nebulaCanvas.getContext('2d');
+      if (!nCtx) return;
+      nCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const maxDim = Math.max(width, height);
+      for (const cloud of NEBULA_CLOUDS) {
+        const cx = width * cloud.xRatio;
+        const cy = height * cloud.yRatio;
+        const r = maxDim * cloud.radiusRatio;
+        const grad = nCtx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0, cloud.colorInner);
+        grad.addColorStop(1, cloud.colorOuter);
+        nCtx.fillStyle = grad;
+        nCtx.fillRect(0, 0, width, height);
+      }
+    };
+
     const createStars = () => {
-      const count = Math.min(300, Math.max(140, Math.floor((width * height) / 6800)));
+      const count = Math.min(240, Math.max(80, Math.floor((width * height) / 9000)));
       stars = Array.from({ length: count }, (_, idx) => {
         const layerRoll = Math.random();
         const layer = layerRoll < 0.55 ? 0 : layerRoll < 0.85 ? 1 : 2;
@@ -176,10 +196,12 @@
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      updateNebula();
       createStars();
     };
 
     const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
       targetMouseX = e.clientX / Math.max(1, width) - 0.5;
       targetMouseY = e.clientY / Math.max(1, height) - 0.5;
     };
@@ -230,17 +252,9 @@
       ctx.fillStyle = '#030305';
       ctx.fillRect(0, 0, width, height);
 
-      // 1. Render subtle deep-space nebula clouds
-      const maxDim = Math.max(width, height);
-      for (const cloud of NEBULA_CLOUDS) {
-        const cx = width * cloud.xRatio - currentMouseX * cloud.parallax;
-        const cy = height * cloud.yRatio - currentMouseY * cloud.parallax;
-        const r = maxDim * cloud.radiusRatio;
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-        grad.addColorStop(0, cloud.colorInner);
-        grad.addColorStop(1, cloud.colorOuter);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
+      // 1. Render pre-computed deep-space nebula clouds
+      if (nebulaCanvas) {
+        ctx.drawImage(nebulaCanvas, 0, 0, width, height);
       }
 
       // 2. Render multi-temperature twinkling stars

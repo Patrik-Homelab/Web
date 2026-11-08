@@ -1,15 +1,11 @@
 <script lang="ts">
-  import Icon from '$/components/utility/Icon.svelte';
   import {
     ASTEROID_BELT,
     getDaysSinceJ2000,
     getPlanetLongitudeDeg,
     normalizeDegrees,
-    PLANETS,
-    type PlanetConfig,
-    type PlanetId
+    PLANETS
   } from '$/lib/solarSystem';
-  import { getState } from '$/lib/state.svelte';
   import { onMount } from 'svelte';
 
   interface Props {
@@ -19,371 +15,456 @@
 
   let { pointerX = 0, pointerY = 0 }: Props = $props();
 
-  const _state = getState();
-  const labels = $derived(_state.lang.main.solarSystem);
-
-  let isTimeLapse = $state(false);
-  let activePlanetId = $state<PlanetId | null>(null);
-  let simulatedOffsetDays = $state(0);
-  let ambientSeconds = $state(0);
-  let beltRotationDeg = $state(0);
-  let currentEpochMs = $state(Date.now());
-
-  // Smoothed 3D tilt angles
-  let tiltX = $state(0);
-  let tiltY = $state(0);
-
-  const daysSinceJ2000 = $derived(
-    getDaysSinceJ2000(currentEpochMs) + simulatedOffsetDays
-  );
-
-  const simulatedDateStr = $derived.by(() => {
-    const simMs = currentEpochMs + simulatedOffsetDays * 86_400_000;
-    const d = new Date(simMs);
-    return d.toISOString().slice(0, 10);
-  });
-
-  const planetStates = $derived.by(() => {
-    return PLANETS.map((planet) => {
-      const angleDeg = getPlanetLongitudeDeg(planet, daysSinceJ2000, ambientSeconds);
-      const exactJ2000Deg = normalizeDegrees(planet.L0 + planet.LRate * daysSinceJ2000);
-      const rad = (angleDeg * Math.PI) / 180;
-      const radiusPct = planet.orbitPct / 2;
-      const xPct = 50 + Math.cos(rad) * radiusPct;
-      const yPct = 50 - Math.sin(rad) * radiusPct;
-
-      const moons = (planet.moons ?? []).map((moon) => {
-        const moonDeg = normalizeDegrees(
-          moon.initialPhaseDeg +
-            (daysSinceJ2000 / moon.periodDays) * 360 +
-            ambientSeconds * (360 / Math.max(4, moon.periodDays * 0.45))
-        );
-        const moonRad = (moonDeg * Math.PI) / 180;
-        return {
-          ...moon,
-          xPx: Math.cos(moonRad) * moon.radiusPx,
-          yPx: -Math.sin(moonRad) * moon.radiusPx
-        };
-      });
-
-      return {
-        planet,
-        angleDeg,
-        exactJ2000Deg,
-        xPct,
-        yPct,
-        moons
-      };
-    });
-  });
-
-  const activePlanetData = $derived(
-    activePlanetId
-      ? (planetStates.find((item) => item.planet.id === activePlanetId) ?? null)
-      : null
-  );
-
-  function formatPeriod(planet: PlanetConfig): string {
-    if (planet.periodDays >= 600) {
-      return `${(planet.periodDays / 365.25).toFixed(1)} ${labels.years}`;
-    }
-    return `${Math.round(planet.periodDays)} ${labels.days}`;
-  }
-
-  function toggleMode() {
-    isTimeLapse = !isTimeLapse;
-    if (!isTimeLapse) {
-      simulatedOffsetDays = 0;
-      currentEpochMs = Date.now();
-    }
-  }
+  let stageEl: HTMLDivElement;
+  let backCanvas: HTMLCanvasElement;
+  let frontCanvas: HTMLCanvasElement;
 
   onMount(() => {
+    if (!stageEl || !backCanvas || !frontCanvas) return;
+
+    const ctxBack = backCanvas.getContext('2d');
+    const ctxFront = frontCanvas.getContext('2d');
+    if (!ctxBack || !ctxFront) return;
+
+    let width = 700;
+    let height = 437.5;
+    let dpr = 1;
+
+    const resize = () => {
+      width = stageEl.clientWidth || 700;
+      height = stageEl.clientHeight || 437.5;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      backCanvas.width = Math.floor(width * dpr);
+      backCanvas.height = Math.floor(height * dpr);
+      frontCanvas.width = Math.floor(width * dpr);
+      frontCanvas.height = Math.floor(height * dpr);
+
+      ctxBack.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctxFront.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    resize();
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(stageEl);
+
+    let isVisible = true;
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0.05 }
+    );
+    intersectionObserver.observe(stageEl);
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isVisible = false;
+      } else {
+        isVisible = true;
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     let rafId = 0;
+    let ambientSeconds = 0;
+    let smoothX = 0;
+    let smoothY = 0;
     let lastTime = performance.now();
+    let lastDrawTime = 0;
+    const epochMs = Date.now();
+    const daysSinceJ2000 = getDaysSinceJ2000(epochMs);
 
-    const tick = (now: number) => {
-      const dt = Math.min(0.05, (now - lastTime) / 1000);
+    // Target ~45 FPS: butter-smooth for tranquil orbits while halving CPU/GPU wakeups on mobile
+    const minFrameInterval = 1000 / 45;
+
+    const render = (now: number) => {
+      rafId = requestAnimationFrame(render);
+
+      if (!isVisible) {
+        lastTime = now;
+        return;
+      }
+
+      const elapsedSinceDraw = now - lastDrawTime;
+      if (elapsedSinceDraw < minFrameInterval) {
+        return;
+      }
+
+      const dt = Math.min(0.08, (now - lastTime) / 1000);
       lastTime = now;
+      lastDrawTime = now;
 
+      ambientSeconds += dt;
+
+      // Smooth pointer parallax tilt (disabled if reduced motion requested)
       const prefersReducedMotion = window.matchMedia(
         '(prefers-reduced-motion: reduce)'
       ).matches;
-      const animationsActive =
-        _state.starsEnabled !== false && !prefersReducedMotion && !document.hidden;
+      const targetX = prefersReducedMotion ? 0 : pointerX;
+      const targetY = prefersReducedMotion ? 0 : pointerY;
+      smoothX += (targetX - smoothX) * 0.08;
+      smoothY += (targetY - smoothY) * 0.08;
 
-      if (animationsActive) {
-        const hoverSlowdown = activePlanetId ? 0.2 : 1;
-        ambientSeconds += dt * hoverSlowdown;
-        beltRotationDeg = (beltRotationDeg + dt * 1.6 * hoverSlowdown) % 360;
+      const cx = width / 2;
+      const cy = height / 2;
 
-        if (isTimeLapse) {
-          // Advance ~45 Earth days per second in time-lapse mode
-          simulatedOffsetDays += dt * 45 * hoverSlowdown;
-        }
+      // 2.5D perspective inclination and roll
+      const tiltRatio = 0.36 - smoothY * 0.05;
+      const rollDeg = -9 + smoothX * 4.5;
+      const rollRad = (rollDeg * Math.PI) / 180;
+      const cosRoll = Math.cos(rollRad);
+      const sinRoll = Math.sin(rollRad);
+
+      // Clear both layers
+      ctxBack.clearRect(0, 0, width, height);
+      ctxFront.clearRect(0, 0, width, height);
+
+      // -------------------------------------------------------------
+      // 1. ORBIT ELLIPSES (Back dashed in ctxBack, Front glowing in ctxFront)
+      // -------------------------------------------------------------
+      for (const planet of PLANETS) {
+        const rx = (planet.orbitPct / 100) * (width / 2);
+        const ry = rx * tiltRatio;
+
+        // --- Back Arc: upper half (y <= 0 in rotated coords) ---
+        ctxBack.save();
+        ctxBack.translate(cx, cy);
+        ctxBack.rotate(rollRad);
+        ctxBack.beginPath();
+        ctxBack.ellipse(0, 0, rx, ry, 0, Math.PI, 0); // Math.PI to 0 (top half)
+        ctxBack.setLineDash([4, 6]);
+        ctxBack.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctxBack.lineWidth = 1.2;
+        ctxBack.stroke();
+        ctxBack.restore();
+
+        // --- Front Arc: lower half (y >= 0 in rotated coords) ---
+        ctxFront.save();
+        ctxFront.translate(cx, cy);
+        ctxFront.rotate(rollRad);
+
+        // Dark contrast under-stroke to pop over portrait
+        ctxFront.beginPath();
+        ctxFront.ellipse(0, 0, rx, ry, 0, 0, Math.PI); // 0 to Math.PI (bottom half)
+        ctxFront.setLineDash([]);
+        ctxFront.strokeStyle = 'rgba(2, 6, 23, 0.75)';
+        ctxFront.lineWidth = 3.6;
+        ctxFront.stroke();
+
+        // High-contrast luminous front orbit line
+        const frontGrad = ctxFront.createLinearGradient(-rx, 0, rx, 0);
+        frontGrad.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+        frontGrad.addColorStop(0.25, 'rgba(254, 240, 138, 0.75)');
+        frontGrad.addColorStop(0.5, 'rgba(253, 224, 71, 0.95)');
+        frontGrad.addColorStop(0.75, 'rgba(254, 240, 138, 0.75)');
+        frontGrad.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
+
+        ctxFront.beginPath();
+        ctxFront.ellipse(0, 0, rx, ry, 0, 0, Math.PI);
+        ctxFront.strokeStyle = frontGrad;
+        ctxFront.lineWidth = 1.6;
+        ctxFront.stroke();
+        ctxFront.restore();
       }
 
-      // Smooth 3D tilt interpolation toward pointer
-      const targetTiltX = animationsActive ? -pointerY * 18 : 0;
-      const targetTiltY = animationsActive ? pointerX * 18 : 0;
-      tiltX += (targetTiltX - tiltX) * 0.08;
-      tiltY += (targetTiltY - tiltY) * 0.08;
+      // -------------------------------------------------------------
+      // 2. ASTEROID BELT PARTICLES
+      // -------------------------------------------------------------
+      for (const rock of ASTEROID_BELT) {
+        const deg = normalizeDegrees(
+          rock.angleDeg - ambientSeconds * rock.speedDegPerSec
+        );
+        const rad = (-deg * Math.PI) / 180;
+        const sinVal = Math.sin(rad);
+        const cosVal = Math.cos(rad);
 
-      rafId = requestAnimationFrame(tick);
+        const rx = (rock.radiusPct / 100) * (width / 2);
+        const ry = rx * tiltRatio;
+
+        const unX = cosVal * rx;
+        const unY = sinVal * ry;
+        const x = cx + unX * cosRoll - unY * sinRoll;
+        const y = cy + unX * sinRoll + unY * cosRoll;
+
+        const isFront = sinVal >= 0;
+        const targetCtx = isFront ? ctxFront : ctxBack;
+        const scale = 1 + 0.22 * sinVal;
+        const opacity = rock.opacity * (0.65 + 0.35 * sinVal);
+
+        targetCtx.beginPath();
+        targetCtx.arc(x, y, (rock.sizePx / 2) * scale, 0, Math.PI * 2);
+        targetCtx.fillStyle = `rgba(254, 243, 199, ${opacity.toFixed(2)})`;
+        targetCtx.fill();
+      }
+
+      // -------------------------------------------------------------
+      // 3. ORBITING PLANETS, MOONS & RINGS
+      // -------------------------------------------------------------
+      for (const planet of PLANETS) {
+        const longitudeDeg = getPlanetLongitudeDeg(
+          planet,
+          daysSinceJ2000,
+          ambientSeconds
+        );
+        const rad = (-longitudeDeg * Math.PI) / 180;
+        const sinVal = Math.sin(rad);
+        const cosVal = Math.cos(rad);
+
+        const rx = (planet.orbitPct / 100) * (width / 2);
+        const ry = rx * tiltRatio;
+
+        const unX = cosVal * rx;
+        const unY = sinVal * ry;
+        const x = cx + unX * cosRoll - unY * sinRoll;
+        const y = cy + unX * sinRoll + unY * cosRoll;
+
+        const isFront = sinVal >= 0;
+        const targetCtx = isFront ? ctxFront : ctxBack;
+
+        const depthScale = 1 + 0.25 * sinVal;
+        const depthOpacity = 0.75 + 0.25 * sinVal;
+        const pRadius = (planet.sizePx / 2) * depthScale;
+
+        targetCtx.save();
+        targetCtx.translate(x, y);
+        targetCtx.globalAlpha = depthOpacity;
+
+        // A. True Elliptical Ring — BACK ARC (behind planet)
+        if (planet.rings) {
+          const {
+            rx: ringRx,
+            ry: ringRy,
+            tiltDeg,
+            outerColor,
+            innerColor
+          } = planet.rings;
+          const scaledRx = ringRx * depthScale;
+          const scaledRy = ringRy * depthScale;
+          const ringTiltRad = (tiltDeg * Math.PI) / 180;
+
+          targetCtx.save();
+          targetCtx.rotate(ringTiltRad);
+
+          // Outer ring back arc (Math.PI to 0)
+          targetCtx.beginPath();
+          targetCtx.ellipse(0, 0, scaledRx, scaledRy, 0, Math.PI, 0);
+          targetCtx.strokeStyle = outerColor;
+          targetCtx.lineWidth = 2.2 * depthScale;
+          targetCtx.stroke();
+
+          // Inner ring back arc
+          if (innerColor) {
+            targetCtx.beginPath();
+            targetCtx.ellipse(0, 0, scaledRx * 0.76, scaledRy * 0.76, 0, Math.PI, 0);
+            targetCtx.strokeStyle = innerColor;
+            targetCtx.lineWidth = 1.4 * depthScale;
+            targetCtx.stroke();
+          }
+          targetCtx.restore();
+        }
+
+        // B. Moons — BACK ARC
+        if (planet.moons) {
+          for (const moon of planet.moons) {
+            const moonDeg = normalizeDegrees(
+              moon.initialPhaseDeg -
+                ambientSeconds * (360 / Math.max(3, moon.periodDays * 0.35))
+            );
+            const moonRad = (moonDeg * Math.PI) / 180;
+            const moonSin = Math.sin(moonRad);
+            if (moonSin < 0) {
+              const mX = Math.cos(moonRad) * moon.radiusPx * depthScale;
+              const mY = moonSin * moon.radiusPx * 0.45 * depthScale;
+              targetCtx.beginPath();
+              targetCtx.arc(mX, mY, (moon.sizePx / 2) * depthScale, 0, Math.PI * 2);
+              targetCtx.fillStyle = moon.color;
+              targetCtx.fill();
+            }
+          }
+        }
+
+        // C. Planet Atmosphere Glow
+        targetCtx.beginPath();
+        targetCtx.arc(0, 0, pRadius * 1.8, 0, Math.PI * 2);
+        const glowGrad = targetCtx.createRadialGradient(
+          0,
+          0,
+          pRadius * 0.4,
+          0,
+          0,
+          pRadius * 1.8
+        );
+        glowGrad.addColorStop(0, planet.glowColor);
+        glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+        targetCtx.fillStyle = glowGrad;
+        targetCtx.fill();
+
+        // D. Planet Sphere (Radial 3D shading)
+        const sphereGrad = targetCtx.createRadialGradient(
+          -pRadius * 0.32,
+          -pRadius * 0.32,
+          pRadius * 0.1,
+          0,
+          0,
+          pRadius
+        );
+        sphereGrad.addColorStop(0, planet.colors.light);
+        sphereGrad.addColorStop(0.55, planet.colors.mid);
+        sphereGrad.addColorStop(1, planet.colors.dark);
+
+        targetCtx.beginPath();
+        targetCtx.arc(0, 0, pRadius, 0, Math.PI * 2);
+        targetCtx.fillStyle = sphereGrad;
+        targetCtx.fill();
+
+        // Jupiter subtle atmospheric bands
+        if (planet.id === 'jupiter') {
+          targetCtx.save();
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, pRadius, 0, Math.PI * 2);
+          targetCtx.clip();
+          targetCtx.fillStyle = 'rgba(120, 53, 15, 0.45)';
+          targetCtx.fillRect(-pRadius, -pRadius * 0.28, pRadius * 2, pRadius * 0.2);
+          targetCtx.fillRect(-pRadius, pRadius * 0.16, pRadius * 2, pRadius * 0.22);
+          targetCtx.restore();
+        }
+
+        // E. True Elliptical Ring — FRONT ARC (in front of planet)
+        if (planet.rings) {
+          const {
+            rx: ringRx,
+            ry: ringRy,
+            tiltDeg,
+            outerColor,
+            innerColor
+          } = planet.rings;
+          const scaledRx = ringRx * depthScale;
+          const scaledRy = ringRy * depthScale;
+          const ringTiltRad = (tiltDeg * Math.PI) / 180;
+
+          targetCtx.save();
+          targetCtx.rotate(ringTiltRad);
+
+          // Outer ring front arc (0 to Math.PI)
+          targetCtx.beginPath();
+          targetCtx.ellipse(0, 0, scaledRx, scaledRy, 0, 0, Math.PI);
+          targetCtx.strokeStyle = outerColor;
+          targetCtx.lineWidth = 2.4 * depthScale;
+          targetCtx.stroke();
+
+          // Inner ring front arc
+          if (innerColor) {
+            targetCtx.beginPath();
+            targetCtx.ellipse(0, 0, scaledRx * 0.76, scaledRy * 0.76, 0, 0, Math.PI);
+            targetCtx.strokeStyle = innerColor;
+            targetCtx.lineWidth = 1.5 * depthScale;
+            targetCtx.stroke();
+          }
+          targetCtx.restore();
+        }
+
+        // F. Moons — FRONT ARC
+        if (planet.moons) {
+          for (const moon of planet.moons) {
+            const moonDeg = normalizeDegrees(
+              moon.initialPhaseDeg -
+                ambientSeconds * (360 / Math.max(3, moon.periodDays * 0.35))
+            );
+            const moonRad = (moonDeg * Math.PI) / 180;
+            const moonSin = Math.sin(moonRad);
+            if (moonSin >= 0) {
+              const mX = Math.cos(moonRad) * moon.radiusPx * depthScale;
+              const mY = moonSin * moon.radiusPx * 0.45 * depthScale;
+              targetCtx.beginPath();
+              targetCtx.arc(mX, mY, (moon.sizePx / 2) * depthScale, 0, Math.PI * 2);
+              targetCtx.fillStyle = moon.color;
+              targetCtx.fill();
+            }
+          }
+        }
+
+        targetCtx.restore();
+      }
     };
 
-    rafId = requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(rafId);
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   });
 </script>
 
-<div class="relative flex flex-col items-center justify-center select-none">
-  <!-- Main Interactive Orbital Stage -->
+<!-- Non-Interactive 2.5D Solar System Container -->
+<div
+  bind:this={stageEl}
+  aria-hidden="true"
+  class="pointer-events-none relative flex aspect-[16/10] w-[350px] max-w-[96vw] items-center justify-center select-none sm:w-[560px] md:w-[680px] xl:w-[740px]"
+>
+  <!-- Ambient Elliptical Solar Corona Backdrop -->
   <div
-    class="relative flex h-[340px] w-[340px] items-center justify-center sm:h-[460px] sm:w-[460px] xl:h-[500px] xl:w-[500px]"
-    style="perspective: 1100px;"
+    class="from-primary/25 via-secondary/10 pointer-events-none absolute h-[45%] w-[78%] -rotate-9 rounded-full bg-gradient-to-r to-transparent blur-3xl"
+  ></div>
+
+  <!-- 1. BACK CANVAS LAYER (z-0: Behind Sun Portrait) -->
+  <canvas
+    bind:this={backCanvas}
+    class="pointer-events-none absolute inset-0 z-0 h-full w-full"
+  ></canvas>
+
+  <!-- 2. CENTRAL SOLAR CORE / SUN PORTRAIT (z-10) -->
+  <div
+    class="relative z-10 flex h-[80px] w-[80px] items-center justify-center rounded-full sm:h-[105px] sm:w-[105px] md:h-[120px] md:w-[120px]"
   >
-    <!-- 3D Tilted Orbital Plane -->
+    <!-- Outer Solar Corona Aura -->
     <div
-      class="relative flex h-full w-full items-center justify-center transition-transform duration-75 ease-out"
-      style="transform: rotateX({tiltX.toFixed(2)}deg) rotateY({tiltY.toFixed(
-        2
-      )}deg); transform-style: preserve-3d;"
+      class="from-primary/50 to-secondary/30 animate-pulse-slow absolute -inset-5 rounded-full bg-gradient-to-tr via-amber-400/35 blur-xl"
+    ></div>
+    <!-- Rotating Solar Prominence Rim -->
+    <div
+      class="animate-spin-slow absolute -inset-2 rounded-full border border-dashed border-amber-300/45"
+    ></div>
+    <!-- Inner Chromosphere Rim -->
+    <div
+      class="from-primary to-secondary absolute -inset-1 rounded-full bg-gradient-to-tr via-amber-300 opacity-60 blur-xs"
+    ></div>
+
+    <!-- Upright Circular Sun Portrait Frame -->
+    <div
+      class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-200/75 bg-slate-900 shadow-[0_0_40px_rgba(251,191,36,0.6)]"
     >
-      <!-- Ambient Deep Solar Corona Backdrop -->
-      <div
-        class="from-primary/25 via-secondary/15 pointer-events-none absolute h-[58%] w-[58%] rounded-full bg-gradient-to-tr to-transparent blur-2xl"
-      ></div>
-
-      <!-- Asteroid Belt (Between Mars 75% and Jupiter 83.5%) -->
-      <div
-        class="pointer-events-none absolute inset-0"
-        style="transform: rotate({beltRotationDeg.toFixed(2)}deg);"
-      >
-        {#each ASTEROID_BELT as rock, idx (idx)}
-          {@const rad = (rock.angleDeg * Math.PI) / 180}
-          {@const r = rock.radiusPct / 2}
-          {@const x = 50 + Math.cos(rad) * r}
-          {@const y = 50 - Math.sin(rad) * r}
-          <span
-            class="absolute rounded-full bg-amber-100/70"
-            style="left: {x}%; top: {y}%; width: {rock.sizePx}px; height: {rock.sizePx}px; opacity: {rock.opacity}; transform: translate(-50%, -50%);"
-          ></span>
-        {/each}
-      </div>
-
-      <!-- Concentric Planetary Orbit Tracks -->
-      {#each planetStates as { planet } (planet.id)}
-        {@const isHighlighted = activePlanetId === planet.id}
-        <div
-          class="pointer-events-none absolute rounded-full border transition-all duration-300 {isHighlighted
-            ? 'border-primary/65 shadow-[0_0_20px_rgba(249,115,22,0.22)]'
-            : 'border-white/[0.09]'}"
-          style="width: {planet.orbitPct}%; height: {planet.orbitPct}%;"
-        ></div>
-      {/each}
-
-      <!-- Central Solar Core (Profile Photo + Corona Rings) -->
-      <div
-        class="relative z-10 flex h-[48%] w-[48%] items-center justify-center rounded-full"
-        style="transform: translateZ(14px);"
-      >
-        <!-- Rotating Solar Prominence Rim -->
-        <div
-          class="border-primary/30 animate-spin-slow pointer-events-none absolute -inset-2 rounded-full border border-dashed"
-        ></div>
-        <div
-          class="from-primary to-secondary animate-pulse-slow pointer-events-none absolute -inset-1.5 rounded-full bg-gradient-to-tr via-amber-400 opacity-35 blur-md"
-        ></div>
-
-        <!-- Profile Picture Frame -->
-        <div
-          class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-300/35 bg-slate-900 shadow-[0_0_35px_rgba(249,115,22,0.28)] transition-transform duration-500 hover:scale-103"
-        >
-          <picture>
-            <source
-              srcset="/images/Image-400.webp 400w, /images/Image-800.webp 800w"
-              type="image/webp"
-              sizes="(max-width: 640px) 400px, 800px"
-            />
-            <source
-              srcset="/images/Image-400.jpg 400w, /images/Image-800.jpg 800w"
-              type="image/jpeg"
-              sizes="(max-width: 640px) 400px, 800px"
-            />
-            <img
-              src="/images/Image-400.jpg"
-              alt="Patrik Mintěl Profile"
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-              width="240"
-              height="240"
-              class="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
-            />
-          </picture>
-        </div>
-      </div>
-
-      <!-- Orbiting Planets, Rings & Moons -->
-      {#each planetStates as { planet, xPct, yPct, moons } (planet.id)}
-        {@const isHovered = activePlanetId === planet.id}
-        <button
-          type="button"
-          aria-label={labels.planets[planet.id]}
-          onmouseenter={() => (activePlanetId = planet.id)}
-          onmouseleave={() => {
-            if (activePlanetId === planet.id) activePlanetId = null;
-          }}
-          onfocus={() => (activePlanetId = planet.id)}
-          onblur={() => {
-            if (activePlanetId === planet.id) activePlanetId = null;
-          }}
-          onclick={() =>
-            (activePlanetId = activePlanetId === planet.id ? null : planet.id)}
-          class="group absolute z-20 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full p-2 focus:outline-none"
-          style="left: {xPct}%; top: {yPct}%; transform: translate(-50%, -50%) translateZ(22px);"
-        >
-          <!-- Natural Satellites (Moons) -->
-          {#each moons as moon (moon.id)}
-            <span
-              class="pointer-events-none absolute rounded-full shadow-xs"
-              style="width: {moon.sizePx}px; height: {moon.sizePx}px; background: {moon.color}; transform: translate({moon.xPx.toFixed(
-                1
-              )}px, {moon.yPx.toFixed(1)}px); box-shadow: 0 0 4px {moon.color};"
-            ></span>
-          {/each}
-
-          <!-- Planetary Ring System (Saturn / Uranus) -->
-          {#if planet.rings}
-            <span
-              class="pointer-events-none absolute rounded-full border-2"
-              style="width: {planet.rings.widthPx}px; height: {planet.rings
-                .heightPx}px; border-color: {planet.rings
-                .borderColor}; transform: rotate({planet.rings.tiltDeg}deg); {planet.rings
-                .innerBorderColor
-                ? `box-shadow: inset 0 0 0 1.5px ${planet.rings.innerBorderColor};`
-                : ''}"
-            ></span>
-          {/if}
-
-          <!-- Planet Sphere -->
-          <span
-            class="relative block rounded-full transition-transform duration-200 {isHovered
-              ? 'scale-150 ring-2 ring-white/80'
-              : 'group-hover:scale-135'}"
-            style="width: {planet.sizePx}px; height: {planet.sizePx}px; background: {planet.gradient}; box-shadow: 0 0 {isHovered
-              ? 16
-              : 10}px {planet.glowColor};"
-          ></span>
-        </button>
-      {/each}
+      <picture>
+        <source
+          srcset="/images/Image-400.webp 400w, /images/Image-800.webp 800w"
+          type="image/webp"
+          sizes="(max-width: 640px) 160px, 300px"
+        />
+        <source
+          srcset="/images/Image-400.jpg 400w, /images/Image-800.jpg 800w"
+          type="image/jpeg"
+          sizes="(max-width: 640px) 160px, 300px"
+        />
+        <img
+          src="/images/Image-400.jpg"
+          alt="Patrik Mintěl Profile"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          width="120"
+          height="120"
+          class="h-full w-full object-cover object-center"
+        />
+      </picture>
     </div>
-
-    <!-- Floating Telemetry Tooltip HUD (Top/Bottom Overlay) -->
-    {#if activePlanetData}
-      {@const { planet, exactJ2000Deg } = activePlanetData}
-      <div
-        class="pointer-events-none absolute -top-2 left-1/2 z-30 flex w-max max-w-[92vw] -translate-x-1/2 items-center gap-3 rounded-2xl border border-white/15 bg-slate-950/90 px-4 py-2 text-xs shadow-2xl backdrop-blur-xl sm:gap-4 sm:text-sm"
-      >
-        <div class="flex items-center gap-2">
-          <span
-            class="inline-block h-3 w-3 rounded-full"
-            style="background: {planet.gradient}; box-shadow: 0 0 8px {planet.glowColor};"
-          ></span>
-          <span class="text-text-strong font-bold tracking-wide">
-            {labels.planets[planet.id]}
-          </span>
-        </div>
-        <div class="h-3.5 w-px bg-white/15"></div>
-        <div class="font-mono text-[11px] sm:text-xs">
-          <span class="text-text-muted">{labels.longitude}:</span>
-          <span class="text-primary ml-1 font-semibold">{exactJ2000Deg.toFixed(1)}°</span>
-        </div>
-        <div class="hidden h-3.5 w-px bg-white/15 sm:block"></div>
-        <div class="hidden font-mono text-xs sm:block">
-          <span class="text-text-muted">{labels.distance}:</span>
-          <span class="text-text-strong ml-1 font-semibold">{planet.au} AU</span>
-        </div>
-        <div class="h-3.5 w-px bg-white/15"></div>
-        <div class="font-mono text-[11px] sm:text-xs">
-          <span class="text-text-muted">{formatPeriod(planet)}</span>
-        </div>
-      </div>
-    {/if}
   </div>
 
-  <!-- Compact Control & Planet Selector Bar -->
-  <div
-    class="mt-3 flex flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-slate-950/75 px-3.5 py-1.5 text-xs shadow-xl backdrop-blur-md"
-  >
-    <!-- Live J2000 vs Time-Lapse Toggle -->
-    <button
-      type="button"
-      onclick={toggleMode}
-      class="flex cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold transition-all duration-200 {isTimeLapse
-        ? 'bg-primary/20 text-primary border-primary/30 border'
-        : 'text-text-strong border border-transparent bg-white/5 hover:bg-white/10'}"
-    >
-      <span
-        class="h-2 w-2 rounded-full {isTimeLapse
-          ? 'bg-primary animate-ping'
-          : 'bg-emerald-400 shadow-[0_0_6px_#34d399]'}"
-      ></span>
-      <span>{isTimeLapse ? labels.timeLapse : labels.liveJ2000}</span>
-      <span class="text-text-muted ml-1 hidden sm:inline">({simulatedDateStr})</span>
-    </button>
-
-    <div class="h-3.5 w-px bg-white/10"></div>
-
-    <!-- Quick Planet Inspector Dots -->
-    <div class="flex items-center gap-1.5 px-1">
-      {#each PLANETS as planet (planet.id)}
-        {@const isSelected = activePlanetId === planet.id}
-        <button
-          type="button"
-          title={labels.planets[planet.id]}
-          aria-label={labels.planets[planet.id]}
-          onmouseenter={() => (activePlanetId = planet.id)}
-          onmouseleave={() => {
-            if (activePlanetId === planet.id) activePlanetId = null;
-          }}
-          onclick={() =>
-            (activePlanetId = activePlanetId === planet.id ? null : planet.id)}
-          class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-transform duration-200 {isSelected
-            ? 'scale-125 bg-white/15 ring-1 ring-white/40'
-            : 'hover:scale-115 hover:bg-white/10'}"
-        >
-          <span
-            class="block rounded-full"
-            style="width: {Math.max(
-              6,
-              Math.min(11, planet.sizePx * 0.75)
-            )}px; height: {Math.max(
-              6,
-              Math.min(11, planet.sizePx * 0.75)
-            )}px; background: {planet.gradient}; box-shadow: 0 0 6px {planet.glowColor};"
-          ></span>
-        </button>
-      {/each}
-    </div>
-
-    {#if isTimeLapse}
-      <button
-        type="button"
-        onclick={() => {
-          isTimeLapse = false;
-          simulatedOffsetDays = 0;
-          currentEpochMs = Date.now();
-        }}
-        title={labels.liveJ2000}
-        class="text-text-muted hover:text-text-strong flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-white/10"
-      >
-        <Icon name="bi-arrow-counterclockwise" class="text-xs" />
-      </button>
-    {/if}
-  </div>
+  <!-- 3. FRONT CANVAS LAYER (z-20: In Front of Sun Portrait) -->
+  <canvas
+    bind:this={frontCanvas}
+    class="pointer-events-none absolute inset-0 z-20 h-full w-full"
+  ></canvas>
 </div>

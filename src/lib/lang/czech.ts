@@ -112,26 +112,7 @@ export default lang.parse({
         blank: false
       },
       '!'
-    ],
-    solarSystem: {
-      liveJ2000: 'Živě J2000',
-      timeLapse: 'Časosběr',
-      longitude: 'Heliocentrická λ',
-      distance: 'Vzdálenost',
-      period: 'Oběžná doba',
-      days: 'd',
-      years: 'r',
-      planets: {
-        mercury: 'Merkur',
-        venus: 'Venuše',
-        earth: 'Země',
-        mars: 'Mars',
-        jupiter: 'Jupiter',
-        saturn: 'Saturn',
-        uranus: 'Uran',
-        neptune: 'Neptun'
-      }
-    }
+    ]
   },
   admin: {
     login: {
