@@ -75,7 +75,7 @@
         age = getAge();
         intervalId = setInterval(() => {
           age = getAge();
-        }, 110);
+        }, 50);
       }
     };
 
