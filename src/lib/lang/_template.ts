@@ -81,7 +81,26 @@ export default o({
   }),
   main: o({
     age: _,
-    text: r
+    text: r,
+    solarSystem: o({
+      liveJ2000: _,
+      timeLapse: _,
+      longitude: _,
+      distance: _,
+      period: _,
+      days: _,
+      years: _,
+      planets: o({
+        mercury: _,
+        venus: _,
+        earth: _,
+        mars: _,
+        jupiter: _,
+        saturn: _,
+        uranus: _,
+        neptune: _
+      })
+    })
   }),
   admin: o({
     login: o({

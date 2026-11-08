@@ -113,7 +113,26 @@ export default lang.parse({
         blank: false
       },
       '!'
-    ]
+    ],
+    solarSystem: {
+      liveJ2000: 'Live J2000',
+      timeLapse: 'Time-Lapse',
+      longitude: 'Heliocentric λ',
+      distance: 'Distance',
+      period: 'Orbital Period',
+      days: 'd',
+      years: 'yr',
+      planets: {
+        mercury: 'Mercury',
+        venus: 'Venus',
+        earth: 'Earth',
+        mars: 'Mars',
+        jupiter: 'Jupiter',
+        saturn: 'Saturn',
+        uranus: 'Uranus',
+        neptune: 'Neptune'
+      }
+    }
   },
   admin: {
     login: {

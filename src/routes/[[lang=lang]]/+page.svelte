@@ -1,10 +1,27 @@
 <script lang="ts">
   import RichText from '$/components/utility/RichText.svelte';
+  import SolarSystemHero from '$/components/home/SolarSystemHero.svelte';
   import { getState } from '$/lib/state.svelte';
   import { onMount } from 'svelte';
   import Icon from '$/components/utility/Icon.svelte';
 
   const _state = getState();
+
+  let pointerX = $state(0);
+  let pointerY = $state(0);
+
+  function handlePointerMove(event: PointerEvent) {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      pointerX = (event.clientX - rect.left) / rect.width - 0.5;
+      pointerY = (event.clientY - rect.top) / rect.height - 0.5;
+    }
+  }
+
+  function handlePointerLeave() {
+    pointerX = 0;
+    pointerY = 0;
+  }
 
   const birthday = new Date(2003, 4, 1, 7);
 
@@ -67,61 +84,13 @@
 </svelte:head>
 
 <div
-  class="mx-auto flex w-[90%] max-w-7xl flex-col items-center justify-center gap-10 pt-10 pb-12 md:pt-16 lg:flex-row lg:gap-16 xl:gap-24"
+  role="presentation"
+  onpointermove={handlePointerMove}
+  onpointerleave={handlePointerLeave}
+  class="mx-auto flex w-[90%] max-w-7xl flex-col items-center justify-center gap-10 pt-6 pb-12 md:pt-12 lg:flex-row lg:gap-12 xl:gap-20"
 >
-  <!-- Left Side: Profile Picture with Orbital Rings -->
-  <div class="relative flex items-center justify-center">
-    <!-- Outer orbiting dot pathway -->
-    <div
-      class="border-primary/10 animate-spin-slow absolute h-[360px] w-[360px] rounded-full border border-dashed sm:h-[440px] sm:w-[440px]"
-    >
-      <div
-        class="bg-primary absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full shadow-[0_0_10px_var(--color-primary)]"
-      ></div>
-    </div>
-
-    <!-- Medium glow pathway -->
-    <div
-      class="border-secondary/20 absolute h-[320px] w-[320px] animate-[spin_10s_linear_infinite_reverse] rounded-full border border-dashed sm:h-[390px] sm:w-[390px]"
-    >
-      <div
-        class="bg-secondary absolute top-1/2 -left-1.5 h-2 w-2 -translate-y-1/2 rounded-full shadow-[0_0_8px_var(--color-secondary)]"
-      ></div>
-    </div>
-
-    <!-- Inner pulsing gradient glow backdrop -->
-    <div
-      class="from-primary to-secondary animate-pulse-slow absolute h-[280px] w-[280px] rounded-full bg-gradient-to-tr opacity-20 blur-xl sm:h-[350px] sm:w-[350px]"
-    ></div>
-
-    <!-- Actual profile image frame -->
-    <div
-      class="relative z-10 h-[280px] w-[280px] overflow-hidden rounded-full border-4 border-white/10 bg-slate-900 shadow-2xl transition-transform duration-500 hover:scale-102 sm:h-[340px] sm:w-[340px]"
-    >
-      <picture>
-        <source
-          srcset="/images/Image-400.webp 400w, /images/Image-800.webp 800w"
-          type="image/webp"
-          sizes="(max-width: 640px) 400px, 800px"
-        />
-        <source
-          srcset="/images/Image-400.jpg 400w, /images/Image-800.jpg 800w"
-          type="image/jpeg"
-          sizes="(max-width: 640px) 400px, 800px"
-        />
-        <img
-          src="/images/Image-400.jpg"
-          alt="Patrik Mintěl Profile"
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-          width="340"
-          height="340"
-          class="h-full w-full object-cover object-center transition-transform duration-700 hover:scale-105"
-        />
-      </picture>
-    </div>
-  </div>
+  <!-- Left Side: Interactive Solar System Hero with Profile Core -->
+  <SolarSystemHero {pointerX} {pointerY} />
 
   <!-- Right Side: Info Panel -->
   <div
