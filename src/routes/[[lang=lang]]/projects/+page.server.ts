@@ -33,19 +33,33 @@ export const load = (async ({ parent }) => {
   };
 
   try {
-    let query = conn
+    const totalProjects = await conn
       .selectFrom('project')
-      .selectAll()
-      .orderBy('date', 'desc')
-      .orderBy('id', 'desc');
+      .select((eb) => eb.fn.count<number>('id').as('count'))
+      .executeTakeFirst();
 
-    if (!isAdmin) {
-      query = query.where('hidden', '=', 0);
-    }
+    const count = Number(totalProjects?.count || 0);
 
-    const dbProjects = await query.execute();
+    if (count > 0) {
+      let query = conn
+        .selectFrom('project')
+        .selectAll()
+        .orderBy('date', 'desc')
+        .orderBy('id', 'desc');
 
-    if (dbProjects.length > 0) {
+      if (!isAdmin) {
+        query = query.where('hidden', '=', 0);
+      }
+
+      const dbProjects = await query.execute();
+
+      if (dbProjects.length === 0) {
+        return {
+          projects: [],
+          meta
+        };
+      }
+
       const keys = [
         ...dbProjects.map((p) => p.name),
         ...dbProjects.map((p) => p.description)

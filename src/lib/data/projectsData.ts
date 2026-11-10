@@ -657,6 +657,7 @@ export function getStaticProjects(lang: 'cs' | 'en'): ProjectItem[] {
     date: p.date,
     preview: p.preview,
     images: p.images,
-    tags: p.tags
+    tags: p.tags,
+    hidden: Boolean(p.hidden)
   }));
 }

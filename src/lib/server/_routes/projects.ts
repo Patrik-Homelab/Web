@@ -11,8 +11,14 @@ import { conn } from '../variables';
 const projectSchema = _projectSchema();
 const TRANSLATION_FIELDS = ['name', 'description'] as const;
 
-function normalizeJsonArray(raw: string | undefined): string {
-  if (!raw || !raw.trim()) return '[]';
+function normalizeJsonArray(raw: string | string[] | undefined): string {
+  if (!raw) return '[]';
+  if (Array.isArray(raw)) {
+    return JSON.stringify(
+      raw.map((item) => String(item).trim()).filter((item) => item.length > 0)
+    );
+  }
+  if (!raw.trim()) return '[]';
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
@@ -30,16 +36,41 @@ function normalizeJsonArray(raw: string | undefined): string {
   return JSON.stringify(items);
 }
 
+function formatZodIssues(err: unknown): string {
+  if (!(err instanceof z.ZodError)) return 'projects.form';
+  const FIELD_LABELS: Record<string, string> = {
+    name: 'Název / Name',
+    description: 'Popis / Description',
+    date: 'Datum / Date',
+    preview: 'Náhled / Preview',
+    images: 'Obrázky / Images',
+    tags: 'Tagy / Tags'
+  };
+
+  const labels = err.issues.map((issue) => {
+    const pathKey = issue.path[issue.path.length - 1];
+    const key = typeof pathKey === 'string' ? pathKey : String(issue.path[0] || '');
+    const label = FIELD_LABELS[key] || key || issue.message;
+    return `${label} (${issue.message})`;
+  });
+
+  const unique = Array.from(new Set(labels));
+  return unique.length > 0
+    ? `Chybí nebo jsou neplatná pole: ${unique.join(', ')}`
+    : 'projects.form';
+}
+
 export default [
   loggedProcedure.POST.input(AnyFormDataInput).query(async ({ input: _input }) => {
     let parsed;
     try {
       parsed = parseFormData(_input, projectSchema);
-    } catch {
+    } catch (err) {
+      console.error('Validation error on projects POST:', err);
       return {
         status: false,
         code: 400,
-        message: 'projects.form' satisfies ErrorPath
+        message: formatZodIssues(err)
       };
     }
 
@@ -83,11 +114,12 @@ export default [
     let parsed;
     try {
       parsed = parseFormData(_input, projectSchema);
-    } catch {
+    } catch (err) {
+      console.error('Validation error on projects PUT:', err);
       return {
         status: false,
         code: 400,
-        message: 'projects.form' satisfies ErrorPath
+        message: formatZodIssues(err)
       };
     }
 
