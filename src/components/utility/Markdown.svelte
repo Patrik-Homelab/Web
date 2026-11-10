@@ -13,13 +13,13 @@
 
   const markedInstance = new Marked({
     renderer: {
-      link({ href, title, text }) {
-        const cleanHref = href.replace(
+      link(token) {
+        const cleanHref = token.href.replace(
           /#(?:hidden|hide|nobutton|no-button|nobtn|no-btn|(?:btn|button|label)=[^&]*)$/i,
           ''
         );
 
-        let cleanTitle = title;
+        let cleanTitle = token.title;
         if (cleanTitle) {
           const lower = cleanTitle.toLowerCase();
           if (
@@ -39,7 +39,9 @@
           ? ` title="${cleanTitle.replace(/"/g, '&quot;')}"`
           : '';
 
-        return `<a href="${cleanHref}"${targetAttrs}${titleAttr}>${text}</a>`;
+        const innerContent = this.parser.parseInline(token.tokens);
+
+        return `<a href="${cleanHref}"${targetAttrs}${titleAttr}>${innerContent}</a>`;
       }
     }
   });

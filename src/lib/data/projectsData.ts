@@ -231,7 +231,7 @@ export function extractLinksFromMarkdown(md: string): ExtractedLink[] {
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(md)) !== null) {
-    let rawText = match[1].replace(/\*\*/g, '').trim();
+    let rawText = match[1].replace(/[*_`]/g, '').trim();
     let url = match[2].trim();
     const title = match[3] ? match[3].trim() : undefined;
 
