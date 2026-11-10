@@ -104,6 +104,20 @@ export interface Movie {
   updated_at: Generated<Date>;
 }
 
+export interface Project {
+  created_at: Generated<Date>;
+  date: Date;
+  description: string;
+  hidden: Generated<number>;
+  id: Generated<number>;
+  images: string;
+  name: string;
+  preview: Generated<string | null>;
+  tags: string;
+  updated_at: Generated<Date>;
+  uuid: string;
+}
+
 export interface DB {
   account: Account;
   article: Article;
@@ -114,6 +128,7 @@ export interface DB {
   exposure: Exposure;
   gallery_image: GalleryImage;
   movie: Movie;
+  project: Project;
   translations: Translations;
   visitors: Visitors;
 }

@@ -16,13 +16,15 @@ export default lang.parse({
     contact: 'Kontakt',
     about: 'O mně',
     live: 'Astro Okénko',
-    movies: 'Filmy'
+    movies: 'Filmy',
+    projects: 'Projekty'
   },
   adminNavigation: {
     home: 'Panel',
     equipment: 'Vybavení',
     articles: 'Články',
-    movies: 'Filmy'
+    movies: 'Filmy',
+    projects: 'Projekty'
   },
   error: {
     title: 'Chyba',
@@ -276,7 +278,67 @@ export default lang.parse({
         reviewEn: 'Recenze (EN)',
         button: 'Uložit'
       }
+    },
+    projects: {
+      title: 'Projekty',
+      addTitle: 'Přidat projekt',
+      editTitle: {
+        title: 'Úprava projektu #%1',
+        button: 'Uložit změny'
+      },
+      delete: {
+        question: 'Opravdu chceš smazat tento projekt?'
+      },
+      success: 'Projekt byl úspěšně přidán!',
+      editSuccess: 'Projekt byl úspěšně upraven!',
+      deleteSuccess: 'Projekt byl úspěšně smazán!',
+      empty: 'Žádné projekty nebyly přidány.',
+      status: 'Stav',
+      visible: 'Viditelný',
+      hidden: 'Skrytý',
+      toggleVisibility: 'Přepnout viditelnost',
+      showAll: 'Zobrazit vše',
+      hideAll: 'Skrýt vše',
+      fields: {
+        nameCs: 'Název projektu (CZ)',
+        nameEn: 'Název projektu (EN)',
+        date: 'Datum vytvoření',
+        tags: 'Technologie / Tagy',
+        tagsPlaceholder: 'SvelteKit, TypeScript, Rust...',
+        preview: 'Náhledový obrázek',
+        images: 'Obrázky v galerii',
+        uploadPreview: 'Nahrát náhled',
+        uploadImages: 'Přidat obrázky',
+        descriptionCs: 'Popis v Markdownu (CZ)',
+        descriptionEn: 'Popis v Markdownu (EN)',
+        hidden: 'Skrýt projekt pro veřejnost (Draft)',
+        button: 'Uložit'
+      }
     }
+  },
+  projects: {
+    title: 'Moje Projekty',
+    description:
+      'Přehled webových aplikací, nástrojů, Discord botů a školních či open-source projektů, na kterých jsem pracoval.',
+    searchPlaceholder: 'Hledat projekt podle názvu, popisu nebo technologie...',
+    allTags: 'Všechny technologie',
+    allYears: 'Všechny roky',
+    sortBy: 'Řadit podle',
+    sortDateDesc: 'Od nejnovějších',
+    sortDateAsc: 'Od nejstarších',
+    sortNameAsc: 'Název (A–Z)',
+    resetFilters: 'Resetovat filtry',
+    emptySearch: 'Nebyly nalezeny žádné projekty odpovídající vybraným filtrům.',
+    viewDetails: 'Detail projektu',
+    screenshots: 'Ukázky a screenshoty',
+    close: 'Zavřít',
+    moreProjectsGithub:
+      'Další moje projekty a open-source repozitáře najdeš na mém GitHubu.',
+    visitGithub: 'Prozkoumat GitHub',
+    projectDescription: 'Popis projektu',
+    noScreenshots: 'K tomuto projektu nejsou přiloženy žádné snímky obrazovky.',
+    clickTagToFilter: 'Kliknutím na technologii vyfiltruješ projekty',
+    draftBadge: 'Skrytý'
   },
   movies: {
     title: 'Filmy a Seriály',
@@ -392,6 +454,10 @@ export default lang.parse({
     movies: {
       form: 'Vyplň prosím všechna povinná pole správně.',
       notFound: 'Film / seriál nebyl nalezen.'
+    },
+    projects: {
+      form: 'Vyplň prosím všechna povinná pole projektu.',
+      notFound: 'Projekt nebyl nalezen.'
     }
   },
   equipmentType: {
