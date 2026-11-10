@@ -212,16 +212,96 @@ export interface ExtractedLink {
   icon: BootstrapIcon;
 }
 
+export const HIDE_LINK_KEYWORDS = new Set([
+  'hidden',
+  'hide',
+  'nobtn',
+  'nobutton',
+  'no-button',
+  'no-btn',
+  'skip',
+  'none',
+  'ignore'
+]);
+
 export function extractLinksFromMarkdown(md: string): ExtractedLink[] {
-  const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  // Regex to match [text](url) or [text](url "title") or [text](url 'title')
+  const regex = /\[([^\]]+)\]\(\s*([^\s"')]+)(?:\s+["']([^"']*)["'])?\s*\)/g;
   const links: ExtractedLink[] = [];
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(md)) !== null) {
-    const rawLabel = match[1].replace(/\*\*/g, '').trim();
-    const url = match[2].trim();
+    let rawText = match[1].replace(/\*\*/g, '').trim();
+    let url = match[2].trim();
+    const title = match[3] ? match[3].trim() : undefined;
+
+    let customLabel = title;
+
+    // Support pipe syntax in markdown label: [Prose Text | ButtonLabel]
+    if (rawText.includes('|')) {
+      const parts = rawText.split('|');
+      rawText = parts[0].trim();
+      const pipeLabel = parts.slice(1).join('|').trim();
+      if (!title && pipeLabel) {
+        customLabel = pipeLabel;
+      }
+    }
+
+    let isHidden = false;
+
+    if (title) {
+      const lowerTitle = title.toLowerCase();
+      if (HIDE_LINK_KEYWORDS.has(lowerTitle)) {
+        isHidden = true;
+      } else if (/^(?:btn|button|label)\s*:\s*(.+)$/i.test(title)) {
+        customLabel = title.replace(/^(?:btn|button|label)\s*:\s*/i, '').trim();
+      }
+    }
+
+    if (customLabel && HIDE_LINK_KEYWORDS.has(customLabel.toLowerCase())) {
+      isHidden = true;
+    }
+
+    // Check URL fragment or query for hide or custom label
+    try {
+      const parsedUrl = new URL(url, 'https://dummy.local');
+      const hash = parsedUrl.hash.toLowerCase();
+      if (
+        hash === '#hidden' ||
+        hash === '#hide' ||
+        hash === '#nobutton' ||
+        hash === '#no-button' ||
+        hash === '#nobtn' ||
+        hash === '#no-btn' ||
+        parsedUrl.searchParams.get('button') === 'false' ||
+        parsedUrl.searchParams.get('btn') === 'false' ||
+        parsedUrl.searchParams.get('hidden') === 'true'
+      ) {
+        isHidden = true;
+      } else if (
+        parsedUrl.hash.startsWith('#btn=') ||
+        parsedUrl.hash.startsWith('#button=') ||
+        parsedUrl.hash.startsWith('#label=')
+      ) {
+        const hashLabel = parsedUrl.hash.split('=')[1];
+        if (hashLabel) {
+          customLabel = decodeURIComponent(hashLabel).trim();
+          url = url.replace(/#(?:btn|button|label)=[^&]*$/i, '');
+        }
+      }
+    } catch {
+      if (/#(?:hidden|hide|nobutton|no-button|nobtn|no-btn)$/i.test(url)) {
+        isHidden = true;
+      }
+    }
+
+    if (isHidden) continue;
+
+    url = url.replace(/#(?:btn|button|label)=[^&]*$/i, '');
+
+    const label = customLabel || rawText;
     const lowerUrl = url.toLowerCase();
-    const lowerLabel = rawLabel.toLowerCase();
+    const lowerLabel = label.toLowerCase();
 
     let icon: BootstrapIcon = 'bi-box-arrow-up-right';
     if (lowerUrl.includes('github.com') || lowerLabel.includes('github')) {
@@ -230,7 +310,7 @@ export function extractLinksFromMarkdown(md: string): ExtractedLink[] {
       icon = 'bi-box-seam';
     }
 
-    links.push({ label: rawLabel, url, icon });
+    links.push({ label, url, icon });
   }
 
   return links;

@@ -126,7 +126,7 @@
         return true;
       })
       .join(' ')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/\[([^\]|]+?)\s*(?:\|[^\]]*)?\]\([^)]+\)/g, '$1')
       .replace(/[*_`#>-]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
@@ -475,25 +475,25 @@
 
           <!-- Footer Info (Matching gallery) -->
           <div
-            class="text-text-muted mt-auto flex items-center justify-between border-t border-white/5 px-5 py-3.5 text-sm"
+            class="text-text-muted mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-white/5 px-5 py-3.5 text-sm"
           >
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               {#each links.slice(0, 2) as link (link.url)}
                 <a
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onclick={(e) => e.stopPropagation()}
-                  class="text-text-muted hover:text-text flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs transition-colors hover:border-white/20 hover:bg-white/10"
+                  class="text-text-muted hover:text-text flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs transition-colors hover:border-white/20 hover:bg-white/10"
                 >
                   <Icon name={link.icon} class="text-xs" />
-                  <span class="max-w-[100px] truncate">{link.label}</span>
+                  <span class="whitespace-nowrap">{link.label}</span>
                 </a>
               {/each}
             </div>
 
             <div
-              class="group-hover:text-primary flex items-center gap-1 font-bold transition-colors duration-200"
+              class="group-hover:text-primary ml-auto flex shrink-0 items-center gap-1 font-bold transition-colors duration-200"
             >
               <span>{_lang.viewDetails}</span>
               <Icon
