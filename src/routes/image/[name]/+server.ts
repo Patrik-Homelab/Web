@@ -5,7 +5,7 @@ import { error, type RequestHandler } from '@sveltejs/kit';
 import { createReadStream } from 'node:fs';
 import fs from 'node:fs/promises';
 import Path from 'node:path';
-import { Readable } from 'node:stream';
+import type { Readable } from 'node:stream';
 import sharp from 'sharp';
 
 const FILE_FOLDER = env.FILE_FOLDER;
@@ -68,8 +68,9 @@ const memoryCache = new MemoryCache();
  * Build common cache headers for image responses
  */
 function getCacheHeaders(fileExtension: string, contentLength: number, etag: string) {
+  const mimeType = fileExtension === 'jpg' ? 'image/jpeg' : `image/${fileExtension}`;
   return {
-    'Content-Type': `image/${fileExtension}`,
+    'Content-Type': mimeType,
     'Content-Length': contentLength.toString(),
     'Cache-Control': `public, max-age=${CACHE_MAX_AGE}, immutable`,
     ETag: etag,
@@ -105,7 +106,7 @@ export const GET = (async ({ params, url, request }) => {
   }
 
   const parsed = Path.parse(params.name);
-  if (!extensions.includes(parsed.ext.substring(1) as ImageExtension)) {
+  if (!extensions.includes(parsed.ext.substring(1).toLowerCase() as ImageExtension)) {
     error(404, 'File not found');
   }
 
@@ -165,12 +166,13 @@ export const GET = (async ({ params, url, request }) => {
     // Check if we need to generate the cached version
     if (!(await isFile(cachePath))) {
       const originalContent = await fs.readFile(filePath);
-      let image = sharp(originalContent);
+      let image = sharp(originalContent, { animated: true });
 
       const imageOptions: sharp.JpegOptions &
         sharp.PngOptions &
         sharp.WebpOptions &
-        sharp.TiffOptions = {
+        sharp.TiffOptions &
+        sharp.GifOptions = {
         quality
       };
 
@@ -188,11 +190,15 @@ export const GET = (async ({ params, url, request }) => {
         case 'tiff':
           image = image.tiff(imageOptions);
           break;
+        case 'gif':
+          image = image.gif();
+          break;
       }
 
       const meta = await image.metadata();
+      const baseHeight = meta.pageHeight ?? meta.height;
       const newWidth = meta.width ? Math.round(meta.width * (scale / 100)) : undefined;
-      const newHeight = meta.height ? Math.round(meta.height * (scale / 100)) : undefined;
+      const newHeight = baseHeight ? Math.round(baseHeight * (scale / 100)) : undefined;
       image = image.resize(newWidth, newHeight);
 
       const imageBuffer = await image.toBuffer();
