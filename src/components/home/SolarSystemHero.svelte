@@ -620,7 +620,6 @@
     if (e.button !== 0) return; // Only primary button
     isDragging = true;
     didDrag = false;
-    dragStartX = e.clientX;
     dragStartY = e.clientY;
   }
 
