@@ -4,6 +4,7 @@ import astronomical_object from './_routes/astronomical_object';
 import equipment from './_routes/equipment';
 import login from './_routes/login';
 import movies from './_routes/movies';
+import projects from './_routes/projects';
 import telescope from './_routes/telescope';
 import types from './_routes/types';
 import upload from './_routes/upload';
@@ -18,7 +19,8 @@ export const r = router({
   ai,
   telescope,
   astronomical_object,
-  movies
+  movies,
+  projects
 });
 
 export type AppRouter = typeof r;

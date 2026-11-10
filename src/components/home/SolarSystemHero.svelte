@@ -5,8 +5,12 @@
     getPlanetLongitudeDeg,
     normalizeDegrees,
     PLANETS,
+    SUN_CONFIG,
+    type CelestialBodyInfo,
     type PlanetConfig
   } from '$/lib/solarSystem';
+  import { getState } from '$/lib/state.svelte';
+  import Icon from '$/components/utility/Icon.svelte';
   import { onMount } from 'svelte';
 
   interface Props {
@@ -16,13 +20,49 @@
 
   let { pointerX = 0, pointerY = 0 }: Props = $props();
 
+  const _state = getState();
+  const currentLang = $derived((_state.selectedLang || 'cs') as 'cs' | 'en');
+
   let stageEl: HTMLDivElement;
   let sunEl: HTMLDivElement;
   let sceneCanvas: HTMLCanvasElement;
 
+  // Interactive state
+  let hoveredBody = $state<CelestialBodyInfo | null>(null);
+  let selectedBody = $state<CelestialBodyInfo | null>(null);
+  let tooltipX = $state(0);
+  let tooltipY = $state(0);
+  let isPaused = $state(false);
+  let simSpeed = $state<1 | 5 | 10>(1);
+  let isDragging = $state(false);
+  let manualTiltOffset = $state(0);
+
+  // Stored screen positions for hit-testing
+  interface ScreenBody {
+    info: CelestialBodyInfo;
+    x: number;
+    y: number;
+    radius: number;
+    isFront: boolean;
+  }
+  let screenBodies: ScreenBody[] = [];
+
   interface PlanetSprite {
     canvas: HTMLCanvasElement;
-    halfSpanCss: number; // CSS pixel half-width/height from center (0,0) at depthScale = 1
+    halfSpanCss: number;
+  }
+
+  function resetView() {
+    manualTiltOffset = 0;
+    simSpeed = 1;
+    isPaused = false;
+    selectedBody = null;
+  }
+
+  function toggleSpeed() {
+    if (simSpeed === 1) simSpeed = 5;
+    else if (simSpeed === 5) simSpeed = 10;
+    else simSpeed = 1;
   }
 
   onMount(() => {
@@ -48,7 +88,7 @@
 
     const buildPlanetSprites = () => {
       planetSprites.clear();
-      const maxScale = 1.3; // covers max depthScale (1.25) with crisp margin
+      const maxScale = 1.3;
       const spriteScale = dpr * maxScale;
 
       for (const planet of PLANETS) {
@@ -290,7 +330,7 @@
     const epochMs = Date.now();
     const daysSinceJ2000 = getDaysSinceJ2000(epochMs);
 
-    // Target ~36 FPS: silky orbital motion while cutting mobile GPU/CanvasRenderer load
+    // Target ~36 FPS: silky orbital motion while cutting mobile GPU load
     const minFrameInterval = 1000 / 36;
 
     const drawPlanetPass = (
@@ -301,7 +341,7 @@
       cosRoll: number,
       sinRoll: number
     ) => {
-      // 1. Asteroid belt particles for this depth half
+      // 1. Asteroid belt particles
       ctx.fillStyle = 'rgba(254, 243, 199, 0.42)';
       ctx.beginPath();
       for (const rock of ASTEROID_BELT) {
@@ -327,7 +367,7 @@
       }
       ctx.fill();
 
-      // 2. Planets & Moons for this depth half (using pre-rendered sprites!)
+      // 2. Planets & Moons
       for (const planet of PLANETS) {
         const longitudeDeg = getPlanetLongitudeDeg(
           planet,
@@ -349,6 +389,15 @@
 
         const depthScale = 1 + 0.25 * sinVal;
         const depthOpacity = 0.75 + 0.25 * sinVal;
+
+        // Register screen coordinates for hit testing
+        screenBodies.push({
+          info: planet,
+          x,
+          y,
+          radius: (planet.sizePx / 2) * depthScale,
+          isFront: isFrontPass
+        });
 
         ctx.globalAlpha = depthOpacity;
 
@@ -372,7 +421,33 @@
           }
         }
 
-        // Pre-rendered Planet Sprite (Glow + 3D Sphere + Rings in 1 drawImage!)
+        // Draw Interactive Selection / Hover Reticle Halo
+        const isHovered = hoveredBody?.id === planet.id;
+        const isSelected = selectedBody?.id === planet.id;
+
+        if (isHovered || isSelected) {
+          ctx.save();
+          ctx.beginPath();
+          const haloRadius = Math.max(14, (planet.sizePx / 2) * depthScale + 8);
+          ctx.arc(x, y, haloRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = isSelected
+            ? 'rgba(253, 224, 71, 0.95)'
+            : 'rgba(255, 255, 255, 0.75)';
+          ctx.lineWidth = isSelected ? 2 : 1.4;
+          ctx.setLineDash(isSelected ? [4, 4] : [2, 3]);
+          ctx.stroke();
+
+          // Outer pulse glow
+          ctx.beginPath();
+          ctx.arc(x, y, haloRadius * 1.35, 0, Math.PI * 2);
+          ctx.strokeStyle = planet.glowColor;
+          ctx.lineWidth = 1;
+          ctx.setLineDash([]);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Pre-rendered Planet Sprite
         const sprite = planetSprites.get(planet.id);
         if (sprite) {
           const drawHalf = sprite.halfSpanCss * depthScale;
@@ -425,7 +500,10 @@
       lastTime = now;
       lastDrawTime = now;
 
-      ambientSeconds += dt;
+      // Advance time only if not paused
+      if (!isPaused) {
+        ambientSeconds += dt * simSpeed;
+      }
 
       const prefersReducedMotion = prefersReducedMotionQuery.matches;
       const targetX = prefersReducedMotion ? 0 : pointerX;
@@ -436,13 +514,16 @@
       const cx = width / 2;
       const cy = height / 2;
 
-      const tiltRatio = 0.36 - smoothY * 0.05;
+      const tiltRatio = Math.max(
+        0.18,
+        Math.min(0.55, 0.36 - smoothY * 0.05 + manualTiltOffset)
+      );
       const rollDeg = -9 + smoothX * 4.5;
       const rollRad = (rollDeg * Math.PI) / 180;
       const cosRoll = Math.cos(rollRad);
       const sinRoll = Math.sin(rollRad);
 
-      // Rebuild cached orbit layer only on resize or when desktop pointer tilt changes
+      // Rebuild cached orbit layer when tilt/roll changes
       if (
         orbitCacheDirty ||
         Math.abs(rollRad - cachedRollRad) > 0.0015 ||
@@ -453,10 +534,21 @@
 
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Blit pre-rendered back + front orbit ellipses (already masked around Sun)
+      // Reset screen coordinates before passes
+      screenBodies = [
+        {
+          info: SUN_CONFIG,
+          x: cx,
+          y: cy,
+          radius: sunRadius,
+          isFront: true
+        }
+      ];
+
+      // 1. Blit pre-rendered back + front orbit ellipses (masked around Sun)
       ctx.drawImage(orbitCanvas, 0, 0, width, height);
 
-      // 2. Back-half asteroids & planets (masked outside central Sun circle so they pass behind it)
+      // 2. Back-half asteroids & planets
       ctx.save();
       ctx.beginPath();
       ctx.rect(0, 0, width, height);
@@ -465,7 +557,19 @@
       drawPlanetPass(false, cx, cy, tiltRatio, cosRoll, sinRoll);
       ctx.restore();
 
-      // 3. Front-half asteroids & planets (unmasked so they pass in front of the Sun)
+      // Highlight Sun if selected or hovered
+      if (hoveredBody?.id === 'sun' || selectedBody?.id === 'sun') {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, sunRadius + 6, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(253, 224, 71, 0.9)';
+        ctx.lineWidth = 2.2;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 3. Front-half asteroids & planets
       drawPlanetPass(true, cx, cy, tiltRatio, cosRoll, sinRoll);
     };
 
@@ -478,52 +582,261 @@
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   });
+
+  // Pointer Interaction Handlers (Click, Hover, Drag to Rotate)
+  let dragStartY = 0;
+  let didDrag = false;
+
+  function findBodyAtPoint(clientX: number, clientY: number): CelestialBodyInfo | null {
+    if (!stageEl) return null;
+    const rect = stageEl.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    // Check planets first (top priority)
+    for (let i = screenBodies.length - 1; i >= 0; i--) {
+      const body = screenBodies[i];
+      if (body.info.id === 'sun') continue;
+      const hitRadius = Math.max(16, body.radius + 10);
+      const dist = Math.hypot(x - body.x, y - body.y);
+      if (dist <= hitRadius) {
+        return body.info;
+      }
+    }
+
+    // Check central Sun
+    const sunBody = screenBodies.find((b) => b.info.id === 'sun');
+    if (sunBody) {
+      const dist = Math.hypot(x - sunBody.x, y - sunBody.y);
+      if (dist <= sunBody.radius + 6) {
+        return SUN_CONFIG;
+      }
+    }
+
+    return null;
+  }
+
+  function handlePointerDown(e: PointerEvent) {
+    if (e.button !== 0) return; // Only primary button
+    isDragging = true;
+    didDrag = false;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+  }
+
+  function handlePointerMove(e: PointerEvent) {
+    if (!stageEl) return;
+    const rect = stageEl.getBoundingClientRect();
+
+    if (isDragging) {
+      const dy = e.clientY - dragStartY;
+      if (Math.abs(dy) > 3) {
+        didDrag = true;
+        manualTiltOffset = Math.max(-0.16, Math.min(0.2, manualTiltOffset + dy * 0.0016));
+        dragStartY = e.clientY;
+      }
+      return;
+    }
+
+    const hit = findBodyAtPoint(e.clientX, e.clientY);
+    hoveredBody = hit;
+    if (hit) {
+      tooltipX = e.clientX - rect.left;
+      tooltipY = e.clientY - rect.top - 20;
+    }
+  }
+
+  function handlePointerUp(e: PointerEvent) {
+    if (!didDrag) {
+      const hit = findBodyAtPoint(e.clientX, e.clientY);
+      if (hit) {
+        selectedBody = selectedBody?.id === hit.id ? null : hit;
+      } else {
+        selectedBody = null;
+      }
+    }
+    isDragging = false;
+  }
+
+  function handlePointerLeave() {
+    isDragging = false;
+    hoveredBody = null;
+  }
 </script>
 
-<!-- Non-Interactive 2.5D Solar System Container -->
-<div
-  bind:this={stageEl}
-  aria-hidden="true"
-  style="contain: layout paint;"
-  class="pointer-events-none relative flex aspect-[16/10] w-[350px] max-w-[96vw] items-center justify-center select-none sm:w-[560px] md:w-[680px] xl:w-[740px]"
->
-  <!-- 1. CENTRAL SOLAR CORE / SUN PORTRAIT (z-10) -->
+<div class="flex flex-col items-center">
+  <!-- Interactive 2.5D Solar System Container -->
   <div
-    bind:this={sunEl}
-    class="relative z-10 flex h-[80px] w-[80px] items-center justify-center rounded-full sm:h-[105px] sm:w-[105px] md:h-[120px] md:w-[120px]"
+    bind:this={stageEl}
+    role="region"
+    aria-label="Interactive 2.5D Solar System"
+    onpointerdown={handlePointerDown}
+    onpointermove={handlePointerMove}
+    onpointerup={handlePointerUp}
+    onpointerleave={handlePointerLeave}
+    style="contain: layout paint;"
+    class="relative flex aspect-[16/10] w-[350px] max-w-[96vw] touch-none items-center justify-center select-none sm:w-[560px] md:w-[680px] xl:w-[740px] {isDragging
+      ? 'cursor-grabbing'
+      : hoveredBody
+        ? 'cursor-pointer'
+        : 'cursor-ns-resize'}"
   >
-    <!-- Upright Circular Sun Portrait Frame (pure box-shadow corona avoids WebRender CSS gradient fallback) -->
+    <!-- 1. CENTRAL SOLAR CORE / SUN PORTRAIT (z-10) -->
     <div
-      class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-200/80 bg-slate-900 shadow-[0_0_45px_8px_rgba(251,191,36,0.45),0_0_90px_20px_rgba(234,88,12,0.25)]"
+      bind:this={sunEl}
+      class="pointer-events-none relative z-10 flex h-[80px] w-[80px] items-center justify-center rounded-full sm:h-[105px] sm:w-[105px] md:h-[120px] md:w-[120px]"
     >
-      <picture>
-        <source
-          srcset="/images/Image-400.webp 400w, /images/Image-800.webp 800w"
-          type="image/webp"
-          sizes="(max-width: 640px) 160px, 300px"
-        />
-        <source
-          srcset="/images/Image-400.jpg 400w, /images/Image-800.jpg 800w"
-          type="image/jpeg"
-          sizes="(max-width: 640px) 160px, 300px"
-        />
-        <img
-          src="/images/Image-400.jpg"
-          alt="Patrik Mintěl Profile"
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-          width="120"
-          height="120"
-          class="h-full w-full object-cover object-center"
-        />
-      </picture>
+      <div
+        class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-200/80 bg-slate-900 shadow-[0_0_45px_8px_rgba(251,191,36,0.45),0_0_90px_20px_rgba(234,88,12,0.25)] transition-transform duration-300 {selectedBody?.id ===
+        'sun'
+          ? 'scale-105 ring-4 ring-amber-400'
+          : ''}"
+      >
+        <picture>
+          <source
+            srcset="/images/Image-400.webp 400w, /images/Image-800.webp 800w"
+            type="image/webp"
+            sizes="(max-width: 640px) 160px, 300px"
+          />
+          <source
+            srcset="/images/Image-400.jpg 400w, /images/Image-800.jpg 800w"
+            type="image/jpeg"
+            sizes="(max-width: 640px) 160px, 300px"
+          />
+          <img
+            src="/images/Image-400.jpg"
+            alt="Patrik Mintěl Profile"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            width="120"
+            height="120"
+            class="h-full w-full object-cover object-center"
+          />
+        </picture>
+      </div>
+    </div>
+
+    <!-- 2. SINGLE COMPOSITED SOLAR SYSTEM CANVAS (z-20) -->
+    <canvas
+      bind:this={sceneCanvas}
+      class="pointer-events-none absolute inset-0 z-20 h-full w-full"
+    ></canvas>
+
+    <!-- 3. INTERACTIVE FLOATING HOVER TOOLTIP -->
+    {#if hoveredBody && !isDragging}
+      <div
+        class="pointer-events-none absolute z-30 flex -translate-x-1/2 -translate-y-full items-center rounded-full border border-white/15 bg-slate-950/90 px-3 py-1 font-mono text-xs font-bold text-white shadow-xl backdrop-blur-md transition-all duration-150"
+        style="left: {tooltipX}px; top: {tooltipY}px;"
+      >
+        <span>{hoveredBody.name[currentLang]}</span>
+      </div>
+    {/if}
+
+    <!-- 4. CONTROLS STRIP (Play/Pause, Speed, Reset view) -->
+    <div
+      class="absolute right-2 bottom-2 z-30 flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/70 p-1 shadow-lg backdrop-blur-md"
+    >
+      <button
+        type="button"
+        onclick={(e) => {
+          e.stopPropagation();
+          isPaused = !isPaused;
+        }}
+        title={isPaused ? 'Spustit simulaci' : 'Pozastavit simulaci'}
+        aria-label="Pause/Resume simulation"
+        class="text-text-muted hover:text-text flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-white/10"
+      >
+        <Icon name={isPaused ? 'bi-play-fill' : 'bi-pause-fill'} class="text-sm" />
+      </button>
+
+      <button
+        type="button"
+        onclick={(e) => {
+          e.stopPropagation();
+          toggleSpeed();
+        }}
+        title="Rychlost simulace"
+        class="text-text-muted hover:text-text px-2 py-0.5 font-mono text-[11px] font-bold transition-colors hover:bg-white/10"
+      >
+        {simSpeed}x
+      </button>
+
+      <button
+        type="button"
+        onclick={(e) => {
+          e.stopPropagation();
+          resetView();
+        }}
+        title="Resetovat pohled"
+        aria-label="Reset view"
+        class="text-text-muted hover:text-text flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-white/10"
+      >
+        <Icon name="bi-arrow-counterclockwise" class="text-xs" />
+      </button>
     </div>
   </div>
 
-  <!-- 2. SINGLE COMPOSITED SOLAR SYSTEM CANVAS (z-20: Masks back-half behind Sun, draws front-half over Sun) -->
-  <canvas
-    bind:this={sceneCanvas}
-    class="pointer-events-none absolute inset-0 z-20 h-full w-full"
-  ></canvas>
+  <!-- 5. SELECTED CELESTIAL BODY HUD CARD (Matching site's glass bio cards) -->
+  {#if selectedBody}
+    <div
+      class="relative mt-4 flex w-full max-w-lg flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/85 p-5 shadow-2xl backdrop-blur-xl transition-all duration-300"
+    >
+      <!-- HUD Header -->
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
+        <div>
+          <h3 class="text-text-strong text-lg font-bold">
+            {selectedBody.name[currentLang]}
+          </h3>
+          <span class="text-text-muted text-xs">
+            {selectedBody.type[currentLang]}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onclick={() => (selectedBody = null)}
+          aria-label="Zavřít detail planety"
+          class="text-text-muted hover:text-text flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-white/10"
+        >
+          <Icon name="bi-x-lg" class="text-sm" />
+        </button>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-3 gap-2 py-1 text-center font-mono text-xs">
+        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
+          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
+            {currentLang === 'cs' ? 'Oběh' : 'Orbit'}
+          </span>
+          <span class="text-text-strong mt-0.5 block font-bold">
+            {selectedBody.orbitPeriod[currentLang]}
+          </span>
+        </div>
+
+        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
+          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
+            {currentLang === 'cs' ? 'Vzdálenost' : 'Distance'}
+          </span>
+          <span class="text-text-strong mt-0.5 block font-bold">
+            {selectedBody.distanceAu}
+          </span>
+        </div>
+
+        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
+          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
+            {currentLang === 'cs' ? 'Měsíce' : 'Moons'}
+          </span>
+          <span class="text-text-strong mt-0.5 block font-bold">
+            {selectedBody.moonsCount}
+          </span>
+        </div>
+      </div>
+
+      <!-- Description / Fun Fact -->
+      <p class="text-text-muted text-sm leading-relaxed">
+        {selectedBody.description[currentLang]}
+      </p>
+    </div>
+  {/if}
 </div>

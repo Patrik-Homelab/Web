@@ -32,6 +32,12 @@
       path: '/about'
     },
     {
+      name: _state.lang.navigation.projects,
+      icon: 'bi-code-slash',
+      path: '/projects',
+      matchStart: true
+    },
+    {
       name: _state.lang.navigation.gallery,
       icon: 'bi-image-fill',
       path: '/gallery',
@@ -87,6 +93,12 @@
       name: _state.lang.adminNavigation.movies,
       icon: 'bi-film',
       path: '/admin/movies',
+      matchStart: true
+    },
+    {
+      name: _state.lang.adminNavigation.projects,
+      icon: 'bi-code-slash',
+      path: '/admin/projects',
       matchStart: true
     }
   ] satisfies AdminItem[]);

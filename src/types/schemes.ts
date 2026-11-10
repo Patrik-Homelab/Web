@@ -128,3 +128,20 @@ export const movieSchema = () =>
     review: z.string().min(1),
     image: z.string().nullable().optional()
   });
+
+export const projectSchema = () =>
+  z.object({
+    id: z.coerce.number().optional(),
+    name: z.string().min(1),
+    description: z.string().min(1),
+    date: z.coerce.date(),
+    preview: z.string().nullable().optional(),
+    images: z.string().optional(),
+    tags: z.string().optional(),
+    hidden: z
+      .preprocess(
+        (val) => val === true || val === 'true' || val === 1 || val === '1',
+        z.boolean()
+      )
+      .optional()
+  });

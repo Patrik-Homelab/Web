@@ -16,13 +16,15 @@ export default lang.parse({
     contact: 'Contact',
     about: 'About Me',
     live: 'Astro Window',
-    movies: 'Movies'
+    movies: 'Movies',
+    projects: 'Projects'
   },
   adminNavigation: {
     home: 'Dashboard',
     equipment: 'Equipment',
     articles: 'Articles',
-    movies: 'Movies'
+    movies: 'Movies',
+    projects: 'Projects'
   },
   error: {
     title: 'Error',
@@ -277,7 +279,67 @@ export default lang.parse({
         reviewEn: 'Review (EN)',
         button: 'Save'
       }
+    },
+    projects: {
+      title: 'Projects',
+      addTitle: 'Add Project',
+      editTitle: {
+        title: 'Edit Project #%1',
+        button: 'Save Changes'
+      },
+      delete: {
+        question: 'Are you sure you want to delete this project?'
+      },
+      success: 'Project added successfully!',
+      editSuccess: 'Project updated successfully!',
+      deleteSuccess: 'Project deleted successfully!',
+      empty: 'No projects have been added yet.',
+      status: 'Status',
+      visible: 'Visible',
+      hidden: 'Hidden',
+      toggleVisibility: 'Toggle visibility',
+      showAll: 'Show all',
+      hideAll: 'Hide all',
+      fields: {
+        nameCs: 'Project Name (CZ)',
+        nameEn: 'Project Name (EN)',
+        date: 'Creation Date',
+        tags: 'Technologies / Tags',
+        tagsPlaceholder: 'SvelteKit, TypeScript, Rust...',
+        preview: 'Preview Image',
+        images: 'Gallery Screenshots',
+        uploadPreview: 'Upload Preview',
+        uploadImages: 'Add Images',
+        descriptionCs: 'Markdown Description (CZ)',
+        descriptionEn: 'Markdown Description (EN)',
+        hidden: 'Hide project from public (Draft)',
+        button: 'Save'
+      }
     }
+  },
+  projects: {
+    title: 'My Projects',
+    description:
+      'A showcase of web applications, tools, Discord bots, and academic or open-source projects I have worked on.',
+    searchPlaceholder: 'Search project by name, description, or technology...',
+    allTags: 'All Technologies',
+    allYears: 'All Years',
+    sortBy: 'Sort by',
+    sortDateDesc: 'Newest First',
+    sortDateAsc: 'Oldest First',
+    sortNameAsc: 'Name (A–Z)',
+    resetFilters: 'Reset Filters',
+    emptySearch: 'No projects match your current filters.',
+    viewDetails: 'Project Details',
+    screenshots: 'Screenshots & Showcase',
+    close: 'Close',
+    moreProjectsGithub:
+      'You can find more of my projects and open-source repositories on my GitHub.',
+    visitGithub: 'Explore GitHub',
+    projectDescription: 'Project Description',
+    noScreenshots: 'No screenshots are attached to this project.',
+    clickTagToFilter: 'Click on a technology tag to filter projects',
+    draftBadge: 'Hidden'
   },
   movies: {
     title: 'Movies & Series',
@@ -394,6 +456,10 @@ export default lang.parse({
     movies: {
       form: 'Please fill in all required fields correctly.',
       notFound: 'Movie / series not found.'
+    },
+    projects: {
+      form: 'Please fill in all required project fields.',
+      notFound: 'Project not found.'
     }
   },
   equipmentType: {

@@ -38,13 +38,15 @@ export default o({
     contact: _,
     about: _,
     live: _,
-    movies: _
+    movies: _,
+    projects: _
   }),
   adminNavigation: o({
     home: _,
     equipment: _,
     articles: _,
-    movies: _
+    movies: _,
+    projects: _
   }),
   error: o({
     title: _,
@@ -245,7 +247,65 @@ export default o({
         reviewEn: _,
         button: _
       })
+    }),
+    projects: o({
+      title: _,
+      addTitle: _,
+      editTitle: o({
+        title: _,
+        button: _
+      }),
+      delete: o({
+        question: _
+      }),
+      success: _,
+      editSuccess: _,
+      deleteSuccess: _,
+      empty: _,
+      status: _,
+      visible: _,
+      hidden: _,
+      toggleVisibility: _,
+      showAll: _,
+      hideAll: _,
+      fields: o({
+        nameCs: _,
+        nameEn: _,
+        date: _,
+        tags: _,
+        tagsPlaceholder: _,
+        preview: _,
+        images: _,
+        uploadPreview: _,
+        uploadImages: _,
+        descriptionCs: _,
+        descriptionEn: _,
+        hidden: _,
+        button: _
+      })
     })
+  }),
+  projects: o({
+    title: _,
+    description: _,
+    searchPlaceholder: _,
+    allTags: _,
+    allYears: _,
+    sortBy: _,
+    sortDateDesc: _,
+    sortDateAsc: _,
+    sortNameAsc: _,
+    resetFilters: _,
+    emptySearch: _,
+    viewDetails: _,
+    screenshots: _,
+    close: _,
+    moreProjectsGithub: _,
+    visitGithub: _,
+    projectDescription: _,
+    noScreenshots: _,
+    clickTagToFilter: _,
+    draftBadge: _
   }),
   movies: o({
     title: _,
@@ -346,6 +406,10 @@ export default o({
       noAltText: _
     }),
     movies: o({
+      form: _,
+      notFound: _
+    }),
+    projects: o({
       form: _,
       notFound: _
     })
