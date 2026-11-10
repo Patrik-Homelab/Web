@@ -12,13 +12,15 @@
 </script>
 
 {#if opened}
-  <div class="bg-background/80 fixed top-0 left-0 z-10 flex h-screen w-screen">
+  <div
+    class="bg-background/80 fixed top-0 left-0 z-[60] flex h-screen w-screen backdrop-blur-sm"
+  >
     <ClickOutside
       clickoutside={() => {
         opened = false;
         onClose();
       }}
-      class="border-text bg-background/80 m-auto flex max-w-[90%] flex-col rounded-md border-2 p-4"
+      class="border-text bg-background/95 m-auto flex max-h-[90vh] max-w-[90%] flex-col rounded-md border-2 p-4 shadow-2xl"
     >
       {@render children()}
     </ClickOutside>

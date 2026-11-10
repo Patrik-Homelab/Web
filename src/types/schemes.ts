@@ -132,12 +132,20 @@ export const movieSchema = () =>
 export const projectSchema = () =>
   z.object({
     id: z.coerce.number().optional(),
-    name: z.string().min(1),
-    description: z.string().min(1),
-    date: z.coerce.date(),
-    preview: z.string().nullable().optional(),
-    images: z.string().optional(),
-    tags: z.string().optional(),
+    name: z.string().min(1, 'Vyplň název projektu (Name is required)'),
+    description: z.string().min(1, 'Vyplň popis projektu (Description is required)'),
+    date: z.preprocess(
+      (val) => (!val || val === '' ? undefined : val),
+      z.coerce.date({ message: 'Vyplň platné datum (Valid date is required)' })
+    ),
+    preview: z
+      .preprocess(
+        (val) => (val === '' || val === 'null' || val === 'undefined' ? null : val),
+        z.string().nullable()
+      )
+      .optional(),
+    images: z.union([z.string(), z.array(z.string())]).optional(),
+    tags: z.union([z.string(), z.array(z.string())]).optional(),
     hidden: z
       .preprocess(
         (val) => val === true || val === 'true' || val === 1 || val === '1',

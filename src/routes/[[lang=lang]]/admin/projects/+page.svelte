@@ -169,7 +169,8 @@
     if (!res.status) {
       SwalAlert({
         title: resolveError(res.message, _state.lang),
-        icon: 'error'
+        icon: 'error',
+        timer: 4500
       });
       return;
     }
@@ -205,7 +206,8 @@
     if (!res.status) {
       SwalAlert({
         title: resolveError(res.message, _state.lang),
-        icon: 'error'
+        icon: 'error',
+        timer: 4500
       });
       return;
     }
@@ -225,7 +227,8 @@
     if (!res.status) {
       SwalAlert({
         title: resolveError(res.message, _state.lang),
-        icon: 'error'
+        icon: 'error',
+        timer: 4500
       });
       return;
     }
@@ -237,7 +240,8 @@
     if (!res.status) {
       SwalAlert({
         title: resolveError(res.message, _state.lang),
-        icon: 'error'
+        icon: 'error',
+        timer: 4500
       });
       return;
     }
@@ -262,7 +266,8 @@
     if (!res.status) {
       SwalAlert({
         title: resolveError(res.message, _state.lang),
-        icon: 'error'
+        icon: 'error',
+        timer: 4500
       });
       return;
     }
@@ -282,6 +287,7 @@
       <Input
         id="{prefix}_nameCs"
         name="cs:name"
+        class="w-full !text-base lg:!text-lg"
         bind:value={formNameCs}
         placeholder="např. Moje stránky"
         required
@@ -291,6 +297,7 @@
       <Input
         id="{prefix}_nameEn"
         name="en:name"
+        class="w-full !text-base lg:!text-lg"
         bind:value={formNameEn}
         placeholder="e.g. My Personal Website"
         required
@@ -305,16 +312,17 @@
         name="date"
         type="date"
         bind:value={formDate}
-        class="border-text text-text w-full rounded border bg-transparent p-2"
+        class="border-secondary text-text w-full rounded-md border-2 bg-transparent p-2 text-base font-bold"
         required
       />
     </FormItem>
 
-    <div class="md:col-span-2">
+    <div class="min-w-0 md:col-span-2">
       <FormItem for="{prefix}_tags" label={_lang.fields.tags}>
         <Input
           id="{prefix}_tags"
           name="tags"
+          class="w-full !text-base lg:!text-lg"
           bind:value={formTags}
           placeholder={_lang.fields.tagsPlaceholder}
         />
@@ -339,92 +347,101 @@
     </div>
   </div>
 
-  <!-- Preview & Gallery Images -->
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-    <FormItem for="{prefix}_preview" label={_lang.fields.preview}>
-      <div class="flex gap-2">
-        <Input
-          id="{prefix}_preview"
-          name="preview"
-          bind:value={formPreview}
-          placeholder="/projects/... or uploaded filename"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          class="hidden"
-          bind:this={previewFileInput}
-          onchange={handleUploadPreview}
-        />
-        <Button type="button" onclick={() => previewFileInput?.click()}>
-          {_lang.fields.uploadPreview}
-        </Button>
-      </div>
-      {#if formPreview}
-        {@const resolvedPreview = resolveProjectImageUrl(formPreview)}
-        {#if resolvedPreview}
-          <div class="mt-2 flex items-center gap-3">
-            <img
-              src={resolvedPreview}
-              alt="Preview"
-              class="h-14 w-24 rounded border border-white/15 object-cover"
-            />
-            <button
-              type="button"
-              onclick={() => (formPreview = '')}
-              class="cursor-pointer text-xs text-red-400 hover:underline"
-            >
-              Remove
-            </button>
-          </div>
-        {/if}
-      {/if}
-    </FormItem>
-
-    <FormItem for="{prefix}_images" label={_lang.fields.images}>
-      <div class="flex items-center gap-2">
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          class="hidden"
-          bind:this={galleryFileInput}
-          onchange={handleUploadGallery}
-        />
-        <Button type="button" onclick={() => galleryFileInput?.click()}>
-          {_lang.fields.uploadImages} ({formImages.length})
-        </Button>
-      </div>
-      {#if formImages.length > 0}
-        <div class="mt-2 flex max-h-28 flex-wrap gap-2 overflow-y-auto p-1">
-          {#each formImages as img, idx (idx)}
-            {@const resolvedImg = resolveProjectImageUrl(img)}
-            <div
-              class="relative flex items-center gap-1.5 rounded border border-white/15 bg-black/40 p-1 pr-2 text-xs"
-            >
-              {#if resolvedImg}
-                <img src={resolvedImg} alt="" class="h-8 w-12 rounded object-cover" />
-              {/if}
-              <span class="max-w-[100px] truncate">{img}</span>
-              <button
-                type="button"
-                onclick={() => removeGalleryImage(idx)}
-                class="cursor-pointer text-red-400 hover:text-red-300"
-                aria-label="Remove image"
-              >
-                <Icon name="bi-x-lg" />
-              </button>
-            </div>
-          {/each}
+  <!-- Preview -->
+  <FormItem for="{prefix}_preview" label={_lang.fields.preview}>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <Input
+        id="{prefix}_preview"
+        name="preview"
+        class="w-full min-w-0 flex-1 !text-base lg:!text-lg"
+        bind:value={formPreview}
+        placeholder="/projects/... or uploaded filename"
+      />
+      <input
+        type="file"
+        accept="image/*"
+        class="hidden"
+        bind:this={previewFileInput}
+        onchange={handleUploadPreview}
+      />
+      <Button
+        type="button"
+        class="shrink-0 px-3 py-1.5 !text-sm whitespace-nowrap md:!text-base"
+        onclick={() => previewFileInput?.click()}
+      >
+        {_lang.fields.uploadPreview}
+      </Button>
+    </div>
+    {#if formPreview}
+      {@const resolvedPreview = resolveProjectImageUrl(formPreview)}
+      {#if resolvedPreview}
+        <div class="mt-2 flex items-center gap-3">
+          <img
+            src={resolvedPreview}
+            alt="Preview"
+            class="h-14 w-24 rounded border border-white/15 object-cover"
+          />
+          <button
+            type="button"
+            onclick={() => (formPreview = '')}
+            class="cursor-pointer text-xs text-red-400 hover:underline"
+          >
+            Remove
+          </button>
         </div>
       {/if}
-    </FormItem>
-  </div>
+    {/if}
+  </FormItem>
+
+  <!-- Gallery Images -->
+  <FormItem for="{prefix}_images" label={_lang.fields.images}>
+    <div class="flex items-center gap-2">
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        class="hidden"
+        bind:this={galleryFileInput}
+        onchange={handleUploadGallery}
+      />
+      <Button
+        type="button"
+        class="shrink-0 px-3 py-1.5 !text-sm whitespace-nowrap md:!text-base"
+        onclick={() => galleryFileInput?.click()}
+      >
+        {_lang.fields.uploadImages} ({formImages.length})
+      </Button>
+    </div>
+    {#if formImages.length > 0}
+      <div class="mt-2 flex max-h-36 flex-wrap gap-2 overflow-y-auto p-1">
+        {#each formImages as img, idx (idx)}
+          {@const resolvedImg = resolveProjectImageUrl(img)}
+          <div
+            class="relative flex items-center gap-1.5 rounded border border-white/15 bg-black/40 p-1 pr-2 text-xs"
+          >
+            {#if resolvedImg}
+              <img src={resolvedImg} alt="" class="h-8 w-12 rounded object-cover" />
+            {/if}
+            <span class="max-w-[140px] truncate">{img}</span>
+            <button
+              type="button"
+              onclick={() => removeGalleryImage(idx)}
+              class="cursor-pointer text-red-400 hover:text-red-300"
+              aria-label="Remove image"
+            >
+              <Icon name="bi-x-lg" />
+            </button>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </FormItem>
 
   <FormItem for="{prefix}_descCs" label={_lang.fields.descriptionCs}>
     <TextArea
       id="{prefix}_descCs"
       name="cs:description"
+      class="w-full !text-base"
       bind:value={formDescCs}
       rows={4}
       required
@@ -435,6 +452,7 @@
     <TextArea
       id="{prefix}_descEn"
       name="en:description"
+      class="w-full !text-base"
       bind:value={formDescEn}
       rows={4}
       required
@@ -600,10 +618,16 @@
       {@render projectFormFields('add')}
 
       <div class="mt-2 flex justify-end gap-3">
-        <Button type="button" onclick={() => (openAddDialog = false)}>
+        <Button
+          type="button"
+          class="!px-4 !py-1.5 !text-base"
+          onclick={() => (openAddDialog = false)}
+        >
           {_state.lang.cancel}
         </Button>
-        <Button type="submit">{_lang.fields.button}</Button>
+        <Button type="submit" class="!px-4 !py-1.5 !text-base"
+          >{_lang.fields.button}</Button
+        >
       </div>
     </form>
   </div>
@@ -620,10 +644,16 @@
         {@render projectFormFields('edit')}
 
         <div class="mt-2 flex justify-end gap-3">
-          <Button type="button" onclick={() => (editingProject = null)}>
+          <Button
+            type="button"
+            class="!px-4 !py-1.5 !text-base"
+            onclick={() => (editingProject = null)}
+          >
             {_state.lang.cancel}
           </Button>
-          <Button type="submit">{_lang.editTitle.button}</Button>
+          <Button type="submit" class="!px-4 !py-1.5 !text-base"
+            >{_lang.editTitle.button}</Button
+          >
         </div>
       </form>
     </div>
