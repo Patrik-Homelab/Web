@@ -92,6 +92,7 @@
   {#snippet right()}
     <input
       type="file"
+      accept="image/*"
       multiple
       class="hidden"
       bind:this={fileInput}

@@ -72,12 +72,13 @@ export const isFile = async (path: string) => {
 export const uploadFile = async (file: File) => {
   const arrayBuffer = await file.arrayBuffer();
   const path = Path.parse(file.name);
+  const ext = path.ext.substring(1).toLowerCase();
 
-  if (!extensions.includes(path.ext.substring(1) as ImageExtension)) {
+  if (!extensions.includes(ext as ImageExtension)) {
     return undefined;
   }
 
-  const name = (await randomBytesAsync(16)).toString('hex') + path.ext;
+  const name = (await randomBytesAsync(16)).toString('hex') + '.' + ext;
 
   if (!(await isDirectory(FILE_FOLDER))) {
     await fs.mkdir(FILE_FOLDER, { recursive: true });

@@ -30,13 +30,14 @@ export type ResponseWithData<$Data> = Response & {
   data: $Data;
 };
 
-export type ImageExtension = 'jpg' | 'jpeg' | 'png' | 'webp' | 'tiff';
+export type ImageExtension = 'jpg' | 'jpeg' | 'png' | 'webp' | 'tiff' | 'gif';
 export const extensions = [
   'jpg',
   'jpeg',
   'png',
   'webp',
-  'tiff'
+  'tiff',
+  'gif'
 ] satisfies ImageExtension[];
 
 export type DePromise<$Promise> =
