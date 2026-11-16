@@ -29,7 +29,6 @@
 
   // Interactive state
   let hoveredBody = $state<CelestialBodyInfo | null>(null);
-  let selectedBody = $state<CelestialBodyInfo | null>(null);
   let tooltipX = $state(0);
   let tooltipY = $state(0);
   let isPaused = $state(false);
@@ -56,7 +55,6 @@
     manualTiltOffset = 0;
     simSpeed = 1;
     isPaused = false;
-    selectedBody = null;
   }
 
   function toggleSpeed() {
@@ -421,20 +419,17 @@
           }
         }
 
-        // Draw Interactive Selection / Hover Reticle Halo
+        // Draw Interactive Hover Reticle Halo
         const isHovered = hoveredBody?.id === planet.id;
-        const isSelected = selectedBody?.id === planet.id;
 
-        if (isHovered || isSelected) {
+        if (isHovered) {
           ctx.save();
           ctx.beginPath();
           const haloRadius = Math.max(14, (planet.sizePx / 2) * depthScale + 8);
           ctx.arc(x, y, haloRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = isSelected
-            ? 'rgba(253, 224, 71, 0.95)'
-            : 'rgba(255, 255, 255, 0.75)';
-          ctx.lineWidth = isSelected ? 2 : 1.4;
-          ctx.setLineDash(isSelected ? [4, 4] : [2, 3]);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+          ctx.lineWidth = 1.4;
+          ctx.setLineDash([2, 3]);
           ctx.stroke();
 
           // Outer pulse glow
@@ -557,8 +552,8 @@
       drawPlanetPass(false, cx, cy, tiltRatio, cosRoll, sinRoll);
       ctx.restore();
 
-      // Highlight Sun if selected or hovered
-      if (hoveredBody?.id === 'sun' || selectedBody?.id === 'sun') {
+      // Highlight Sun if hovered
+      if (hoveredBody?.id === 'sun') {
         ctx.save();
         ctx.beginPath();
         ctx.arc(cx, cy, sunRadius + 6, 0, Math.PI * 2);
@@ -583,9 +578,8 @@
     };
   });
 
-  // Pointer Interaction Handlers (Click, Hover, Drag to Rotate)
+  // Pointer Interaction Handlers (Hover, Drag to Rotate)
   let dragStartY = 0;
-  let didDrag = false;
 
   function findBodyAtPoint(clientX: number, clientY: number): CelestialBodyInfo | null {
     if (!stageEl) return null;
@@ -619,7 +613,6 @@
   function handlePointerDown(e: PointerEvent) {
     if (e.button !== 0) return; // Only primary button
     isDragging = true;
-    didDrag = false;
     dragStartY = e.clientY;
   }
 
@@ -630,7 +623,6 @@
     if (isDragging) {
       const dy = e.clientY - dragStartY;
       if (Math.abs(dy) > 3) {
-        didDrag = true;
         manualTiltOffset = Math.max(-0.16, Math.min(0.2, manualTiltOffset + dy * 0.0016));
         dragStartY = e.clientY;
       }
@@ -645,15 +637,7 @@
     }
   }
 
-  function handlePointerUp(e: PointerEvent) {
-    if (!didDrag) {
-      const hit = findBodyAtPoint(e.clientX, e.clientY);
-      if (hit) {
-        selectedBody = selectedBody?.id === hit.id ? null : hit;
-      } else {
-        selectedBody = null;
-      }
-    }
+  function handlePointerUp() {
     isDragging = false;
   }
 
@@ -676,9 +660,7 @@
     style="contain: layout paint;"
     class="relative flex aspect-[16/10] w-[350px] max-w-[96vw] touch-none items-center justify-center select-none sm:w-[560px] md:w-[680px] xl:w-[740px] {isDragging
       ? 'cursor-grabbing'
-      : hoveredBody
-        ? 'cursor-pointer'
-        : 'cursor-ns-resize'}"
+      : 'cursor-ns-resize'}"
   >
     <!-- 1. CENTRAL SOLAR CORE / SUN PORTRAIT (z-10) -->
     <div
@@ -686,10 +668,7 @@
       class="pointer-events-none relative z-10 flex h-[80px] w-[80px] items-center justify-center rounded-full sm:h-[105px] sm:w-[105px] md:h-[120px] md:w-[120px]"
     >
       <div
-        class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-200/80 bg-slate-900 shadow-[0_0_45px_8px_rgba(251,191,36,0.45),0_0_90px_20px_rgba(234,88,12,0.25)] transition-transform duration-300 {selectedBody?.id ===
-        'sun'
-          ? 'scale-105 ring-4 ring-amber-400'
-          : ''}"
+        class="relative h-full w-full overflow-hidden rounded-full border-2 border-amber-200/80 bg-slate-900 shadow-[0_0_45px_8px_rgba(251,191,36,0.45),0_0_90px_20px_rgba(234,88,12,0.25)] transition-transform duration-300"
       >
         <picture>
           <source
@@ -775,67 +754,4 @@
       </button>
     </div>
   </div>
-
-  <!-- 5. SELECTED CELESTIAL BODY HUD CARD (Matching site's glass bio cards) -->
-  {#if selectedBody}
-    <div
-      class="relative mt-4 flex w-full max-w-lg flex-col gap-3 rounded-2xl border border-white/10 bg-slate-950/85 p-5 shadow-2xl backdrop-blur-xl transition-all duration-300"
-    >
-      <!-- HUD Header -->
-      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-        <div>
-          <h3 class="text-text-strong text-lg font-bold">
-            {selectedBody.name[currentLang]}
-          </h3>
-          <span class="text-text-muted text-xs">
-            {selectedBody.type[currentLang]}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          onclick={() => (selectedBody = null)}
-          aria-label="Zavřít detail planety"
-          class="text-text-muted hover:text-text flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-white/10"
-        >
-          <Icon name="bi-x-lg" class="text-sm" />
-        </button>
-      </div>
-
-      <!-- Quick Metrics Grid -->
-      <div class="grid grid-cols-3 gap-2 py-1 text-center font-mono text-xs">
-        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
-          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
-            {currentLang === 'cs' ? 'Oběh' : 'Orbit'}
-          </span>
-          <span class="text-text-strong mt-0.5 block font-bold">
-            {selectedBody.orbitPeriod[currentLang]}
-          </span>
-        </div>
-
-        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
-          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
-            {currentLang === 'cs' ? 'Vzdálenost' : 'Distance'}
-          </span>
-          <span class="text-text-strong mt-0.5 block font-bold">
-            {selectedBody.distanceAu}
-          </span>
-        </div>
-
-        <div class="rounded-xl border border-white/5 bg-white/5 p-2.5">
-          <span class="text-text-muted block text-[10px] tracking-wider uppercase">
-            {currentLang === 'cs' ? 'Měsíce' : 'Moons'}
-          </span>
-          <span class="text-text-strong mt-0.5 block font-bold">
-            {selectedBody.moonsCount}
-          </span>
-        </div>
-      </div>
-
-      <!-- Description / Fun Fact -->
-      <p class="text-text-muted text-sm leading-relaxed">
-        {selectedBody.description[currentLang]}
-      </p>
-    </div>
-  {/if}
 </div>
