@@ -13,7 +13,7 @@
   import Icon from '$/components/utility/Icon.svelte';
   import Image from '$/components/utility/Image.svelte';
   import Markdown from '$/components/utility/Markdown.svelte';
-  import { formatDate, sToHHMM } from '$/lib/functions';
+  import { formatDate, formatExposure, sToHHMM } from '$/lib/functions';
   import { resolveLanguagable, resolveTranslation } from '$/lib/lang';
   import { getState } from '$/lib/state.svelte';
   import type { PageProps } from './$types';
@@ -26,6 +26,17 @@
 
   let selectedImage = $state(0);
   let section = $state<'article' | 'details'>('article');
+
+  const hasArticleContent = $derived(
+    Boolean((_langDynamic[data.post.content_md] || '').trim())
+  );
+  const descriptionText = $derived((_langDynamic[data.post.description] || '').trim());
+  const totalLightSeconds = $derived(
+    data.post.exposures
+      .filter((ex) => ex.type === 'light')
+      .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
+  );
+  const formattedTotalLight = $derived(formatExposure(totalLightSeconds));
 
   type Frame = 'light' | 'dark' | 'bias' | 'flat';
 
@@ -280,7 +291,7 @@
 </script>
 
 <section
-  class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 px-4 pt-10 pb-6 md:pt-16"
+  class="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 px-4 pt-6 pb-10 md:pt-10"
 >
   <!-- Back Button Link -->
   <a
@@ -294,6 +305,11 @@
   <!-- Header Title -->
   <div class="flex flex-col gap-3">
     <H1 class="text-left font-bold">{_langDynamic[data.post.title]}</H1>
+    {#if descriptionText && !hasArticleContent}
+      <p class="text-text-muted max-w-3xl text-base leading-relaxed md:text-lg">
+        {descriptionText}
+      </p>
+    {/if}
 
     <!-- High-Tech Telemetry Ribbon -->
     <div
@@ -309,17 +325,13 @@
         <span>{_lang.updated}:</span>
         <span class="text-text-strong">{formatDate(data.post.updated_at, false)}</span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <Icon name="bi-hourglass-split" class="text-primary text-sm" />
-        <span>{_lang.totalExposure}:</span>
-        <span class="text-primary-text font-mono font-bold"
-          >{sToHHMM(
-            data.post.exposures
-              .filter((ex) => ex.type === 'light')
-              .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
-          )}</span
-        >
-      </div>
+      {#if formattedTotalLight}
+        <div class="flex items-center gap-1.5">
+          <Icon name="bi-hourglass-split" class="text-primary text-sm" />
+          <span>{_lang.totalExposure}:</span>
+          <span class="text-primary-text font-mono font-bold">{formattedTotalLight}</span>
+        </div>
+      {/if}
     </div>
   </div>
 
@@ -476,7 +488,7 @@
       </div>
 
       <!-- Sky View & Targets -->
-      {#if data.post.object_id || (data.post.ra !== null && data.post.dec !== null)}
+      {#if data.objects.length > 0 || (data.post.ra !== null && data.post.dec !== null)}
         <div
           class="flex flex-col gap-4 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-md"
         >
@@ -487,14 +499,20 @@
             <span>{_lang.skyMap}</span>
           </H3>
 
-          {#if data.objectTranslationUuid}
-            <div class="flex items-center gap-2 text-base font-semibold lg:text-lg">
-              <span class="text-text-muted">{_lang.object}:</span>
-              <span
-                class="bg-primary/20 text-primary border-primary/25 rounded-full border px-3 py-0.5 font-bold"
+          {#if data.objects.length > 0}
+            <div
+              class="flex flex-wrap items-center gap-2 text-base font-semibold lg:text-lg"
+            >
+              <span class="text-text-muted"
+                >{data.objects.length === 1 ? _lang.object : _lang.objects}:</span
               >
-                {_langDynamic[data.objectTranslationUuid]}
-              </span>
+              {#each data.objects as obj (obj.id)}
+                <span
+                  class="bg-primary/20 text-primary border-primary/25 rounded-full border px-3 py-0.5 text-sm font-bold"
+                >
+                  {_langDynamic[obj.name]}
+                </span>
+              {/each}
             </div>
           {/if}
 
@@ -556,38 +574,62 @@
 
     <!-- Right Column: Navigation Tabs & Tab Content (2/3rd width) -->
     <div class="flex flex-col gap-6 xl:w-[72%]">
-      <!-- Section Tab Switcher (Segmented Pill Control) -->
-      <div
-        class="flex rounded-full border border-white/15 bg-slate-950/60 p-1 font-semibold shadow-2xl backdrop-blur-md"
-      >
-        <button
-          onclick={() => (section = 'article')}
-          class={[
-            'flex w-1/2 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold transition-all duration-300 md:text-sm',
-            section === 'article'
-              ? 'bg-primary shadow-primary/20 text-slate-950 shadow-md'
-              : 'text-text-muted hover:text-text hover:bg-white/5'
-          ].join(' ')}
+      {#if hasArticleContent}
+        <!-- Section Tab Switcher (Segmented Pill Control) -->
+        <div
+          class="flex rounded-full border border-white/15 bg-slate-950/60 p-1 font-semibold shadow-2xl backdrop-blur-md"
         >
-          <Icon name="bi-file-earmark-text" />
-          <span>{_lang.article}</span>
-        </button>
-        <button
-          onclick={() => (section = 'details')}
-          class={[
-            'flex w-1/2 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold transition-all duration-300 md:text-sm',
-            section === 'details'
-              ? 'bg-primary shadow-primary/20 text-slate-950 shadow-md'
-              : 'text-text-muted hover:text-text hover:bg-white/5'
-          ].join(' ')}
+          <button
+            onclick={() => (section = 'article')}
+            class={[
+              'flex w-1/2 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold transition-all duration-300 md:text-sm',
+              section === 'article'
+                ? 'bg-primary shadow-primary/20 text-slate-950 shadow-md'
+                : 'text-text-muted hover:text-text hover:bg-white/5'
+            ].join(' ')}
+          >
+            <Icon name="bi-file-earmark-text" />
+            <span>{_lang.article}</span>
+          </button>
+          <button
+            onclick={() => (section = 'details')}
+            class={[
+              'flex w-1/2 cursor-pointer items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold transition-all duration-300 md:text-sm',
+              section === 'details'
+                ? 'bg-primary shadow-primary/20 text-slate-950 shadow-md'
+                : 'text-text-muted hover:text-text hover:bg-white/5'
+            ].join(' ')}
+          >
+            <Icon name="bi-card-list" />
+            <span>{_lang.details}</span>
+          </button>
+        </div>
+      {:else}
+        <!-- Photo Showcase when no written Markdown article exists -->
+        <div
+          class="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/5 bg-slate-950/50 p-4 shadow-2xl backdrop-blur-md"
         >
-          <Icon name="bi-card-list" />
-          <span>{_lang.details}</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            onclick={openImage}
+            class="relative flex max-h-[540px] w-full cursor-zoom-in items-center justify-center overflow-hidden rounded-xl bg-black/50"
+          >
+            <Image
+              name={data.post.images[selectedImage].name}
+              alt={_langDynamic[data.post.images[selectedImage].alt_text]}
+              class="max-h-[520px] w-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]"
+            />
+          </button>
+          {#if (_langDynamic[data.post.images[selectedImage].alt_text] || '').trim()}
+            <p class="text-text-muted mt-3 text-center text-sm font-medium">
+              {_langDynamic[data.post.images[selectedImage].alt_text]}
+            </p>
+          {/if}
+        </div>
+      {/if}
 
       <!-- Tab Content Area -->
-      {#if section === 'article'}
+      {#if hasArticleContent && section === 'article'}
         <div
           class="rounded-2xl border border-white/5 bg-slate-950/40 p-6 text-base leading-relaxed shadow-2xl backdrop-blur-md"
         >
@@ -598,108 +640,173 @@
         </div>
       {:else}
         <!-- Exposure Detailed Log -->
-        <div class="flex flex-col gap-3">
-          <H2 class="text-text-strong flex items-center gap-1.5 px-2 text-lg font-bold">
-            <Icon name="bi-stopwatch" class="text-primary" />
-            <span>{_lang.exposureDetails}</span>
-          </H2>
+        {#if data.post.exposures.length > 0}
+          <div class="flex flex-col gap-3">
+            <H2 class="text-text-strong flex items-center gap-1.5 px-2 text-lg font-bold">
+              <Icon name="bi-stopwatch" class="text-primary" />
+              <span>{_lang.exposureDetails}</span>
+            </H2>
 
-          <div
-            class="overflow-hidden rounded-2xl border border-white/5 bg-slate-950/40 shadow-2xl backdrop-blur-md"
-          >
-            <Table class="text-center text-sm">
-              <THead>
-                <Tr class="border-b border-white/10 bg-slate-900/60">
-                  <Th
-                    class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
-                    >{_frames.date}</Th
-                  >
-                  <Th
-                    class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
-                    >{_frames.type}</Th
-                  >
-                  <Th
-                    class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
-                    >{_frames.count}</Th
-                  >
-                  <Th
-                    class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
-                    >{_frames.seconds}</Th
-                  >
-                  <Th
-                    class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
-                    >{_frames.total}</Th
-                  >
-                </Tr>
-              </THead>
-              <TBody>
-                {#each data.post.exposures as exposure (exposure.id)}
-                  <Tr
-                    class="border-b border-white/5 transition-colors duration-150 last:border-b-0 hover:bg-white/5"
-                  >
-                    <Td class="text-text-strong py-3"
-                      >{formatDate(exposure.date, false)}</Td
+            <div
+              class="overflow-hidden rounded-2xl border border-white/5 bg-slate-950/40 shadow-2xl backdrop-blur-md"
+            >
+              <Table class="text-center text-sm">
+                <THead>
+                  <Tr class="border-b border-white/10 bg-slate-900/60">
+                    <Th
+                      class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
+                      >{_frames.date}</Th
                     >
-                    <Td class="py-3">
-                      <span
-                        class={[
-                          'rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase',
-                          exposure.type === 'light'
-                            ? 'bg-primary/20 text-primary border-primary/20'
-                            : exposure.type === 'flat'
-                              ? 'border-blue-500/20 bg-blue-500/20 text-blue-400'
-                              : exposure.type === 'dark'
-                                ? 'border-purple-500/20 bg-purple-500/20 text-purple-400'
-                                : 'text-text-muted border-white/10 bg-white/5'
-                        ].join(' ')}
-                      >
-                        {_state.lang.frames[exposure.type as Frame]}
-                      </span>
-                    </Td>
-                    <Td class="text-text-strong py-3 font-mono">{exposure.count}</Td>
-                    <Td class="text-text-strong py-3 font-mono"
-                      >{exposure.exposure_time_s}s</Td
+                    <Th
+                      class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
+                      >{_frames.type}</Th
                     >
-                    <Td class="text-primary-text py-3 font-mono font-bold"
-                      >{sToHHMM(exposure.count * exposure.exposure_time_s)}</Td
+                    <Th
+                      class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
+                      >{_frames.count}</Th
+                    >
+                    <Th
+                      class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
+                      >{_frames.seconds}</Th
+                    >
+                    <Th
+                      class="text-text-strong py-3 text-[11px] font-extrabold tracking-wider uppercase"
+                      >{_frames.total}</Th
                     >
                   </Tr>
-                {/each}
-              </TBody>
-            </Table>
+                </THead>
+                <TBody>
+                  {#each data.post.exposures as exposure (exposure.id)}
+                    <Tr
+                      class="border-b border-white/5 transition-colors duration-150 last:border-b-0 hover:bg-white/5"
+                    >
+                      <Td class="text-text-strong py-3"
+                        >{formatDate(exposure.date, false)}</Td
+                      >
+                      <Td class="py-3">
+                        <span
+                          class={[
+                            'rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase',
+                            exposure.type === 'light'
+                              ? 'bg-primary/20 text-primary border-primary/20'
+                              : exposure.type === 'flat'
+                                ? 'border-blue-500/20 bg-blue-500/20 text-blue-400'
+                                : exposure.type === 'dark'
+                                  ? 'border-purple-500/20 bg-purple-500/20 text-purple-400'
+                                  : 'text-text-muted border-white/10 bg-white/5'
+                          ].join(' ')}
+                        >
+                          {_state.lang.frames[exposure.type as Frame]}
+                        </span>
+                      </Td>
+                      <Td class="text-text-strong py-3 font-mono">{exposure.count}</Td>
+                      <Td class="text-text-strong py-3 font-mono"
+                        >{exposure.exposure_time_s}s</Td
+                      >
+                      <Td class="text-primary-text py-3 font-mono font-bold"
+                        >{formatExposure(exposure.count * exposure.exposure_time_s) ??
+                          '0s'}</Td
+                      >
+                    </Tr>
+                  {/each}
+                </TBody>
+              </Table>
+            </div>
           </div>
-        </div>
+        {/if}
 
         <!-- Equipment Detailed Cards -->
-        <div class="mt-4 flex flex-col gap-3">
-          <H2 class="text-text-strong flex items-center gap-1.5 px-2 text-lg font-bold">
-            <Icon name="bi-cpu-fill" class="text-primary" />
-            <span>{_lang.equipmentDetails}</span>
-          </H2>
-          <div class="flex flex-wrap gap-4">
-            {#each data.post.equipment as equipment (equipment.name)}
-              <div
-                class="hover:border-primary/25 flex w-full flex-col gap-2 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] md:w-[calc(50%_-_0.5rem)]"
-              >
-                <div class="flex items-start justify-between">
-                  <H3 class="text-text-strong text-base font-bold">{equipment.name}</H3>
-                  <a
-                    href={equipment.link}
-                    class="hover:text-primary text-text-muted flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs transition-all duration-200 hover:bg-white/10"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon name="bi-box-arrow-up-right" />
-                  </a>
-                </div>
-                <span class="text-text-muted mt-1 text-xs leading-relaxed"
-                  >{resolveTranslation(equipment.lang_key, _state.lang)}</span
+        {#if data.post.equipment.length > 0}
+          <div class="mt-4 flex flex-col gap-3">
+            <H2 class="text-text-strong flex items-center gap-1.5 px-2 text-lg font-bold">
+              <Icon name="bi-cpu-fill" class="text-primary" />
+              <span>{_lang.equipmentDetails}</span>
+            </H2>
+            <div class="flex flex-wrap gap-4">
+              {#each data.post.equipment as equipment (equipment.name)}
+                <div
+                  class="hover:border-primary/25 flex w-full flex-col gap-2 rounded-2xl border border-white/5 bg-slate-950/40 p-5 shadow-xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] md:w-[calc(50%_-_0.5rem)]"
                 >
-              </div>
-            {/each}
+                  <div class="flex items-start justify-between">
+                    <H3 class="text-text-strong text-base font-bold">{equipment.name}</H3>
+                    <a
+                      href={equipment.link}
+                      class="hover:text-primary text-text-muted flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs transition-all duration-200 hover:bg-white/10"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon name="bi-box-arrow-up-right" />
+                    </a>
+                  </div>
+                  <span class="text-text-muted mt-1 text-xs leading-relaxed"
+                    >{resolveTranslation(equipment.lang_key, _state.lang)}</span
+                  >
+                </div>
+              {/each}
+            </div>
           </div>
-        </div>
+        {/if}
       {/if}
     </div>
   </div>
+
+  <!-- Related / Progression Captures for Same Object(s) -->
+  {#if data.relatedPosts.length > 0}
+    <div class="mt-6 flex flex-col gap-4 border-t border-white/10 pt-8">
+      <H2 class="text-text-strong flex items-center gap-2 text-xl font-bold">
+        <Icon name="bi-collection" class="text-primary" />
+        <span>{_lang.moreCaptures}</span>
+      </H2>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {#each data.relatedPosts as related (related.id)}
+          {@const relExposure = formatExposure(related.lightSeconds)}
+          <a
+            href="/{_state.selectedLang}/gallery/{related.id}"
+            class="group hover:border-primary/30 flex flex-col overflow-hidden rounded-xl border border-white/5 bg-slate-950/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01]"
+          >
+            <div class="relative h-36 overflow-hidden bg-slate-900">
+              {#if related.imageName}
+                <Image
+                  class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  name={related.imageName}
+                  alt={related.imageAlt ? _langDynamic[related.imageAlt] || '' : ''}
+                />
+              {:else}
+                <div
+                  class="text-text-muted flex h-full w-full items-center justify-center"
+                >
+                  <Icon name="bi-image" class="text-2xl opacity-40" />
+                </div>
+              {/if}
+              {#if relExposure}
+                <div class="absolute top-2 right-2">
+                  <span
+                    class="text-text-strong flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 px-2 py-0.5 text-[10px] font-bold backdrop-blur-md"
+                  >
+                    <Icon name="bi-clock" class="text-primary text-[9px]" />
+                    <span>{relExposure}</span>
+                  </span>
+                </div>
+              {/if}
+            </div>
+            <div class="flex flex-col gap-1 p-3.5">
+              <h3
+                class="text-text-strong group-hover:text-primary truncate text-sm font-bold transition-colors"
+              >
+                {_langDynamic[related.title]}
+              </h3>
+              <div class="text-text-muted flex items-center justify-between text-xs">
+                <span>{formatDate(related.created_at, false)}</span>
+                <Icon
+                  name="bi-arrow-right"
+                  class="text-primary transition-transform group-hover:translate-x-0.5"
+                />
+              </div>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </section>

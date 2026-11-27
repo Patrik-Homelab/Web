@@ -166,7 +166,8 @@ export default o({
           content: _,
           editContent: _,
           previewContent: _,
-          contentPlaceholder: _
+          contentPlaceholder: _,
+          optionalHint: _
         }),
         equipment: o({
           title: _,
@@ -351,12 +352,15 @@ export default o({
     equipmentDetails: _,
     images: _,
     object: _,
+    objects: _,
     all: _,
     byObject: _,
     skyMap: _,
+    skyMapCta: _,
     fov: _,
     postsCount: languagable,
-    older: _
+    older: _,
+    moreCaptures: _
   }),
   contact: o({
     title: _,

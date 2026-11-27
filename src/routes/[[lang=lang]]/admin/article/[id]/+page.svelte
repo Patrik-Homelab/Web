@@ -11,7 +11,6 @@
   import {
     Button,
     Form,
-    Select as FormSelect,
     GeminiInput,
     ImageManager,
     Input,
@@ -71,13 +70,24 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
   const editing = $derived('id' in data.article);
   let showPreview = $state(false);
   let selectedEquipment = $state<null | number>(null);
-
   let equipment = $state<number[]>((data.article as any).equipment ?? []);
 
   $effect(() => {
     if (selectedEquipment !== null) {
       equipment.push(selectedEquipment);
       selectedEquipment = null;
+    }
+  });
+
+  let selectedObjectId = $state<string | null>(null);
+  let objectIds = $state<string[]>((data.article as any).object_ids ?? []);
+
+  $effect(() => {
+    if (selectedObjectId) {
+      if (!objectIds.includes(selectedObjectId)) {
+        objectIds.push(selectedObjectId);
+      }
+      selectedObjectId = null;
     }
   });
 
@@ -420,6 +430,7 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
     </div>
     <Card>
       {@render subTitle(_lang.details.title)}
+      <p class="text-text-muted text-sm">{_lang.details.optionalHint}</p>
       <Input
         name="title"
         label={_lang.details.titleInput}
@@ -481,19 +492,42 @@ Nyní napiš popisek pro tento obsah (pouze text, žádné uvozovky):
         </BaseButton>
       </div>
 
-      <FormSelect name="object_id" label={_lang.target.object}>
-        <option value="">{_lang.target.none}</option>
-        {#each data.objects as obj (obj.id)}
-          <option value={obj.id}>
-            {(dynamicTranslations as Record<string, Record<string, string>>)[
-              _state.selectedLang
-            ][obj.name as string]}
-            {#if obj.created_at}
-              ({formatDate(obj.created_at, true)})
-            {/if}
-          </option>
-        {/each}
-      </FormSelect>
+      <FormItem for="object_ids" label={_lang.target.object} variant="small">
+        <Select id="object_ids" bind:value={selectedObjectId}>
+          <option value={null} selected disabled>{_lang.target.select}</option>
+          {#each data.objects.filter((obj) => !objectIds.includes(obj.id)) as obj (obj.id)}
+            <option value={obj.id}>
+              {(dynamicTranslations as Record<string, Record<string, string>>)[
+                _state.selectedLang
+              ][obj.name as string]}
+              {#if obj.created_at}
+                ({formatDate(obj.created_at, true)})
+              {/if}
+            </option>
+          {/each}
+        </Select>
+      </FormItem>
+      <DataProvider name="object_ids" bind:value={objectIds} />
+      {#if objectIds.length > 0}
+        <div class="flex flex-wrap gap-2">
+          {#each data.objects.filter((obj) => objectIds.includes(obj.id)) as obj (obj.id)}
+            <div
+              class="border-primary/40 bg-primary/10 flex items-center gap-2 rounded-md border px-2.5 py-1 text-sm font-bold"
+            >
+              <span>
+                {(dynamicTranslations as Record<string, Record<string, string>>)[
+                  _state.selectedLang
+                ][obj.name as string]}
+              </span>
+              <Icon
+                onclick={() => (objectIds = objectIds.filter((id) => id !== obj.id))}
+                name="bi-trash-fill"
+                class="cursor-pointer text-red-500"
+              />
+            </div>
+          {/each}
+        </div>
+      {/if}
 
       <div
         class="border-text bg-background/50 mt-2 flex flex-col gap-2 rounded-md border p-3"

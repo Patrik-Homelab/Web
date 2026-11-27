@@ -20,26 +20,14 @@ export const articleSchema = (lang: keyof typeof languages) =>
   z.object({
     id: z.string().optional(),
     title: z.string().min(1, languages[lang].t.errors.article.noTitle),
-    description: z.string().min(1, languages[lang].t.errors.article.noDescrption),
-    content_md: z.string().min(1, languages[lang].t.errors.article.noContent),
+    description: z.string().default(''),
+    content_md: z.string().default(''),
     created_at: z.coerce.date().optional(),
     updated_at: z.coerce.date().optional(),
     images: z.array(articleImage),
     exposures: z.array(articleExposure),
     equipment: z.array(z.number()),
-    object_id: z
-      .preprocess(
-        (val) =>
-          val === '' ||
-          val === null ||
-          val === undefined ||
-          val === 'null' ||
-          val === 'undefined'
-            ? null
-            : String(val),
-        z.string().nullable()
-      )
-      .optional(),
+    object_ids: z.array(z.string()).default([]),
     ra: z
       .preprocess((val) => {
         if (

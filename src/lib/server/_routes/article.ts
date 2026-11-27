@@ -42,7 +42,6 @@ export default [
           title: translations.title,
           description: translations.description,
           content_md: translations.content_md,
-          object_id: input.object_id ?? null,
           ra: input.ra ?? null,
           dec: input.dec ?? null,
           fov_width: input.fov_width ?? null,
@@ -50,6 +49,19 @@ export default [
           fov_rotation: input.fov_rotation ?? null
         })
         .execute();
+
+      const uniqueObjectIds = Array.from(new Set(input.object_ids.filter(Boolean)));
+      if (uniqueObjectIds.length > 0) {
+        await trx
+          .insertInto('article_object')
+          .values(
+            uniqueObjectIds.map((objectId) => ({
+              article_id: uuid,
+              object_id: objectId
+            }))
+          )
+          .execute();
+      }
 
       //equipment
       if (input.equipment.length > 0) {
@@ -337,8 +349,39 @@ export default [
           .execute();
       }
 
+      const uniqueObjectIds = Array.from(new Set(input.object_ids.filter(Boolean)));
+      const originalObjects = await conn
+        .selectFrom('article_object')
+        .select(['object_id'])
+        .where('article_id', '=', input.id!)
+        .execute();
+      const origObjectIds = originalObjects.map((o) => o.object_id);
+      const toAddObjects = uniqueObjectIds.filter((id) => !origObjectIds.includes(id));
+      const toRemoveObjects = origObjectIds.filter((id) => !uniqueObjectIds.includes(id));
+
+      if (toAddObjects.length > 0) {
+        someChanged = true;
+        await trx
+          .insertInto('article_object')
+          .values(
+            toAddObjects.map((objectId) => ({
+              article_id: input.id!,
+              object_id: objectId
+            }))
+          )
+          .execute();
+      }
+
+      if (toRemoveObjects.length > 0) {
+        someChanged = true;
+        await trx
+          .deleteFrom('article_object')
+          .where('article_id', '=', input.id!)
+          .where('object_id', 'in', toRemoveObjects)
+          .execute();
+      }
+
       const directFieldsChanged =
-        originalData.object_id !== (input.object_id ?? null) ||
         originalData.ra !== (input.ra ?? null) ||
         originalData.dec !== (input.dec ?? null) ||
         originalData.fov_width !== (input.fov_width ?? null) ||
@@ -353,7 +396,6 @@ export default [
         await trx
           .updateTable('article')
           .set({
-            object_id: input.object_id ?? null,
             ra: input.ra ?? null,
             dec: input.dec ?? null,
             fov_width: input.fov_width ?? null,
@@ -384,6 +426,8 @@ export default [
     try {
       //equipment
       await trx.deleteFrom('article_equipment').where('article_id', '=', input).execute();
+      //objects
+      await trx.deleteFrom('article_object').where('article_id', '=', input).execute();
       //exposures
       await trx.deleteFrom('exposure').where('article_id', '=', input).execute();
       //images

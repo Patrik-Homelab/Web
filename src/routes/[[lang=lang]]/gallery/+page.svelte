@@ -23,7 +23,7 @@
     }> = [];
 
     for (const obj of data.objects) {
-      const objPosts = data.posts.filter((p) => p.object_id === obj.id);
+      const objPosts = data.posts.filter((p) => p.object_ids.includes(obj.id));
       if (objPosts.length > 0) {
         groups.push({
           id: obj.id as string,
@@ -33,7 +33,7 @@
       }
     }
 
-    const uncategorizedPosts = data.posts.filter((p) => !p.object_id);
+    const uncategorizedPosts = data.posts.filter((p) => p.object_ids.length === 0);
     if (uncategorizedPosts.length > 0) {
       groups.push({
         id: null,
@@ -86,21 +86,30 @@
       {/if}
       <!-- Top Badges Overlay -->
       <div
-        class="absolute inset-x-0 top-0 flex items-center justify-between gap-2 bg-gradient-to-b from-black/50 to-transparent p-4"
+        class="absolute inset-x-0 top-0 flex items-start justify-between gap-2 bg-gradient-to-b from-black/50 to-transparent p-4"
       >
-        {#if post.object_id}
-          {@const obj = data.objects.find((o) => o.id === post.object_id)}
-          {#if obj}
+        <div class="flex flex-wrap items-center gap-1.5">
+          {#each post.object_ids.slice(0, 2) as objectId (objectId)}
+            {@const obj = data.objects.find((o) => o.id === objectId)}
+            {#if obj}
+              <span
+                class="bg-primary/20 text-primary border-primary/30 rounded-full border px-3 py-0.5 text-xs font-bold tracking-wide backdrop-blur-md"
+              >
+                {_langDynamic[obj.name as string]}
+              </span>
+            {/if}
+          {/each}
+          {#if post.object_ids.length > 2}
             <span
-              class="bg-primary/20 text-primary border-primary/30 rounded-full border px-3 py-0.5 text-xs font-bold tracking-wide backdrop-blur-md"
+              class="bg-primary/15 text-primary border-primary/25 rounded-full border px-2 py-0.5 text-xs font-bold backdrop-blur-md"
             >
-              {_langDynamic[obj.name as string]}
+              +{post.object_ids.length - 2}
             </span>
           {/if}
-        {/if}
+        </div>
         {#if lightExposure}
           <div
-            class="text-text-strong ml-auto flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 px-2.5 py-1 text-xs font-bold shadow-lg backdrop-blur-md"
+            class="text-text-strong ml-auto flex shrink-0 items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 px-2.5 py-1 text-xs font-bold shadow-lg backdrop-blur-md"
           >
             <Icon name="bi-clock" class="text-primary text-[10px]" />
             <span>{lightExposure}</span>
@@ -116,9 +125,11 @@
         >{_langDynamic[post.title]}</H2
       >
 
-      <p class="text-text-muted line-clamp-2 text-lg leading-relaxed">
-        {_langDynamic[post.description]}
-      </p>
+      {#if (_langDynamic[post.description] || '').trim()}
+        <p class="text-text-muted line-clamp-2 text-lg leading-relaxed">
+          {_langDynamic[post.description]}
+        </p>
+      {/if}
 
       <!-- Badges row -->
       <div class="flex w-full flex-wrap gap-1.5 py-1">

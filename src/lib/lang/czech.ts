@@ -197,7 +197,9 @@ export default lang.parse({
           content: 'Obsah článku (Markdown)',
           editContent: 'Úprava',
           previewContent: 'Náhled',
-          contentPlaceholder: 'Zadej obsah článku v markdownu...'
+          contentPlaceholder: 'Zadej obsah článku v markdownu...',
+          optionalHint:
+            'Popis i Markdown obsah jsou volitelné – pro rychlý snímek je můžeš nechat prázdné.'
         },
         equipment: {
           title: 'Vybavení',
@@ -389,16 +391,19 @@ export default lang.parse({
     equipmentDetails: 'Detaily vybavení',
     images: 'Obrázky',
     object: 'Objekt',
+    objects: 'Objekty',
     all: 'Všechny příspěvky',
     byObject: 'Podle objektu',
     skyMap: 'Mapa oblohy',
+    skyMapCta: 'Prohlédni si vše, co jsem vyfotil na reálné obloze :)',
     fov: 'Zorné pole (FOV)',
     postsCount: {
       '1': 'příspěvek',
       '2': 'příspěvky',
       other: 'příspěvků'
     },
-    older: 'Starší'
+    older: 'Starší',
+    moreCaptures: 'Další snímky tohoto objektu'
   },
   contact: {
     title: 'Spoj se se mnou',

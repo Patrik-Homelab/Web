@@ -7,8 +7,17 @@
       "article.description": "string",
       "article.content_md": "string",
       "article_equipment.article_id": "string",
+      "article_object.article_id": "string",
+      "article_object.object_id": "string",
+      "astronomical_object.id": "string",
+      "astronomical_object.name": "string",
       "exposure.article_id": "string",
       "gallery_image.article_id": "string",
+      "movie.rating": "number",
+      "movie.review": "string",
+      "movie.title": "string",
+      "project.description": "string",
+      "project.name": "string",
       "translations.key": "string",
       "gallery_image.alt_text": "string"
     }
