@@ -3,11 +3,13 @@
     ASTEROID_BELT,
     getDaysSinceJ2000,
     getPlanetLongitudeDeg,
+    MOON_CONFIG,
     normalizeDegrees,
     PLANETS,
     SUN_CONFIG,
     type CelestialBodyInfo,
-    type PlanetConfig
+    type PlanetConfig,
+    type SolarArticleLink
   } from '$/lib/solarSystem';
   import { getState } from '$/lib/state.svelte';
   import Icon from '$/components/utility/Icon.svelte';
@@ -16,9 +18,10 @@
   interface Props {
     pointerX?: number; // normalized [-0.5, 0.5]
     pointerY?: number; // normalized [-0.5, 0.5]
+    planetArticles?: Record<string, SolarArticleLink[]>;
   }
 
-  let { pointerX = 0, pointerY = 0 }: Props = $props();
+  let { pointerX = 0, pointerY = 0, planetArticles = {} }: Props = $props();
 
   const _state = getState();
   const currentLang = $derived((_state.selectedLang || 'cs') as 'cs' | 'en');
@@ -31,10 +34,57 @@
   let hoveredBody = $state<CelestialBodyInfo | null>(null);
   let tooltipX = $state(0);
   let tooltipY = $state(0);
+  let isTooltipHovered = $state(false);
+  let isTooltipPinned = $state(false);
+  let leaveTimer: ReturnType<typeof setTimeout> | null = null;
   let isPaused = $state(false);
   let simSpeed = $state<1 | 5 | 10>(1);
   let isDragging = $state(false);
   let manualTiltOffset = $state(0);
+
+  function getBodyArticles(bodyId: string): {
+    articles: SolarArticleLink[];
+    subLabel?: string;
+  } {
+    const direct = planetArticles[bodyId] ?? [];
+    if (direct.length > 0) {
+      return { articles: direct };
+    }
+    if (bodyId === 'earth' && (planetArticles['moon']?.length ?? 0) > 0) {
+      return {
+        articles: planetArticles['moon'],
+        subLabel: currentLang === 'cs' ? '🌙 Měsíc' : '🌙 Moon'
+      };
+    }
+    return { articles: [] };
+  }
+
+  function hasHighlightRing(bodyId: string): boolean {
+    if ((planetArticles[bodyId]?.length ?? 0) > 0) return true;
+    if (bodyId === 'earth' && (planetArticles['moon']?.length ?? 0) > 0) return true;
+    return false;
+  }
+
+  function clearLeaveTimer() {
+    if (leaveTimer) {
+      clearTimeout(leaveTimer);
+      leaveTimer = null;
+    }
+  }
+
+  function scheduleClearHover() {
+    clearLeaveTimer();
+    if (isTooltipPinned) return;
+    leaveTimer = setTimeout(() => {
+      if (!isTooltipHovered && !isTooltipPinned) {
+        hoveredBody = null;
+      }
+    }, 280);
+  }
+
+  const activeTooltipData = $derived(
+    hoveredBody ? getBodyArticles(hoveredBody.id) : { articles: [] }
+  );
 
   // Stored screen positions for hit-testing
   interface ScreenBody {
@@ -411,12 +461,51 @@
             if (moonSin < 0) {
               const mX = x + Math.cos(moonRad) * moon.radiusPx * depthScale;
               const mY = y + moonSin * moon.radiusPx * 0.45 * depthScale;
+              const mRadius = (moon.sizePx / 2) * depthScale;
+
+              if (moon.id === 'moon') {
+                screenBodies.push({
+                  info: MOON_CONFIG,
+                  x: mX,
+                  y: mY,
+                  radius: mRadius,
+                  isFront: false
+                });
+                if (hasHighlightRing('moon')) {
+                  ctx.save();
+                  ctx.beginPath();
+                  ctx.arc(mX, mY, mRadius + 3.5, 0, Math.PI * 2);
+                  ctx.strokeStyle = 'rgba(247, 91, 0, 0.9)';
+                  ctx.lineWidth = 1.4;
+                  ctx.stroke();
+                  ctx.restore();
+                }
+              }
+
               ctx.beginPath();
-              ctx.arc(mX, mY, (moon.sizePx / 2) * depthScale, 0, Math.PI * 2);
+              ctx.arc(mX, mY, mRadius, 0, Math.PI * 2);
               ctx.fillStyle = moon.color;
               ctx.fill();
             }
           }
+        }
+
+        // Photographed Planet Outline Ring
+        if (hasHighlightRing(planet.id)) {
+          const outlineRadius = (planet.sizePx / 2) * depthScale + 4.5;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(x, y, outlineRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(247, 91, 0, 0.85)';
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(x, y, outlineRadius + 2.5, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(247, 91, 0, 0.25)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.restore();
         }
 
         // Draw Interactive Hover Reticle Halo
@@ -467,8 +556,29 @@
             if (moonSin >= 0) {
               const mX = x + Math.cos(moonRad) * moon.radiusPx * depthScale;
               const mY = y + moonSin * moon.radiusPx * 0.45 * depthScale;
+              const mRadius = (moon.sizePx / 2) * depthScale;
+
+              if (moon.id === 'moon') {
+                screenBodies.push({
+                  info: MOON_CONFIG,
+                  x: mX,
+                  y: mY,
+                  radius: mRadius,
+                  isFront: true
+                });
+                if (hasHighlightRing('moon')) {
+                  ctx.save();
+                  ctx.beginPath();
+                  ctx.arc(mX, mY, mRadius + 3.5, 0, Math.PI * 2);
+                  ctx.strokeStyle = 'rgba(247, 91, 0, 0.9)';
+                  ctx.lineWidth = 1.4;
+                  ctx.stroke();
+                  ctx.restore();
+                }
+              }
+
               ctx.beginPath();
-              ctx.arc(mX, mY, (moon.sizePx / 2) * depthScale, 0, Math.PI * 2);
+              ctx.arc(mX, mY, mRadius, 0, Math.PI * 2);
               ctx.fillStyle = moon.color;
               ctx.fill();
             }
@@ -495,8 +605,14 @@
       lastTime = now;
       lastDrawTime = now;
 
-      // Advance time only if not paused
-      if (!isPaused) {
+      // Advance time only if not paused and not reading a body's article links
+      const lockMotion =
+        isPaused ||
+        isTooltipHovered ||
+        isTooltipPinned ||
+        (hoveredBody !== null && getBodyArticles(hoveredBody.id).articles.length > 0);
+
+      if (!lockMotion) {
         ambientSeconds += dt * simSpeed;
       }
 
@@ -553,6 +669,17 @@
       ctx.restore();
 
       // Highlight Sun if hovered
+      // Highlight Sun if photographed or hovered
+      if (hasHighlightRing('sun') && hoveredBody?.id !== 'sun') {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, sunRadius + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(247, 91, 0, 0.75)';
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+        ctx.restore();
+      }
+
       if (hoveredBody?.id === 'sun') {
         ctx.save();
         ctx.beginPath();
@@ -578,8 +705,9 @@
     };
   });
 
-  // Pointer Interaction Handlers (Hover, Drag to Rotate)
+  // Pointer Interaction Handlers (Hover, Tap, Drag to Rotate)
   let dragStartY = 0;
+  let didDrag = false;
 
   function findBodyAtPoint(clientX: number, clientY: number): CelestialBodyInfo | null {
     if (!stageEl) return null;
@@ -587,11 +715,14 @@
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    // Check planets first (top priority)
+    // Check Moon & planets first (top priority, Moon checked with tighter radius)
     for (let i = screenBodies.length - 1; i >= 0; i--) {
       const body = screenBodies[i];
       if (body.info.id === 'sun') continue;
-      const hitRadius = Math.max(16, body.radius + 10);
+      const hitRadius =
+        body.info.id === 'moon'
+          ? Math.max(10, body.radius + 6)
+          : Math.max(16, body.radius + 10);
       const dist = Math.hypot(x - body.x, y - body.y);
       if (dist <= hitRadius) {
         return body.info;
@@ -610,40 +741,78 @@
     return null;
   }
 
+  function updateTooltipAnchor(body: CelestialBodyInfo) {
+    if (!stageEl) return;
+    const rect = stageEl.getBoundingClientRect();
+    const match = screenBodies.find((b) => b.info.id === body.id);
+    if (match) {
+      const clampedX = Math.max(95, Math.min(rect.width - 95, match.x));
+      const clampedY = Math.max(60, match.y - match.radius - 10);
+      tooltipX = clampedX;
+      tooltipY = clampedY;
+    }
+  }
+
   function handlePointerDown(e: PointerEvent) {
-    if (e.button !== 0) return; // Only primary button
+    if (e.button !== 0) return;
     isDragging = true;
+    didDrag = false;
     dragStartY = e.clientY;
   }
 
   function handlePointerMove(e: PointerEvent) {
     if (!stageEl) return;
-    const rect = stageEl.getBoundingClientRect();
 
     if (isDragging) {
       const dy = e.clientY - dragStartY;
       if (Math.abs(dy) > 3) {
+        didDrag = true;
         manualTiltOffset = Math.max(-0.16, Math.min(0.2, manualTiltOffset + dy * 0.0016));
         dragStartY = e.clientY;
       }
       return;
     }
 
+    if (isTooltipPinned || isTooltipHovered) return;
+
     const hit = findBodyAtPoint(e.clientX, e.clientY);
-    hoveredBody = hit;
     if (hit) {
-      tooltipX = e.clientX - rect.left;
-      tooltipY = e.clientY - rect.top - 20;
+      clearLeaveTimer();
+      hoveredBody = hit;
+      updateTooltipAnchor(hit);
+    } else if (hoveredBody) {
+      scheduleClearHover();
     }
   }
 
-  function handlePointerUp() {
+  function handlePointerUp(e: PointerEvent) {
+    const wasDragging = didDrag;
     isDragging = false;
+    didDrag = false;
+    if (wasDragging) return;
+
+    const hit = findBodyAtPoint(e.clientX, e.clientY);
+    if (hit && getBodyArticles(hit.id).articles.length > 0) {
+      clearLeaveTimer();
+      if (isTooltipPinned && hoveredBody?.id === hit.id) {
+        isTooltipPinned = false;
+        hoveredBody = null;
+      } else {
+        hoveredBody = hit;
+        isTooltipPinned = true;
+        updateTooltipAnchor(hit);
+      }
+    } else if (isTooltipPinned) {
+      isTooltipPinned = false;
+      hoveredBody = null;
+    }
   }
 
   function handlePointerLeave() {
     isDragging = false;
-    hoveredBody = null;
+    if (!isTooltipHovered && !isTooltipPinned) {
+      scheduleClearHover();
+    }
   }
 </script>
 
@@ -701,13 +870,67 @@
       class="pointer-events-none absolute inset-0 z-20 h-full w-full"
     ></canvas>
 
-    <!-- 3. INTERACTIVE FLOATING HOVER TOOLTIP -->
+    <!-- 3. INTERACTIVE FLOATING HOVER TOOLTIP WITH GALLERY LINKS -->
     {#if hoveredBody && !isDragging}
       <div
-        class="pointer-events-none absolute z-30 flex -translate-x-1/2 -translate-y-full items-center rounded-full border border-white/15 bg-slate-950/90 px-3 py-1 font-mono text-xs font-bold text-white shadow-xl backdrop-blur-md transition-all duration-150"
+        role="tooltip"
+        onpointerdown={(e) => e.stopPropagation()}
+        onpointerup={(e) => e.stopPropagation()}
+        onpointerenter={() => {
+          clearLeaveTimer();
+          isTooltipHovered = true;
+        }}
+        onpointerleave={() => {
+          isTooltipHovered = false;
+          scheduleClearHover();
+        }}
+        class={[
+          'absolute z-30 flex -translate-x-1/2 -translate-y-full flex-col gap-1.5 rounded-2xl border border-white/15 bg-slate-950/95 px-3.5 py-2 text-xs text-white shadow-2xl backdrop-blur-xl transition-all duration-150',
+          activeTooltipData.articles.length > 0
+            ? 'pointer-events-auto max-w-[260px] min-w-[200px]'
+            : 'pointer-events-none items-center rounded-full px-3 py-1'
+        ].join(' ')}
         style="left: {tooltipX}px; top: {tooltipY}px;"
       >
-        <span>{hoveredBody.name[currentLang]}</span>
+        <div class="flex items-center justify-between gap-2 font-mono font-bold">
+          <span>{hoveredBody.name[currentLang]}</span>
+          {#if activeTooltipData.subLabel}
+            <span class="text-primary text-[10px] font-semibold">
+              {activeTooltipData.subLabel}
+            </span>
+          {/if}
+        </div>
+
+        {#if activeTooltipData.articles.length > 0}
+          <div class="flex flex-col gap-1 border-t border-white/10 pt-1.5">
+            {#each activeTooltipData.articles.slice(0, 4) as article (article.id)}
+              <a
+                href="/{currentLang}/gallery/{article.id}"
+                class="group hover:bg-primary/15 hover:text-primary flex items-center justify-between gap-2 rounded-lg px-2 py-1 text-[11px] font-semibold text-slate-200 transition-colors"
+              >
+                <span class="truncate">{article.title}</span>
+                <span
+                  class="text-text-muted flex shrink-0 items-center gap-1 font-mono text-[10px]"
+                >
+                  {article.year}
+                  <Icon
+                    name="bi-arrow-right"
+                    class="text-primary text-[10px] transition-transform group-hover:translate-x-0.5"
+                  />
+                </span>
+              </a>
+            {/each}
+            {#if activeTooltipData.articles.length > 4}
+              <a
+                href="/{currentLang}/gallery"
+                class="text-primary px-2 pt-0.5 text-[10px] font-bold hover:underline"
+              >
+                +{activeTooltipData.articles.length - 4}
+                {currentLang === 'cs' ? 'dalších v galerii →' : 'more in gallery →'}
+              </a>
+            {/if}
+          </div>
+        {/if}
       </div>
     {/if}
 

@@ -6,9 +6,11 @@
   import { onMount } from 'svelte';
   import type { z } from 'zod';
   import Icon from '$/components/utility/Icon.svelte';
+  import type { PageProps } from './$types';
 
   type RichTextArray = z.infer<typeof r>;
 
+  const { data }: PageProps = $props();
   const _state = getState();
 
   let pointerX = $state(0);
@@ -162,7 +164,7 @@
 
     <!-- Centerpiece: 2.5D Solar System with Sun Portrait -->
     <div class="order-1 flex justify-center xl:order-2">
-      <SolarSystemHero {pointerX} {pointerY} />
+      <SolarSystemHero {pointerX} {pointerY} planetArticles={data.planetArticles} />
     </div>
 
     <!-- Right Satellite Cards (Frameworks & Node.js/Bots) -->
