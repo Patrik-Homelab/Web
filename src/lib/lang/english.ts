@@ -349,6 +349,8 @@ export default lang.parse({
     allTypes: 'All Types',
     series: 'Series',
     movie: 'Movies',
+    seriesSingle: 'Series',
+    movieSingle: 'Movie',
     allRatings: 'All Ratings',
     allYears: 'All Years',
     sortBy: 'Sort by',

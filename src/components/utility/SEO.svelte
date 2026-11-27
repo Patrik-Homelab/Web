@@ -61,7 +61,7 @@
           image: `${origin}/images/PFP.jpg`,
           jobTitle: 'Software Developer & Astrophotographer',
           sameAs: [
-            'https://github.com/patrick115',
+            'https://github.com/patrick11514',
             'https://astrobin.com/users/patrick115'
           ]
         }

@@ -347,6 +347,8 @@ export default lang.parse({
     allTypes: 'Všechny typy',
     series: 'Seriály',
     movie: 'Filmy',
+    seriesSingle: 'Seriál',
+    movieSingle: 'Film',
     allRatings: 'Všechna hodnocení',
     allYears: 'Všechny roky',
     sortBy: 'Řadit podle',

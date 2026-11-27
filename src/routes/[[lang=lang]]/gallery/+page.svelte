@@ -5,7 +5,7 @@
   import Image from '$/components/utility/Image.svelte';
   import H2 from '$/components/headers/H2.svelte';
   import Icon from '$/components/utility/Icon.svelte';
-  import { formatDate, sToHHMM } from '$/lib/functions';
+  import { formatDate, formatExposure } from '$/lib/functions';
 
   const { data }: PageProps = $props();
   const _state = getState();
@@ -60,6 +60,11 @@
 {/snippet}
 
 {#snippet postCard(post: (typeof data.posts)[number])}
+  {@const lightExposure = formatExposure(
+    post.exposures
+      .filter((ex) => ex.type === 'light')
+      .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
+  )}
   <a
     href="/{_state.selectedLang}/gallery/{post.id}"
     class="group hover:border-primary/30 flex aspect-[4/5] w-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-slate-950/40 shadow-xl backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_15px_30px_rgba(0,0,0,0.5),_0_0_20px_rgba(var(--color-primary-500),0.1)] sm:w-[calc(50%_-_0.5rem)] lg:w-md xl:w-lg"
@@ -81,7 +86,7 @@
       {/if}
       <!-- Top Badges Overlay -->
       <div
-        class="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/50 to-transparent p-4"
+        class="absolute inset-x-0 top-0 flex items-center justify-between gap-2 bg-gradient-to-b from-black/50 to-transparent p-4"
       >
         {#if post.object_id}
           {@const obj = data.objects.find((o) => o.id === post.object_id)}
@@ -93,18 +98,14 @@
             </span>
           {/if}
         {/if}
-        <div
-          class="text-text-strong flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 px-2.5 py-1 text-xs font-bold shadow-lg backdrop-blur-md"
-        >
-          <Icon name="bi-clock" class="text-primary text-[10px]" />
-          <span
-            >{sToHHMM(
-              post.exposures
-                .filter((ex) => ex.type === 'light')
-                .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
-            )}</span
+        {#if lightExposure}
+          <div
+            class="text-text-strong ml-auto flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 px-2.5 py-1 text-xs font-bold shadow-lg backdrop-blur-md"
           >
-        </div>
+            <Icon name="bi-clock" class="text-primary text-[10px]" />
+            <span>{lightExposure}</span>
+          </div>
+        {/if}
       </div>
     </div>
 
@@ -156,6 +157,11 @@
 {/snippet}
 
 {#snippet smallPostCard(post: (typeof data.posts)[number])}
+  {@const lightExposure = formatExposure(
+    post.exposures
+      .filter((ex) => ex.type === 'light')
+      .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
+  )}
   <a
     href="/{_state.selectedLang}/gallery/{post.id}"
     class="group hover:border-primary/25 flex w-full flex-col overflow-hidden rounded-xl border border-white/5 bg-slate-950/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] sm:w-[calc(50%_-_0.5rem)] md:w-[calc(33.33%_-_0.75rem)] lg:max-w-[320px]"
@@ -174,20 +180,16 @@
           <Icon name="bi-image" class="text-3xl opacity-40" />
         </div>
       {/if}
-      <div class="absolute top-2 right-2">
-        <div
-          class="text-text-strong flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/70 px-2 py-0.5 text-[10px] font-bold shadow-md backdrop-blur-md"
-        >
-          <Icon name="bi-clock" class="text-primary text-[9px]" />
-          <span
-            >{sToHHMM(
-              post.exposures
-                .filter((ex) => ex.type === 'light')
-                .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0)
-            )}</span
+      {#if lightExposure}
+        <div class="absolute top-2 right-2">
+          <div
+            class="text-text-strong flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/70 px-2 py-0.5 text-[10px] font-bold shadow-md backdrop-blur-md"
           >
+            <Icon name="bi-clock" class="text-primary text-[9px]" />
+            <span>{lightExposure}</span>
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
     <div class="flex flex-col gap-1.5 p-3.5">
       <h3
@@ -211,7 +213,7 @@
   </a>
 {/snippet}
 
-<section class="flex h-full flex-1 flex-col px-4 pt-10 pb-6 md:pt-16">
+<section class="flex h-full flex-1 flex-col px-4 pt-6 pb-10 md:pt-10">
   <H1 class="mx-auto mb-6 text-center">{_lang.title}</H1>
 
   <!-- View Mode Switcher: Segmented Capsule Control -->

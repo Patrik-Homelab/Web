@@ -99,7 +99,7 @@
 </script>
 
 <section
-  class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-10 pb-6 md:pt-16 2xl:max-w-[80%]"
+  class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-6 pb-12 md:pt-10 2xl:max-w-[80%]"
 >
   <!-- Section Title -->
   <H1 class="mx-auto mb-10 text-center">{lang.title}</H1>

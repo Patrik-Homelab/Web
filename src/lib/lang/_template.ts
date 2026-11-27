@@ -314,6 +314,8 @@ export default o({
     allTypes: _,
     series: _,
     movie: _,
+    seriesSingle: _,
+    movieSingle: _,
     allRatings: _,
     allYears: _,
     sortBy: _,

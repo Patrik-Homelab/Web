@@ -45,7 +45,7 @@
 </script>
 
 <section
-  class="relative mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-6 px-4 pt-10 pb-12 sm:px-6 lg:px-8"
+  class="relative mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-6 px-4 pt-6 pb-12 sm:px-6 md:pt-10 lg:px-8"
 >
   <!-- Ambient background glow behind live indicator -->
   <div

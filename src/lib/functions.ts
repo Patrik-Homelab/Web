@@ -23,7 +23,7 @@ export const SwalAlert = <$Type = unknown>(data: SweetAlertOptions) => {
   });
 };
 
-export const formatDate = (date: Date | string, time = true) => {
+export const formatDate = (date: Date | string, time = true, lang?: string) => {
   if (typeof date === 'string') {
     date = new Date(date);
   }
@@ -39,7 +39,14 @@ export const formatDate = (date: Date | string, time = true) => {
     })
   };
 
-  const locale = navigator.language || 'cs-CZ';
+  const locale =
+    lang === 'cs'
+      ? 'cs-CZ'
+      : lang === 'en'
+        ? 'en-US'
+        : typeof navigator !== 'undefined'
+          ? navigator.language || 'cs-CZ'
+          : 'cs-CZ';
 
   return new Intl.DateTimeFormat(locale, options).format(date);
 };
@@ -49,6 +56,21 @@ export const sToHHMM = (seconds: number) => {
   const minutes = Math.floor((seconds % 3600) / 60);
 
   return `${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`;
+};
+
+export const formatExposure = (seconds: number): string | null => {
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    return null;
+  }
+  if (seconds < 60) {
+    return `${Math.round(seconds)}s`;
+  }
+  if (seconds < 3600) {
+    const mins = Math.floor(seconds / 60);
+    const rem = Math.round(seconds % 60);
+    return rem > 0 ? `${mins}m ${rem}s` : `${mins}m`;
+  }
+  return sToHHMM(seconds);
 };
 
 export const resolveObject = (path: string, _path: object) => {
