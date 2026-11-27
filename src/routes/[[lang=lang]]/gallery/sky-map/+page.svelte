@@ -34,6 +34,7 @@
   let sidebarOpen = $state(false);
   let showPhotos = $state(true);
   let photoOpacity = $state(0.9);
+  let perCaptureOpacity = $state<Record<string, number>>({});
   let showFrames = $state(true);
   let aladinLoading = $state(true);
   let aladinContainer = $state<HTMLDivElement | null>(null);
@@ -110,14 +111,29 @@
     };
   }
 
+  // Draw older captures first so newer captures sit on top
+  const capturesOldestFirst = $derived([...data.captures].reverse());
+
+  function getLayerOpacity(captureId: string): number {
+    return perCaptureOpacity[captureId] ?? 1;
+  }
+
+  function setLayerOpacity(captureId: string, value: number) {
+    perCaptureOpacity[captureId] = Math.max(0, Math.min(1, value));
+    scheduleRedraw();
+  }
+
   function findCaptureAtPoint(clickX: number, clickY: number): CaptureItem | null {
     if (!aladinContainer) return null;
     const width = aladinContainer.clientWidth;
     const height = aladinContainer.clientHeight;
     if (width <= 0 || height <= 0) return null;
 
-    const hits: ProjectedQuad[] = [];
-    for (const capture of data.captures) {
+    const hits: Array<ProjectedQuad & { orderIdx: number }> = [];
+    for (let i = 0; i < capturesOldestFirst.length; i++) {
+      const capture = capturesOldestFirst[i];
+      // Allow clicking through completely faded-out layers
+      if (showPhotos && getLayerOpacity(capture.id) <= 0.01) continue;
       const quad = getProjectedQuad(capture, width, height);
       if (!quad) continue;
       const det = quad.ux * quad.vy - quad.uy * quad.vx;
@@ -128,13 +144,13 @@
       const a = (dx * quad.vy - dy * quad.vx) / det;
       const b = (quad.ux * dy - quad.uy * dx) / det;
       if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
-        hits.push(quad);
+        hits.push({ ...quad, orderIdx: i });
       }
     }
 
     if (hits.length === 0) return null;
-    // Prefer the smallest FOV capture if nested frames overlap
-    hits.sort((a, b) => a.area - b.area);
+    // Prefer topmost visible layer (newest), breaking ties by smallest FOV
+    hits.sort((a, b) => b.orderIdx - a.orderIdx || a.area - b.area);
     return hits[0].capture;
   }
 
@@ -161,8 +177,11 @@
 
     if (!showPhotos || !aladinInstance?.world2pix) return;
 
-    for (const capture of data.captures) {
+    for (const capture of capturesOldestFirst) {
       if (!capture.imageName) continue;
+      const layerAlpha = photoOpacity * getLayerOpacity(capture.id);
+      if (layerAlpha <= 0.005) continue;
+
       const img = loadedImages.get(capture.id);
       if (!img || !img.complete || img.naturalWidth === 0) continue;
 
@@ -170,7 +189,7 @@
       if (!quad) continue;
 
       ctx.save();
-      ctx.globalAlpha = photoOpacity;
+      ctx.globalAlpha = layerAlpha;
       ctx.setTransform(
         (dpr * quad.ux) / img.naturalWidth,
         (dpr * quad.uy) / img.naturalWidth,
@@ -626,6 +645,13 @@
                         {exp}
                       </span>
                     {/if}
+                    {#if getLayerOpacity(capture.id) < 0.99}
+                      <span
+                        class="rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[10px] text-amber-300"
+                      >
+                        {Math.round(getLayerOpacity(capture.id) * 100)}%
+                      </span>
+                    {/if}
                   </div>
                 </div>
               </button>
@@ -722,6 +748,48 @@
               </div>
             {/if}
           </div>
+
+          {#if showPhotos && selectedCapture.imageName}
+            {@const layerOpacity = getLayerOpacity(selectedCapture.id)}
+            <div
+              class="flex items-center justify-between gap-2.5 rounded-xl border border-white/5 bg-white/5 px-3 py-2"
+            >
+              <button
+                type="button"
+                onclick={() =>
+                  setLayerOpacity(selectedCapture.id, layerOpacity > 0 ? 0 : 1)}
+                title={_lang.skyMapLayerOpacity}
+                class="text-text-muted hover:text-primary flex cursor-pointer items-center gap-1.5 text-[11px] font-bold transition-colors"
+              >
+                <Icon
+                  name={layerOpacity > 0 ? 'bi-eye-fill' : 'bi-eye-slash'}
+                  class="text-primary text-xs"
+                />
+                <span>{_lang.skyMapLayerOpacity}</span>
+              </button>
+              <div class="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={layerOpacity}
+                  oninput={(e) =>
+                    setLayerOpacity(
+                      selectedCapture.id,
+                      parseFloat(e.currentTarget.value)
+                    )}
+                  aria-label={_lang.skyMapLayerOpacity}
+                  class="accent-primary h-1.5 w-20 cursor-pointer"
+                />
+                <span
+                  class="text-text-strong w-8 text-right font-mono text-[11px] font-bold"
+                >
+                  {Math.round(layerOpacity * 100)}%
+                </span>
+              </div>
+            </div>
+          {/if}
 
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-1.5">
