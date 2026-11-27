@@ -60,7 +60,31 @@ export default lang.parse({
       total: 'Total'
     },
     last_frame:
-      '*last frame (for example from previous exposure, or auto-guiding, re-centering, etc... therefore it may not always be a quality image)'
+      '*last frame (for example from previous exposure, or auto-guiding, re-centering, etc... therefore it may not always be a quality image)',
+    guiding_chart: {
+      title: 'PHD2 Guiding Error History (RMS)',
+      empty: 'Live guiding graph will appear once an active imaging session starts.',
+      ra: 'RA Error',
+      dec: 'Dec Error',
+      total: 'Total RMS'
+    },
+    observatory_stats: {
+      title: 'Published Observatory Statistics',
+      subtitle:
+        'Lifetime metrics aggregated from all published astrophotography gallery posts.',
+      light_time: 'Total Light Integration',
+      total_frames: 'Total Frames Captured',
+      sessions: 'Published Sessions',
+      unique_objects: 'Unique Objects',
+      frames_breakdown: 'Breakdown by Frame Type',
+      top_targets: 'Most Imaged Targets',
+      top_equipment: 'Most Used Equipment',
+      session_count: {
+        '1': 'post',
+        '2': 'posts',
+        other: 'posts'
+      }
+    }
   },
   main: {
     age: 'Age',

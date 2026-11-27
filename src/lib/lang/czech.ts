@@ -59,7 +59,30 @@ export default lang.parse({
       total: 'Celková'
     },
     last_frame:
-      '*poslední snímek (například z předchozí expozice, automatického ostření či centrování, proto nemusí být vždy ostrý a kvalitní)'
+      '*poslední snímek (například z předchozí expozice, automatického ostření či centrování, proto nemusí být vždy ostrý a kvalitní)',
+    guiding_chart: {
+      title: 'Průběh navádění PHD2 (RMS)',
+      empty: 'Graf navádění se zobrazí, jakmile začne aktivní focení s PHD2.',
+      ra: 'RA chyba',
+      dec: 'DEC chyba',
+      total: 'Celková RMS'
+    },
+    observatory_stats: {
+      title: 'Statistiky publikovaných pozorování',
+      subtitle: 'Souhrnná data nasbíraná ze všech publikovaných článků v astro galerii.',
+      light_time: 'Celkový čas Light expozic',
+      total_frames: 'Počet snímků',
+      sessions: 'Publikovaných nocí',
+      unique_objects: 'Vyfocených objektů',
+      frames_breakdown: 'Rozdělení podle typu snímků',
+      top_targets: 'Nejčastěji focené objekty',
+      top_equipment: 'Nejpoužívanější technika',
+      session_count: {
+        '1': 'článek',
+        '2': 'články',
+        other: 'článků'
+      }
+    }
   },
   main: {
     age: 'Věk',
