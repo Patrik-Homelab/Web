@@ -101,11 +101,11 @@
 </script>
 
 <section
-  class="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-24 pb-12 md:px-8 md:pt-28"
+  class="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-6 pb-12 md:px-8 md:pt-10"
 >
   <!-- Page Header -->
   <div class="mb-10 text-center">
-    <H1>{_lang.title}</H1>
+    <H1 class="mx-auto border-b-0">{_lang.title}</H1>
     <p class="text-text-muted mx-auto mt-3 max-w-2xl text-lg italic md:text-xl">
       {_lang.description}
     </p>
@@ -314,7 +314,7 @@
                 <span
                   class="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-xs font-bold tracking-widest text-red-400 uppercase"
                 >
-                  {movie.type === 'movie' ? _lang.movie : _lang.series}
+                  {movie.type === 'movie' ? _lang.movieSingle : _lang.seriesSingle}
                 </span>
                 <h2
                   class="text-text-strong group-hover:text-primary mt-2.5 text-xl leading-tight font-bold transition-colors duration-200"
@@ -328,7 +328,7 @@
                   <span>•</span>
                   <span title={_lang.addedOn} class="flex items-center gap-1">
                     <i class="bi bi-calendar-event text-[10px]"></i>
-                    {formatDate(movie.added_at)}
+                    {formatDate(movie.added_at, false, _state.selectedLang)}
                   </span>
                 </div>
               </div>

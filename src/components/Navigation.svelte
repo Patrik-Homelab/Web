@@ -195,9 +195,9 @@
 {/snippet}
 
 <!-- Floating Glassmorphic Header Container -->
-<header class="fixed top-4 left-1/2 z-50 w-max max-w-[95%] -translate-x-1/2 px-2">
+<header class="fixed top-4 left-1/2 z-50 w-[95%] max-w-max -translate-x-1/2 px-1 sm:px-2">
   <div
-    class="flex min-h-[4rem] flex-row items-center justify-between gap-4 rounded-[2rem] border border-white/10 bg-slate-950/60 px-4 py-3.5 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:gap-6 sm:px-6"
+    class="flex min-h-[3.75rem] flex-row items-center justify-between gap-2 rounded-[2rem] border border-white/10 bg-slate-950/60 px-3 py-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:min-h-[4rem] sm:gap-4 sm:px-5 sm:py-3 lg:gap-4 xl:gap-6 xl:px-6"
   >
     <!-- Left: Brand / Title -->
     <a
@@ -205,26 +205,26 @@
       class="flex shrink-0 items-center gap-2 align-middle transition-opacity duration-200 hover:opacity-90"
     >
       <span
-        class="font-ephesis text-primary-text text-3xl font-bold tracking-wide whitespace-nowrap"
+        class="font-ephesis text-primary-text text-2xl font-bold tracking-wide whitespace-nowrap sm:text-3xl"
         >Patrik Mintěl</span
       >
     </a>
 
     <!-- Center: Desktop Navigation -->
-    <nav class="font-poppins hidden items-center lg:ml-8 lg:flex xl:ml-12">
-      <div class="flex flex-wrap items-center justify-center gap-x-1.5 lg:gap-x-2.5">
+    <nav class="font-poppins hidden items-center lg:flex">
+      <div class="flex flex-nowrap items-center justify-center gap-x-1 xl:gap-x-1.5">
         {#each filteredNavigation as item, index (index)}
           {@const isActive = _isActive(item)}
           <a
             href="/{selectedLanguage}{item.path}"
             class={[
-              'flex items-center gap-2 rounded-full border px-4 py-2 transition-all duration-300 ease-in-out',
+              'flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-sm transition-all duration-300 ease-in-out xl:gap-2 xl:px-3.5 xl:py-2 xl:text-base',
               isActive
                 ? 'bg-primary/15 text-primary border-primary/25 shadow-[0_0_15px_rgba(var(--color-primary-500),0.1)]'
                 : 'text-text-muted hover:text-text border-transparent hover:bg-white/5'
             ].join(' ')}
           >
-            <Icon name={item.icon} class="text-lg" />
+            <Icon name={item.icon} class="text-base xl:text-lg" />
             <span class="whitespace-nowrap">{item.name}</span>
           </a>
         {/each}
@@ -232,7 +232,7 @@
     </nav>
 
     <!-- Right: Stars Switch, Language Picker & Mobile Menu Trigger -->
-    <div class="flex shrink-0 items-center gap-2.5 lg:gap-4">
+    <div class="flex shrink-0 items-center gap-1.5 sm:gap-2.5 lg:gap-3">
       <!-- Stars Toggle Switch -->
       <button
         onclick={toggleStars}
@@ -253,7 +253,7 @@
       <ClickOutside clickoutside={() => (dropdownOpen = false)} class="relative shrink-0">
         <button
           onclick={() => (dropdownOpen = !dropdownOpen)}
-          class="text-text-strong flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-slate-900/80 px-4.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all hover:bg-slate-800/80 focus:outline-none md:text-sm"
+          class="text-text-strong flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-slate-900/80 px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all hover:bg-slate-800/80 focus:outline-none sm:gap-2 sm:px-4 md:text-sm"
         >
           {@render flag(selectedLanguage)}
           <span class="hidden sm:inline">{_state.languages[selectedLanguage].name}</span>

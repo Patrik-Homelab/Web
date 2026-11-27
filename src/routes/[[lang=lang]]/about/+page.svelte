@@ -58,10 +58,10 @@
 </script>
 
 <section
-  class="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center px-4 pt-24 pb-12 md:px-8 md:pt-28"
+  class="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center px-4 pt-6 pb-12 md:px-8 md:pt-10"
 >
   <div class="mb-12 text-center">
-    <H1>{lang.title}</H1>
+    <H1 class="mx-auto border-b-0">{lang.title}</H1>
     <div
       class="from-primary to-secondary mx-auto mt-2 h-1 w-24 rounded bg-gradient-to-r"
     ></div>
