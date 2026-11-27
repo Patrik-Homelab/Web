@@ -59,12 +59,6 @@
     return { articles: [] };
   }
 
-  function hasHighlightRing(bodyId: string): boolean {
-    if ((planetArticles[bodyId]?.length ?? 0) > 0) return true;
-    if (bodyId === 'earth' && (planetArticles['moon']?.length ?? 0) > 0) return true;
-    return false;
-  }
-
   function clearLeaveTimer() {
     if (leaveTimer) {
       clearTimeout(leaveTimer);
@@ -471,15 +465,6 @@
                   radius: mRadius,
                   isFront: false
                 });
-                if (hasHighlightRing('moon')) {
-                  ctx.save();
-                  ctx.beginPath();
-                  ctx.arc(mX, mY, mRadius + 3.5, 0, Math.PI * 2);
-                  ctx.strokeStyle = 'rgba(247, 91, 0, 0.9)';
-                  ctx.lineWidth = 1.4;
-                  ctx.stroke();
-                  ctx.restore();
-                }
               }
 
               ctx.beginPath();
@@ -488,24 +473,6 @@
               ctx.fill();
             }
           }
-        }
-
-        // Photographed Planet Outline Ring
-        if (hasHighlightRing(planet.id)) {
-          const outlineRadius = (planet.sizePx / 2) * depthScale + 4.5;
-          ctx.save();
-          ctx.beginPath();
-          ctx.arc(x, y, outlineRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = 'rgba(247, 91, 0, 0.85)';
-          ctx.lineWidth = 1.6;
-          ctx.stroke();
-
-          ctx.beginPath();
-          ctx.arc(x, y, outlineRadius + 2.5, 0, Math.PI * 2);
-          ctx.strokeStyle = 'rgba(247, 91, 0, 0.25)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          ctx.restore();
         }
 
         // Draw Interactive Hover Reticle Halo
@@ -566,15 +533,6 @@
                   radius: mRadius,
                   isFront: true
                 });
-                if (hasHighlightRing('moon')) {
-                  ctx.save();
-                  ctx.beginPath();
-                  ctx.arc(mX, mY, mRadius + 3.5, 0, Math.PI * 2);
-                  ctx.strokeStyle = 'rgba(247, 91, 0, 0.9)';
-                  ctx.lineWidth = 1.4;
-                  ctx.stroke();
-                  ctx.restore();
-                }
               }
 
               ctx.beginPath();
@@ -669,17 +627,7 @@
       ctx.restore();
 
       // Highlight Sun if hovered
-      // Highlight Sun if photographed or hovered
-      if (hasHighlightRing('sun') && hoveredBody?.id !== 'sun') {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(cx, cy, sunRadius + 4, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(247, 91, 0, 0.75)';
-        ctx.lineWidth = 1.6;
-        ctx.stroke();
-        ctx.restore();
-      }
-
+      // Highlight Sun if hovered
       if (hoveredBody?.id === 'sun') {
         ctx.save();
         ctx.beginPath();

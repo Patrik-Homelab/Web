@@ -40,7 +40,7 @@
 <StarfieldCanvas />
 
 <section
-  class="text-text font-ubuntu flex h-full min-h-screen w-full min-w-screen flex-col bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/30 via-slate-950 to-black text-lg lg:text-xl"
+  class="text-text font-ubuntu flex h-full min-h-screen w-full flex-col overflow-x-clip bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/30 via-slate-950 to-black text-lg lg:text-xl"
 >
   <Navigation />
 
