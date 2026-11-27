@@ -20,6 +20,7 @@ export const GET: RequestHandler = async ({ url }) => {
     { path: '/about', priority: '0.8', changefreq: 'monthly' },
     { path: '/projects', priority: '0.8', changefreq: 'monthly' },
     { path: '/gallery', priority: '0.9', changefreq: 'daily' },
+    { path: '/gallery/sky-map', priority: '0.8', changefreq: 'weekly' },
     { path: '/contact', priority: '0.7', changefreq: 'monthly' },
     { path: '/live-photo', priority: '0.6', changefreq: 'hourly' },
     { path: '/movies', priority: '0.7', changefreq: 'weekly' }

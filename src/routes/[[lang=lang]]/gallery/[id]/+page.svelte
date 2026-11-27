@@ -13,6 +13,7 @@
   import Icon from '$/components/utility/Icon.svelte';
   import Image from '$/components/utility/Image.svelte';
   import Markdown from '$/components/utility/Markdown.svelte';
+  import { computeAdaptiveFov, computeFovPolygon } from '$/lib/astro';
   import { formatDate, formatExposure, sToHHMM } from '$/lib/functions';
   import { resolveLanguagable, resolveTranslation } from '$/lib/lang';
   import { getState } from '$/lib/state.svelte';
@@ -79,25 +80,12 @@
         rect.height > 0 ? rect.height : aladinContainer.clientHeight || 250;
       const aspect = widthPx / heightPx;
 
-      if (data.post.fov_width && data.post.fov_height) {
-        const fw = data.post.fov_width;
-        const fh = data.post.fov_height;
-        const rot = data.post.fov_rotation || 0;
-        const rotRad = (rot * Math.PI) / 180;
-
-        // Compute maximum rotated bounding extents in sky degrees
-        const spanX = fw * Math.abs(Math.cos(rotRad)) + fh * Math.abs(Math.sin(rotRad));
-        const spanY = fw * Math.abs(Math.sin(rotRad)) + fh * Math.abs(Math.cos(rotRad));
-
-        // Aladin's FoV parameter defines the horizontal FoV (fovX).
-        // Vertical FoV is fovX / aspect.
-        // Fit both axes with comfortable margin around the captured rectangle
-        const minFovX = Math.max(spanX, spanY * aspect);
-        return Number((minFovX * 1.58).toFixed(4));
-      } else if (data.post.fov_width) {
-        return Number((data.post.fov_width * Math.max(1, aspect) * 1.58).toFixed(4));
-      }
-      return 2.0;
+      return computeAdaptiveFov(
+        data.post.fov_width,
+        data.post.fov_height,
+        data.post.fov_rotation,
+        aspect
+      );
     }
 
     function applyTargetView() {
@@ -196,41 +184,19 @@
           applyTargetView();
 
           if (data.post.fov_width && data.post.fov_height) {
-            const width = data.post.fov_width;
-            const height = data.post.fov_height;
-            const rot = data.post.fov_rotation || 0;
-            const raVal = ra as number;
-            const decVal = dec as number;
-
             const overlay = A.graphicOverlay({
               color: '#f75b00',
               lineWidth: 2
             });
             aladinInstance.addOverlay(overlay);
 
-            const rad = Math.PI / 180;
-            const cosDec = Math.cos(decVal * rad) || 1;
-
-            const rotateAndScale = (x: number, y: number, angleDeg: number) => {
-              const angleRad = -angleDeg * rad;
-              const rx = x * Math.cos(angleRad) - y * Math.sin(angleRad);
-              const ry = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-              // Convert sky degrees to coordinate degrees for the RA component
-              return [rx / cosDec, ry];
-            };
-
-            const halfW = width / 2;
-            const halfH = height / 2;
-
-            const corners = [
-              [-halfW, -halfH],
-              [halfW, -halfH],
-              [halfW, halfH],
-              [-halfW, halfH]
-            ].map(([x, y]) => {
-              const [dRa, dDec] = rotateAndScale(x, y, rot);
-              return [raVal + dRa, decVal + dDec];
-            });
+            const corners = computeFovPolygon(
+              ra as number,
+              dec as number,
+              data.post.fov_width,
+              data.post.fov_height,
+              data.post.fov_rotation || 0
+            );
 
             const polygon = A.polygon(corners);
             overlay.add(polygon);

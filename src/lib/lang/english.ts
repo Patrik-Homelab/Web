@@ -398,6 +398,17 @@ export default lang.parse({
     byObject: 'By object',
     skyMap: 'Sky map',
     skyMapCta: "Explore everything I've captured on the real night sky :)",
+    skyMapTitle: 'My Captured Sky',
+    skyMapSubtitle:
+      'Interactive all-sky atlas of every plate-solved capture with true sensor field-of-view footprints.',
+    skyMapSearch: 'Search target or article...',
+    skyMapReset: 'All-Sky View',
+    skyMapTargets: 'Mapped Captures',
+    skyMapNoTargets: 'No captures match your search.',
+    skyMapOpenArticle: 'Open article',
+    skyMapSurvey: 'Sky Survey',
+    skyMapPrev: 'Previous',
+    skyMapNext: 'Next',
     fov: 'Field of view (FOV)',
     postsCount: {
       '1': 'post',

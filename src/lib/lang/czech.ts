@@ -396,6 +396,17 @@ export default lang.parse({
     byObject: 'Podle objektu',
     skyMap: 'Mapa oblohy',
     skyMapCta: 'Prohlédni si vše, co jsem vyfotil na reálné obloze :)',
+    skyMapTitle: 'Moje vyfocená obloha',
+    skyMapSubtitle:
+      'Interaktivní celooblohová mapa všech mých plate-solvnutých snímků se skutečným zorným polem.',
+    skyMapSearch: 'Hledat objekt nebo článek...',
+    skyMapReset: 'Celá obloha',
+    skyMapTargets: 'Snímky na mapě',
+    skyMapNoTargets: 'Žádné snímky neodpovídají hledání.',
+    skyMapOpenArticle: 'Otevřít článek',
+    skyMapSurvey: 'Průzkum oblohy',
+    skyMapPrev: 'Předchozí',
+    skyMapNext: 'Další',
     fov: 'Zorné pole (FOV)',
     postsCount: {
       '1': 'příspěvek',
