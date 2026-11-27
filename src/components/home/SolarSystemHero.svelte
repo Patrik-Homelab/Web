@@ -34,6 +34,7 @@
   let hoveredBody = $state<CelestialBodyInfo | null>(null);
   let tooltipX = $state(0);
   let tooltipY = $state(0);
+  let tooltipBelow = $state(false);
   let isTooltipHovered = $state(false);
   let isTooltipPinned = $state(false);
   let leaveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -695,9 +696,10 @@
     const match = screenBodies.find((b) => b.info.id === body.id);
     if (match) {
       const clampedX = Math.max(95, Math.min(rect.width - 95, match.x));
-      const clampedY = Math.max(60, match.y - match.radius - 10);
+      const placeBelow = match.y < 150;
+      tooltipBelow = placeBelow;
       tooltipX = clampedX;
-      tooltipY = clampedY;
+      tooltipY = placeBelow ? match.y + match.radius + 10 : match.y - match.radius - 10;
     }
   }
 
@@ -774,7 +776,6 @@
     onpointermove={handlePointerMove}
     onpointerup={handlePointerUp}
     onpointerleave={handlePointerLeave}
-    style="contain: layout paint;"
     class="relative flex aspect-[16/10] w-[350px] max-w-[96vw] touch-none items-center justify-center select-none sm:w-[560px] md:w-[680px] xl:w-[740px] {isDragging
       ? 'cursor-grabbing'
       : 'cursor-ns-resize'}"
@@ -833,7 +834,8 @@
           scheduleClearHover();
         }}
         class={[
-          'absolute z-30 flex -translate-x-1/2 -translate-y-full flex-col gap-1.5 rounded-2xl border border-white/15 bg-slate-950/95 px-3.5 py-2 text-xs text-white shadow-2xl backdrop-blur-xl transition-all duration-150',
+          'absolute z-50 flex -translate-x-1/2 flex-col gap-1.5 rounded-2xl border border-white/15 bg-slate-950/95 px-3.5 py-2 text-xs text-white shadow-2xl backdrop-blur-xl transition-all duration-150',
+          tooltipBelow ? 'translate-y-0' : '-translate-y-full',
           activeTooltipData.articles.length > 0
             ? 'pointer-events-auto max-w-[260px] min-w-[200px]'
             : 'pointer-events-none items-center rounded-full px-3 py-1'

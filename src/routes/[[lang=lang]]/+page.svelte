@@ -163,7 +163,7 @@
     </div>
 
     <!-- Centerpiece: 2.5D Solar System with Sun Portrait -->
-    <div class="order-1 flex justify-center xl:order-2">
+    <div class="relative z-30 order-1 flex justify-center xl:order-2">
       <SolarSystemHero {pointerX} {pointerY} planetArticles={data.planetArticles} />
     </div>
 
