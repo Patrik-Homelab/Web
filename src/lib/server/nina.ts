@@ -61,11 +61,19 @@ interface GuideInfo {
   total: number;
 }
 
+export interface GuideHistoryPoint {
+  timestamp: number;
+  ra: number;
+  dec: number;
+  total: number;
+}
+
 export type LiveStatus = {
   active: boolean;
   imageInfo?: ImageHistoryItem;
   mountInfo?: MountInfo;
   guideInfo?: GuideInfo;
+  guideHistory?: GuideHistoryPoint[];
   currentAction?: string;
   showImage?: boolean;
 };
@@ -89,6 +97,8 @@ export class NinaClient {
   private cachedLiveStatus: LiveStatus | undefined;
 
   private cachedLiveImage: Buffer | undefined;
+
+  private guideHistory: GuideHistoryPoint[] = [];
 
   private imageDownloadPromise: Promise<void> | null = null;
 
@@ -211,6 +221,7 @@ export class NinaClient {
     if (!isRunning) {
       this.cachedLiveStatus = { active: false };
       this.cachedLiveImage = undefined;
+      this.guideHistory = [];
       return this.cachedLiveStatus;
     }
 
@@ -274,19 +285,39 @@ export class NinaClient {
       'api/equipment/guider/info'
     );
 
+    const guideInfo = guideData?.Success
+      ? {
+          ra: guideData.Response.RMSError.RA.Arcseconds,
+          dec: guideData.Response.RMSError.Dec.Arcseconds,
+          total: guideData.Response.RMSError.Total.Arcseconds
+        }
+      : undefined;
+
+    if (
+      guideInfo &&
+      Number.isFinite(guideInfo.ra) &&
+      Number.isFinite(guideInfo.dec) &&
+      Number.isFinite(guideInfo.total)
+    ) {
+      this.guideHistory.push({
+        timestamp: now,
+        ra: guideInfo.ra,
+        dec: guideInfo.dec,
+        total: guideInfo.total
+      });
+      if (this.guideHistory.length > 60) {
+        this.guideHistory = this.guideHistory.slice(-60);
+      }
+    }
+
     this.cachedLiveStatus = {
       active: true,
       mountInfo: mountData?.Response,
       imageInfo,
       currentAction,
       showImage,
-      guideInfo: guideData?.Success
-        ? {
-            ra: guideData.Response.RMSError.RA.Arcseconds,
-            dec: guideData.Response.RMSError.Dec.Arcseconds,
-            total: guideData.Response.RMSError.Total.Arcseconds
-          }
-        : undefined
+      guideInfo,
+      guideHistory: [...this.guideHistory]
     };
 
     return this.cachedLiveStatus;

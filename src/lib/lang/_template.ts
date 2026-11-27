@@ -79,7 +79,26 @@ export default o({
       error: _,
       total: _
     }),
-    last_frame: _
+    last_frame: _,
+    guiding_chart: o({
+      title: _,
+      empty: _,
+      ra: _,
+      dec: _,
+      total: _
+    }),
+    observatory_stats: o({
+      title: _,
+      subtitle: _,
+      light_time: _,
+      total_frames: _,
+      sessions: _,
+      unique_objects: _,
+      frames_breakdown: _,
+      top_targets: _,
+      top_equipment: _,
+      session_count: languagable
+    })
   }),
   main: o({
     age: _,
