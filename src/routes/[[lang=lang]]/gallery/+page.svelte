@@ -225,7 +225,35 @@
 {/snippet}
 
 <section class="flex h-full flex-1 flex-col px-4 pt-6 pb-10 md:pt-10">
-  <H1 class="mx-auto mb-6 text-center">{_lang.title}</H1>
+  <H1 class="mx-auto mb-5 text-center">{_lang.title}</H1>
+
+  <!-- All-Sky Atlas CTA Banner -->
+  <a
+    href="/{_state.selectedLang}/gallery/sky-map"
+    class="group hover:border-primary/40 mx-auto mb-6 flex w-full max-w-2xl items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/60 px-5 py-3.5 shadow-xl backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-900/80 hover:shadow-[0_0_25px_rgba(var(--color-primary-500),0.15)]"
+  >
+    <div class="flex items-center gap-3.5">
+      <div
+        class="bg-primary/15 text-primary border-primary/30 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-transform duration-300 group-hover:scale-110"
+      >
+        <Icon name="bi-compass" class="text-lg" />
+      </div>
+      <div class="flex flex-col text-left">
+        <span
+          class="text-text-strong group-hover:text-primary text-sm font-bold transition-colors md:text-base"
+        >
+          {_lang.skyMapCta}
+        </span>
+        <span class="text-text-muted text-xs">
+          {_lang.skyMapTitle}
+        </span>
+      </div>
+    </div>
+    <Icon
+      name="bi-arrow-right"
+      class="text-primary shrink-0 text-lg transition-transform duration-200 group-hover:translate-x-1"
+    />
+  </a>
 
   <!-- View Mode Switcher: Segmented Capsule Control -->
   <div
