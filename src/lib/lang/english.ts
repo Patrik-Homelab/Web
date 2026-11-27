@@ -433,6 +433,7 @@ export default lang.parse({
     skyMapSurvey: 'Sky Survey',
     skyMapPrev: 'Previous',
     skyMapNext: 'Next',
+    skyMapPhotos: 'Photos',
     fov: 'Field of view (FOV)',
     postsCount: {
       '1': 'post',

@@ -31,9 +31,11 @@
   let selectedSurvey = $state<string>(SURVEYS[0].id);
   let searchQuery = $state('');
   let selectedCaptureId = $state<string | null>(null);
-  let sidebarOpen = $state(true);
+  let sidebarOpen = $state(false);
+  let showPhotos = $state(true);
   let aladinLoading = $state(true);
   let aladinContainer = $state<HTMLDivElement | null>(null);
+  let overlayCanvas = $state<HTMLCanvasElement | null>(null);
 
   let aladinInstance: {
     addOverlay: (overlay: unknown) => void;
@@ -41,8 +43,85 @@
     setImageSurvey: (survey: string) => void;
     setFoV: (fov: number) => void;
     gotoRaDec: (ra: number, dec: number) => void;
+    world2pix: (ra: number, dec: number) => [number, number] | null;
     [key: string]: unknown;
   } | null = null;
+
+  let redrawScheduled = false;
+  const loadedImages = new Map<string, HTMLImageElement>();
+  const capturePolygons = new Map<string, [number, number][]>();
+
+  function drawImageOverlays() {
+    redrawScheduled = false;
+    if (!overlayCanvas || !aladinContainer) return;
+    const ctx = overlayCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = aladinContainer.clientWidth || overlayCanvas.clientWidth;
+    const height = aladinContainer.clientHeight || overlayCanvas.clientHeight;
+    if (width <= 0 || height <= 0) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const targetW = Math.floor(width * dpr);
+    const targetH = Math.floor(height * dpr);
+    if (overlayCanvas.width !== targetW || overlayCanvas.height !== targetH) {
+      overlayCanvas.width = targetW;
+      overlayCanvas.height = targetH;
+    }
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+
+    if (!showPhotos || !aladinInstance?.world2pix) return;
+
+    for (const capture of data.captures) {
+      if (!capture.imageName || !capture.fov_width || !capture.fov_height) continue;
+      const img = loadedImages.get(capture.id);
+      const corners = capturePolygons.get(capture.id);
+      if (!img || !img.complete || img.naturalWidth === 0 || !corners) continue;
+
+      const pTL = aladinInstance.world2pix(corners[2][0], corners[2][1]);
+      const pTR = aladinInstance.world2pix(corners[3][0], corners[3][1]);
+      const pBL = aladinInstance.world2pix(corners[1][0], corners[1][1]);
+      if (!pTL || !pTR || !pBL) continue;
+
+      const values = [pTL[0], pTL[1], pTR[0], pTR[1], pBL[0], pBL[1]];
+      if (values.some((v) => !Number.isFinite(v))) continue;
+
+      const ux = pTR[0] - pTL[0];
+      const uy = pTR[1] - pTL[1];
+      const vx = pBL[0] - pTL[0];
+      const vy = pBL[1] - pTL[1];
+
+      const spanU = Math.hypot(ux, uy);
+      const spanV = Math.hypot(vx, vy);
+      if (spanU < 6 || spanV < 6 || spanU > width * 5 || spanV > height * 5) continue;
+
+      ctx.save();
+      ctx.globalAlpha = 0.9;
+      ctx.setTransform(
+        (dpr * ux) / img.naturalWidth,
+        (dpr * uy) / img.naturalWidth,
+        (dpr * vx) / img.naturalHeight,
+        (dpr * vy) / img.naturalHeight,
+        dpr * pTL[0],
+        dpr * pTL[1]
+      );
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+    }
+  }
+
+  function scheduleRedraw() {
+    if (redrawScheduled) return;
+    redrawScheduled = true;
+    requestAnimationFrame(drawImageOverlays);
+  }
+
+  $effect(() => {
+    void showPhotos;
+    scheduleRedraw();
+  });
 
   const filteredCaptures = $derived.by(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -79,6 +158,7 @@
     );
     aladinInstance.gotoRaDec(capture.ra, capture.dec);
     aladinInstance.setFoV(fov);
+    scheduleRedraw();
   }
 
   function resetAllSky() {
@@ -86,6 +166,7 @@
     if (!aladinInstance) return;
     aladinInstance.gotoRaDec(22, 30);
     aladinInstance.setFoV(150);
+    scheduleRedraw();
   }
 
   function stepCapture(delta: number) {
@@ -102,7 +183,30 @@
 
   onMount(() => {
     if (!browser || !aladinContainer) return;
+    if (window.innerWidth >= 1024) {
+      sidebarOpen = true;
+    }
     let cancelled = false;
+    let resizeObserver: ResizeObserver | null = null;
+
+    // Preload lightweight preview thumbnails for mapped captures
+    for (const capture of data.captures) {
+      if (!capture.imageName || !capture.fov_width || !capture.fov_height) continue;
+      capturePolygons.set(
+        capture.id,
+        computeFovPolygon(
+          capture.ra,
+          capture.dec,
+          capture.fov_width,
+          capture.fov_height,
+          capture.fov_rotation || 0
+        )
+      );
+      const img = new window.Image();
+      img.onload = () => scheduleRedraw();
+      img.src = `/image/${capture.imageName}?format=webp&scale=25&quality=75`;
+      loadedImages.set(capture.id, img);
+    }
 
     (async () => {
       try {
@@ -179,6 +283,17 @@
           })
         );
         catalog.addSources(sources);
+
+        aladinContainer.addEventListener('AL:position.changed', scheduleRedraw);
+        aladinContainer.addEventListener('AL:zoom.changed', scheduleRedraw);
+        aladinContainer.addEventListener('AL:Layer.added', scheduleRedraw);
+
+        if (typeof ResizeObserver !== 'undefined') {
+          resizeObserver = new ResizeObserver(() => scheduleRedraw());
+          resizeObserver.observe(aladinContainer);
+        }
+
+        scheduleRedraw();
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Failed to initialize All-Sky Atlas:', e);
@@ -191,6 +306,10 @@
 
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
+      aladinContainer?.removeEventListener('AL:position.changed', scheduleRedraw);
+      aladinContainer?.removeEventListener('AL:zoom.changed', scheduleRedraw);
+      aladinContainer?.removeEventListener('AL:Layer.added', scheduleRedraw);
       aladinInstance = null;
     };
   });
@@ -235,6 +354,21 @@
           {/each}
         </select>
       </div>
+
+      <!-- Toggle Preview Photo Overlays -->
+      <button
+        type="button"
+        onclick={() => (showPhotos = !showPhotos)}
+        class={[
+          'flex cursor-pointer items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold backdrop-blur-md transition-colors md:text-sm',
+          showPhotos
+            ? 'bg-primary/15 text-primary border-primary/30 hover:bg-primary/25'
+            : 'text-text-muted hover:text-text border-white/10 bg-slate-950/70 hover:border-white/20'
+        ].join(' ')}
+      >
+        <Icon name={showPhotos ? 'bi-eye-fill' : 'bi-eye-slash'} />
+        <span>{_lang.skyMapPhotos}</span>
+      </button>
 
       <!-- Toggle Target Sidebar -->
       <button
@@ -354,9 +488,13 @@
 
     <!-- Aladin Lite Sky Viewport -->
     <div
-      class="relative min-h-[520px] flex-1 overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl lg:h-[72vh]"
+      class="relative h-[68vh] min-h-[460px] w-full flex-none overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl sm:h-[72vh] lg:h-[74vh] lg:min-h-[540px] lg:flex-1"
     >
       <div bind:this={aladinContainer} class="h-full w-full"></div>
+      <canvas
+        bind:this={overlayCanvas}
+        class="pointer-events-none absolute inset-0 z-[2] h-full w-full"
+      ></canvas>
 
       {#if aladinLoading}
         <div

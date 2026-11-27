@@ -430,6 +430,7 @@ export default lang.parse({
     skyMapSurvey: 'Průzkum oblohy',
     skyMapPrev: 'Předchozí',
     skyMapNext: 'Další',
+    skyMapPhotos: 'Fotky',
     fov: 'Zorné pole (FOV)',
     postsCount: {
       '1': 'příspěvek',
