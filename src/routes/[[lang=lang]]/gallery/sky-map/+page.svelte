@@ -33,6 +33,8 @@
   let selectedCaptureId = $state<string | null>(null);
   let sidebarOpen = $state(false);
   let showPhotos = $state(true);
+  let photoOpacity = $state(0.9);
+  let showFrames = $state(true);
   let aladinLoading = $state(true);
   let aladinContainer = $state<HTMLDivElement | null>(null);
   let overlayCanvas = $state<HTMLCanvasElement | null>(null);
@@ -47,9 +49,94 @@
     [key: string]: unknown;
   } | null = null;
 
+  let fovOverlay: {
+    add: (shape: unknown) => void;
+    show?: () => void;
+    hide?: () => void;
+  } | null = null;
+
   let redrawScheduled = false;
   const loadedImages = new Map<string, HTMLImageElement>();
   const capturePolygons = new Map<string, [number, number][]>();
+
+  interface ProjectedQuad {
+    capture: CaptureItem;
+    pTL: [number, number];
+    ux: number;
+    uy: number;
+    vx: number;
+    vy: number;
+    area: number;
+  }
+
+  function getProjectedQuad(
+    capture: CaptureItem,
+    viewWidth: number,
+    viewHeight: number
+  ): ProjectedQuad | null {
+    if (!aladinInstance?.world2pix || !capture.fov_width || !capture.fov_height) {
+      return null;
+    }
+    const corners = capturePolygons.get(capture.id);
+    if (!corners) return null;
+
+    const pTL = aladinInstance.world2pix(corners[2][0], corners[2][1]);
+    const pTR = aladinInstance.world2pix(corners[3][0], corners[3][1]);
+    const pBL = aladinInstance.world2pix(corners[1][0], corners[1][1]);
+    if (!pTL || !pTR || !pBL) return null;
+
+    const values = [pTL[0], pTL[1], pTR[0], pTR[1], pBL[0], pBL[1]];
+    if (values.some((v) => !Number.isFinite(v))) return null;
+
+    const ux = pTR[0] - pTL[0];
+    const uy = pTR[1] - pTL[1];
+    const vx = pBL[0] - pTL[0];
+    const vy = pBL[1] - pTL[1];
+
+    const spanU = Math.hypot(ux, uy);
+    const spanV = Math.hypot(vx, vy);
+    if (spanU < 6 || spanV < 6 || spanU > viewWidth * 5 || spanV > viewHeight * 5) {
+      return null;
+    }
+
+    return {
+      capture,
+      pTL,
+      ux,
+      uy,
+      vx,
+      vy,
+      area: Math.abs(ux * vy - uy * vx)
+    };
+  }
+
+  function findCaptureAtPoint(clickX: number, clickY: number): CaptureItem | null {
+    if (!aladinContainer) return null;
+    const width = aladinContainer.clientWidth;
+    const height = aladinContainer.clientHeight;
+    if (width <= 0 || height <= 0) return null;
+
+    const hits: ProjectedQuad[] = [];
+    for (const capture of data.captures) {
+      const quad = getProjectedQuad(capture, width, height);
+      if (!quad) continue;
+      const det = quad.ux * quad.vy - quad.uy * quad.vx;
+      if (Math.abs(det) < 1e-4) continue;
+
+      const dx = clickX - quad.pTL[0];
+      const dy = clickY - quad.pTL[1];
+      const a = (dx * quad.vy - dy * quad.vx) / det;
+      const b = (quad.ux * dy - quad.uy * dx) / det;
+      if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
+        hits.push(quad);
+      }
+    }
+
+    if (hits.length === 0) return null;
+    // Prefer the smallest FOV capture if nested frames overlap
+    hits.sort((a, b) => a.area - b.area);
+    return hits[0].capture;
+  }
 
   function drawImageOverlays() {
     redrawScheduled = false;
@@ -75,37 +162,22 @@
     if (!showPhotos || !aladinInstance?.world2pix) return;
 
     for (const capture of data.captures) {
-      if (!capture.imageName || !capture.fov_width || !capture.fov_height) continue;
+      if (!capture.imageName) continue;
       const img = loadedImages.get(capture.id);
-      const corners = capturePolygons.get(capture.id);
-      if (!img || !img.complete || img.naturalWidth === 0 || !corners) continue;
+      if (!img || !img.complete || img.naturalWidth === 0) continue;
 
-      const pTL = aladinInstance.world2pix(corners[2][0], corners[2][1]);
-      const pTR = aladinInstance.world2pix(corners[3][0], corners[3][1]);
-      const pBL = aladinInstance.world2pix(corners[1][0], corners[1][1]);
-      if (!pTL || !pTR || !pBL) continue;
-
-      const values = [pTL[0], pTL[1], pTR[0], pTR[1], pBL[0], pBL[1]];
-      if (values.some((v) => !Number.isFinite(v))) continue;
-
-      const ux = pTR[0] - pTL[0];
-      const uy = pTR[1] - pTL[1];
-      const vx = pBL[0] - pTL[0];
-      const vy = pBL[1] - pTL[1];
-
-      const spanU = Math.hypot(ux, uy);
-      const spanV = Math.hypot(vx, vy);
-      if (spanU < 6 || spanV < 6 || spanU > width * 5 || spanV > height * 5) continue;
+      const quad = getProjectedQuad(capture, width, height);
+      if (!quad) continue;
 
       ctx.save();
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = photoOpacity;
       ctx.setTransform(
-        (dpr * ux) / img.naturalWidth,
-        (dpr * uy) / img.naturalWidth,
-        (dpr * vx) / img.naturalHeight,
-        (dpr * vy) / img.naturalHeight,
-        dpr * pTL[0],
-        dpr * pTL[1]
+        (dpr * quad.ux) / img.naturalWidth,
+        (dpr * quad.uy) / img.naturalWidth,
+        (dpr * quad.vx) / img.naturalHeight,
+        (dpr * quad.vy) / img.naturalHeight,
+        dpr * quad.pTL[0],
+        dpr * quad.pTL[1]
       );
       ctx.drawImage(img, 0, 0);
       ctx.restore();
@@ -120,7 +192,17 @@
 
   $effect(() => {
     void showPhotos;
+    void photoOpacity;
     scheduleRedraw();
+  });
+
+  $effect(() => {
+    if (!fovOverlay) return;
+    if (showFrames) {
+      fovOverlay.show?.();
+    } else {
+      fovOverlay.hide?.();
+    }
   });
 
   const filteredCaptures = $derived.by(() => {
@@ -241,8 +323,12 @@
         const overlay = A.graphicOverlay({
           color: '#f75b00',
           lineWidth: 2
-        });
+        }) as NonNullable<typeof fovOverlay>;
+        fovOverlay = overlay;
         instance.addOverlay(overlay);
+        if (!showFrames) {
+          overlay.hide?.();
+        }
 
         for (const capture of data.captures) {
           if (capture.fov_width && capture.fov_height) {
@@ -288,6 +374,33 @@
         aladinContainer.addEventListener('AL:zoom.changed', scheduleRedraw);
         aladinContainer.addEventListener('AL:Layer.added', scheduleRedraw);
 
+        // Open capture preview card when clicking directly on a photo / FOV rectangle
+        let downX = 0;
+        let downY = 0;
+        const onPointerDown = (e: PointerEvent) => {
+          downX = e.clientX;
+          downY = e.clientY;
+        };
+        const onPointerUp = (e: PointerEvent) => {
+          if (Math.hypot(e.clientX - downX, e.clientY - downY) > 6) return;
+          const target = e.target as HTMLElement | null;
+          if (
+            target?.closest(
+              '.aladin-btn, .aladin-location, .aladin-projection-control, .aladin-popup-container, button, a, input, select'
+            )
+          ) {
+            return;
+          }
+          if (!aladinContainer) return;
+          const rect = aladinContainer.getBoundingClientRect();
+          const hit = findCaptureAtPoint(e.clientX - rect.left, e.clientY - rect.top);
+          if (hit) {
+            focusCapture(hit);
+          }
+        };
+        aladinContainer.addEventListener('pointerdown', onPointerDown, { passive: true });
+        aladinContainer.addEventListener('pointerup', onPointerUp, { passive: true });
+
         if (typeof ResizeObserver !== 'undefined') {
           resizeObserver = new ResizeObserver(() => scheduleRedraw());
           resizeObserver.observe(aladinContainer);
@@ -310,6 +423,7 @@
       aladinContainer?.removeEventListener('AL:position.changed', scheduleRedraw);
       aladinContainer?.removeEventListener('AL:zoom.changed', scheduleRedraw);
       aladinContainer?.removeEventListener('AL:Layer.added', scheduleRedraw);
+      fovOverlay = null;
       aladinInstance = null;
     };
   });
@@ -355,19 +469,54 @@
         </select>
       </div>
 
-      <!-- Toggle Preview Photo Overlays -->
+      <!-- Toggle Preview Photo Overlays & Opacity -->
+      <div
+        class="flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950/70 px-2.5 py-1.5 backdrop-blur-md"
+      >
+        <button
+          type="button"
+          onclick={() => (showPhotos = !showPhotos)}
+          class={[
+            'flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-0.5 text-xs font-bold transition-colors md:text-sm',
+            showPhotos ? 'bg-primary/20 text-primary' : 'text-text-muted hover:text-text'
+          ].join(' ')}
+        >
+          <Icon name={showPhotos ? 'bi-eye-fill' : 'bi-eye-slash'} />
+          <span>{_lang.skyMapPhotos}</span>
+        </button>
+
+        {#if showPhotos}
+          <div class="flex items-center gap-1.5 border-l border-white/10 pl-2">
+            <input
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.05"
+              bind:value={photoOpacity}
+              aria-label={_lang.skyMapOpacity}
+              title={_lang.skyMapOpacity}
+              class="accent-primary h-1.5 w-16 cursor-pointer sm:w-20"
+            />
+            <span class="text-text-muted w-9 text-right font-mono text-[11px] font-bold">
+              {Math.round(photoOpacity * 100)}%
+            </span>
+          </div>
+        {/if}
+      </div>
+
+      <!-- Toggle FOV Frames -->
       <button
         type="button"
-        onclick={() => (showPhotos = !showPhotos)}
+        onclick={() => (showFrames = !showFrames)}
         class={[
           'flex cursor-pointer items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-bold backdrop-blur-md transition-colors md:text-sm',
-          showPhotos
+          showFrames
             ? 'bg-primary/15 text-primary border-primary/30 hover:bg-primary/25'
             : 'text-text-muted hover:text-text border-white/10 bg-slate-950/70 hover:border-white/20'
         ].join(' ')}
       >
-        <Icon name={showPhotos ? 'bi-eye-fill' : 'bi-eye-slash'} />
-        <span>{_lang.skyMapPhotos}</span>
+        <Icon name="bi-bounding-box" />
+        <span>{_lang.skyMapFrames}</span>
       </button>
 
       <!-- Toggle Target Sidebar -->

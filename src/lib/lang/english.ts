@@ -434,6 +434,8 @@ export default lang.parse({
     skyMapPrev: 'Previous',
     skyMapNext: 'Next',
     skyMapPhotos: 'Photos',
+    skyMapOpacity: 'Photo opacity',
+    skyMapFrames: 'FOV Frames',
     fov: 'Field of view (FOV)',
     postsCount: {
       '1': 'post',

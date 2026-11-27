@@ -387,6 +387,8 @@ export default o({
     skyMapPrev: _,
     skyMapNext: _,
     skyMapPhotos: _,
+    skyMapOpacity: _,
+    skyMapFrames: _,
     fov: _,
     postsCount: languagable,
     older: _,

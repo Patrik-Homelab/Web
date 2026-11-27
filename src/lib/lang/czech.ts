@@ -431,6 +431,8 @@ export default lang.parse({
     skyMapPrev: 'Předchozí',
     skyMapNext: 'Další',
     skyMapPhotos: 'Fotky',
+    skyMapOpacity: 'Průhlednost fotek',
+    skyMapFrames: 'Rámečky FOV',
     fov: 'Zorné pole (FOV)',
     postsCount: {
       '1': 'příspěvek',
