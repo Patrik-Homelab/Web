@@ -8,7 +8,7 @@ export const load = (async ({ parent }) => {
     meta: {
       title: data.lang.navigation.contact,
       description: isCs
-        ? 'Kontaktujte mě - Discord, GitHub, email a sociální sítě.'
+        ? 'Kontaktuj mě – Discord, GitHub, e-mail a sociální sítě.'
         : 'Contact me - Discord, GitHub, email, and social networks.'
     }
   };

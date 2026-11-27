@@ -58,33 +58,34 @@ export const aboutCards: CardData[] = [
       cs: {
         name: 'Academia',
         category: 'Vzdělání',
-        shortDesc: 'Moje akademická cesta světem informatiky a technologií.',
+        shortDesc:
+          'Moje studijní cesta od chemie až po informatiku a počítačovou grafiku.',
         tags: ['VŠB-TUO', 'Informatika'],
         timeline: [
           {
             year: 'Před rokem 2018',
-            title: 'Rozcestí: Volba chemie vs. elektrotechnika',
-            desc: 'Od základní školy mě velmi bavila matematika a chemie, což mě postavilo před těžké rozhodování, kterou střední školu zvolit. Můj děda mi tehdy dal zásadní radu: podat si přihlášku na obě školy, a pokud mě vezmou na obě, vybrat si tu náročnější. Podal jsem si tedy přihlášky na Střední školu chemickou akademika Heyrovského v Ostravě a na dvě elektrotechnické školy v Havířově. Když dorazily výsledky přijímacího řízení, na elektrotechnice jsem skončil na 13. místě z 30 přijímaných studentů. Na chemické škole jsem se umístil na 57. místě ze 60 – od čáry neúspěchu mě dělilo jen pár desetin bodu, takže jsem se dostal jen tak tak. Vybral jsem si chemii s vědomím, že pokročilé chemické laboratoře a pokusy si doma sám nezařídím, což z ní dělalo jedinečnou příležitost ke vzdělávání. Tím začal můj příběh na chemické střední škole.'
+            title: 'Volba střední školy – chemie, nebo elektrotechnika?',
+            desc: 'Už na základní škole mě hodně bavila matematika a chemie, takže jsem stál před těžkým rozhodnutím, jakou střední školu zvolit. Děda mi tehdy dal zásadní radu: podat si přihlášku na oba obory, a pokud mě vezmou na oba, vybrat si ten náročnější. Podal jsem si tedy přihlášky na Střední průmyslovou školu chemickou akademika Heyrovského v Ostravě a na dvě elektrotechnické školy v Havířově. Na elektrotechnice jsem skončil na 13. místě ze 30 přijímaných uchazečů, zatímco na chemické škole na 57. místě ze 60 – od hranice nepřijetí mě dělilo jen pár desetin bodu, takže jsem se dostal jen tak tak. Nakonec jsem si vybral chemii s vědomím, že pokročilé chemické laboratoře a pokusy si doma sám nezařídím, což z ní dělalo jedinečnou příležitost. Tím začala moje cesta na chemické střední škole.'
           },
           {
-            year: '2018 - 2022',
-            title: 'Střední škola: Chemie, laboratoře a covidová výzva',
-            desc: 'Hned v prvním ročníku na střední škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy chemie než já, a byl jsem poměrně pozadu, přičemž největší obtíží pro mě byla organická chemie. Postupně jsem během let zjišťoval, že laboratoře mě sice baví, ale chemie jako celek není úplně to, co mě dlouhodobě naplňuje. Významný dopad na mé studium měla pandemie Covid-19, která zcela rozbila běžnou rutinu; online výuka většinou znamenala ráno se jen připojit k systému a jít buď dál spát, nebo hrát hry s kamarády. Školu jsem však úspěšně dokončil a získal maturitu. Rozhodl jsem se pokračovat na vysokou školu – hlavním důvodem kromě titulu bylo to, že mě akademické prostředí donutí naučit se komplexní věci, ke kterým bych doma sám nenašel dostatek vnitřní motivace. Podal jsem přihlášky na VUT v Brně (obor Informační technologie) a na VŠB v Ostravě (obor Informatika). Na VUT mě kvůli systému srovnávacích testů nepřijali, a přestože mě později kontaktovali ohledně účasti v dalším kole, rozhodl jsem se nastoupit na VŠB.'
+            year: '2018 – 2022',
+            title: 'Střední chemická škola a online výuka',
+            desc: 'Hned v prvním ročníku jsem zjistil, že většina spolužáků má mnohem pokročilejší základy chemie než já, takže jsem byl dost pozadu – největší zabíračkou pro mě byla organická chemie. Postupně jsem si uvědomil, že laboratoře mě sice baví, ale chemie jako celek není to, co by mě dlouhodobě naplňovalo. Velký dopad na studium měla také pandemie covidu-19, která úplně rozbila běžnou rutinu; online výuka většinou znamenala ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Školu jsem přesto úspěšně zakončil maturitou a rozhodl se pokračovat na vysokou školu – kromě samotného titulu hlavně proto, že mě akademické prostředí donutí naučit se komplexní věci, ke kterým bych doma sám nenašel dostatek motivace. Podal jsem si přihlášky na VUT v Brně (Informační technologie) a na VŠB-TUO v Ostravě (Informatika). Na VUT mě kvůli systému srovnávacích testů nepřijali, a přestože mě později kontaktovali s nabídkou dalšího kola, rozhodl jsem se nastoupit na VŠB-TUO.'
           },
           {
-            year: '2022 - 2025',
-            title: 'Bakalářské studium: Informatika na VŠB-FEI a projekt Kelvin',
-            desc: 'Nastoupil jsem na Fakultě elektrotechniky a informatiky (FEI) na VŠB v Ostravě ke studiu oboru Informatika. Své tříleté bakalářské studium jsem úspěšně zakončil obhajobou bakalářské práce na téma „Reaktivní Frontend pro elearningový systém“. V rámci této práce jsem se podílel na rozvoji školního informačního systému Kelvin. Pokrok byl v průběhu semestrů občas zpomalen specifickou povahou schvalovacích procesů v rámci akademického open-source projektu, kde se na revize odevzdané práce čekalo i několik týdnů. I přes tyto časové komplikace jsem bakalářskou práci úspěšně obhájil, prošel státní závěrečnou zkouškou a získal titul bakalář.'
+            year: '2022 – 2025',
+            title: 'Bakalářské studium informatiky na VŠB-TUO',
+            desc: 'Nastoupil jsem na Fakultu elektrotechniky a informatiky (FEI) VŠB-TUO v Ostravě, obor Informatika. Tříleté bakalářské studium jsem úspěšně zakončil obhajobou bakalářské práce na téma „Reaktivní frontend pro e-learningový systém“, v rámci které jsem se podílel na rozvoji školního informačního systému Kelvin. Postup během semestrů občas brzdily delší schvalovací procesy v rámci akademického open-source projektu, kde se na revizi odevzdané práce čekalo i několik týdnů. Navzdory těmto časovým komplikacím jsem práci úspěšně obhájil, složil státní závěrečnou zkoušku a získal titul Bc.'
           },
           {
-            year: '2025 - Současnost',
-            title: 'Magisterské studium: Počítačová grafika a akademické výzvy',
-            desc: 'Magisterské studium na VŠB pro mě bylo logickým krokem – věděl jsem, že mi další dva roky studia rozšíří obzory a umožní mi získat inženýrský titul. Zvolil jsem si obor Informatika, který přímo navazuje na bakalářský program, a jako své užší zaměření jsem si vybral Digitální zpracování obrazu a počítačovou grafiku. S masivním nástupem moderních AI nástrojů do výuky však studium získalo novou dynamiku; AI sice mnoho akademických úkolů zjednodušuje, ale zároveň je kvůli ní těžší udržet si motivaci řešit složité problémy zcela samostatně a pronikat do nich hluboko pod povrch. První rok studia jsem úspěšně zvládl a zakončil ho Semestrálním projektem na téma „Klasifikace Astronomických fotografií“. Navrhl jsem v něm systém, který analyzuje surové snímky z nočního pozorování a na základě statistického vyhodnocení a normálního rozdělení dat je třídí, čímž pomáhá eliminovat nekvalitní snímky znehodnocené mraky, mlhou či atmosférickými vlivy.'
+            year: '2025 – současnost',
+            title: 'Magisterské studium a počítačová grafika',
+            desc: 'Navazující magisterské studium na VŠB-TUO pro mě bylo logickým krokem – věděl jsem, že mi další dva roky rozšíří obzory a umožní získat inženýrský titul. Zvolil jsem obor Informatika se zaměřením na Digitální zpracování obrazu a počítačovou grafiku. S rychlým nástupem moderních AI nástrojů do výuky ale studium dostalo novou dynamiku – AI sice řadu akademických úkolů výrazně zjednodušuje, zároveň je však těžší udržet si motivaci řešit složité problémy zcela samostatně a jít opravdu do hloubky. První ročník jsem úspěšně završil semestrálním projektem na téma „Klasifikace astronomických fotografií“, v němž jsem navrhl systém pro analýzu surových nočních snímků a jejich třídění pomocí statistického vyhodnocení a normálního rozdělení, díky čemuž lze automaticky vyřadit snímky znehodnocené mraky, mlhou či atmosférickými vlivy.'
           },
           {
-            year: 'Současnost - Budoucnost',
-            title: 'Diplomová práce: Pokročilé zpracování dat v astrofotografii',
-            desc: 'Na výsledky svého semestrálního projektu bezprostředně navazuji v rámci přípravy své magisterské Diplomové práce. Celý klasifikační systém plánuji posunout na vyšší úroveň integrací pokročilých metod rozpoznávání obrazu, které budou snímky noční oblohy třídit zcela autonomně. Výsledný akademický projekt propojí teoretické znalosti z oblasti počítačové grafiky s uživatelsky definovanými kvalitativními kritérii pro čistotu dat. Cílem je úspěšné dokončení inženýrského studia a vytvoření přínosné práce, která najde uplatnění při reálném zpracování astronomických dat.'
+            year: 'Současnost – budoucnost',
+            title: 'Diplomová práce: Automatická klasifikace astrosnímků',
+            desc: 'Na výsledky semestrálního projektu přímo navazuji ve své magisterské diplomové práci. Celý klasifikační systém chci posunout na vyšší úroveň pomocí pokročilých metod rozpoznávání obrazu, které budou snímky noční oblohy třídit zcela autonomně. Projekt propojí teoretické poznatky z počítačové grafiky s uživatelsky nastavitelnými kritérii kvality dat. Mým cílem je úspěšně dokončit inženýrské studium a vytvořit praktický nástroj využitelný při reálném zpracování astronomických dat.'
           }
         ]
       },
@@ -138,54 +139,54 @@ export const aboutCards: CardData[] = [
         name: 'Codenus',
         category: 'Programování',
         shortDesc:
-          'Jak jsem se dostal k programování, moje oblíbené technologie a milníky.',
+          'Jak jsem se dostal k programování, moje oblíbené technologie a důležité milníky.',
         tags: ['SvelteKit', 'Rust', 'Tauri', 'Node.js', 'React'],
         timeline: [
           {
             year: '2016',
-            title: 'První jiskra: Drag-and-Drop rozvržení',
-            desc: 'Moje úplně první zkušenost s webovým vývojem začala ještě před nástupem na střední školu. Tehdy jsem začal experimentovat s jednoduchým webovým designem a strukturou stránek, přičemž jsem zkoušel klikat v drag-and-drop nástroji WYSIWYG Web Builder, abych vůbec dostal do ruky cit pro to, jak se jednotlivé prvky na obrazovce skládají k sobě.',
+            title: 'První pokusy s tvorbou webů',
+            desc: 'Moje úplně první zkušenost s webovým vývojem začala ještě před nástupem na střední školu. Experimentoval jsem s jednoduchým designem a rozvržením stránek v drag-and-drop nástroji WYSIWYG Web Builder, abych vůbec získal cit pro to, jak se jednotlivé prvky na stránce skládají k sobě.',
             thumbnail: '/images/webBuilder.jpg',
             image: '/images/webBuilder_hr.jpg'
           },
           {
-            year: '2018 - 2022',
-            title: 'Tajný programátor: Středoškolské laboratoře a samostudium',
-            desc: 'Hned v prváku na chemické škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy než já a s chemií (hlavně s tou organickou) jsem docela bojoval. Postupně jsem zjišťoval, že laboratoře jsou sice fajn, ale chemie jako taková mě úplně nenaplňuje. Zlom přišel s pandemií Covid-19, která úplně rozbila běžnou rutinu – výuka se přesunula do online prostoru, což většinou znamenalo ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Já jsem ale tento čas doma využil k tomu, že jsem se začal intenzivně a tvrdohlavě učit programovat. Mezi lety 2018 a 2020 jsem se zaměřil na tvorbu svých prvních osobních webů a v letech 2020 až 2022 se mi podařilo úspěšně upevnit své programátorské základy. Střední školu jsem sice úspěšně odmaturoval, ale věděl jsem, že chci jít dál cestou IT.',
+            year: '2018 – 2022',
+            title: 'Samostudium programování při střední škole',
+            desc: 'Hned v prváku na chemické škole jsem zjistil, že většina spolužáků má mnohem pokročilejší základy než já, a s chemií (hlavně organickou) jsem docela bojoval. Postupně jsem si uvědomil, že laboratoře jsou sice fajn, ale chemie jako taková mě úplně nenaplňuje. Zlom přišel s pandemií covidu-19, která rozbila běžnou rutinu – výuka se přesunula do online prostoru, což většinou znamenalo ráno se jen připojit a jít buď dál spát, nebo hrát hry s kamarády. Já jsem ale tento čas doma využil k tomu, abych se začal intenzivně a vytrvale učit programovat. Mezi lety 2018 a 2020 jsem se zaměřil na tvorbu prvních osobních webů a v letech 2020 až 2022 jsem upevnil své programátorské základy. Na střední škole jsem úspěšně odmaturoval, ale věděl jsem, že dál chci jít cestou IT.',
             thumbnail: '/images/oldPage.png',
             image: '/images/oldPage_hr.png'
           },
           {
             year: '2022',
-            title: 'Rozšiřování ekosystému: DiscordJS a SvelteKit',
-            desc: 'Tento rok byl pro můj technologický stack klíčový, protože jsem se posunul od úplných základních stavebních bloků k modernímu javascriptovému ekosystému. Výrazně jsem rozšířil své obzory, když jsem kompletně pronikl do **SvelteKit** a začal vyvíjet vlastní automatizační boty pomocí **DiscordJS**.',
+            title: 'Přechod na SvelteKit a vývoj Discord botů',
+            desc: 'Tento rok byl pro můj technologický stack zásadní – posunul jsem se od úplných základů k modernímu JavaScriptovému ekosystému. Výrazně jsem rozšířil své obzory, naplno pronikl do SvelteKitu a začal vyvíjet vlastní automatizační boty pomocí Discord.js.',
             thumbnail: '/images/djs.png',
             image: '/images/djs_hr.png'
           },
           {
-            year: '2022 - 2025',
-            title: 'Akademický hluboký ponor: Bakalářské studium Informatiky',
-            desc: 'Abych se donutil studovat i komplexnější témata, ke kterým bych sám doma nenašel dostatek vnitřní motivace, rozhodl jsem se pro vysokou školu. Podal jsem si přihlášku na IT na VUT v Brně a na Informatiku na VŠB v Ostravě. Na VUT mě kvůli srovnávacím testům nevzali, a přestože mě později zvali do dalšího kola, zvolil jsem VŠB - FEI. Studium jsem zakončil bakalářskou prací na téma *„Reaktivní Frontend pro elearningový systém“*, kde bylo mým cílem přepsat open-source školní systém **Kelvin** do reaktivního frontendu. Konkrétně šlo o přepis komponent z legacy Svelte 3 do **Vue 3**. I když byl vývoj kvůli open-source povaze projektu pomalý – po vytvoření Pull Requestu jsem často čekal týden až dva na code review, než jsem mohl pokračovat dál – práci jsem úspěšně obhájil, složil státnice a získal titul bakalář.'
+            year: '2022 – 2025',
+            title: 'Bakalářské studium a projekt Kelvin',
+            desc: 'Abych se donutil studovat i komplexnější témata, ke kterým bych doma sám nenašel dostatek motivace, rozhodl jsem se pro vysokou školu. Podal jsem si přihlášku na IT na VUT v Brně a na Informatiku na VŠB-TUO v Ostravě. Na VUT mě kvůli srovnávacím testům nevzali, a přestože mě později zvali do dalšího kola, zvolil jsem VŠB-TUO (FEI). Studium jsem zakončil bakalářskou prací na téma „Reaktivní frontend pro e-learningový systém“, kde bylo mým cílem modernizovat open-source školní systém Kelvin přepisem komponent ze staršího Svelte 3 do Vue 3. I když vývoj brzdila pomalejší open-source revize – po vytvoření Pull Requestu jsem často čekal týden až dva na code review – práci jsem úspěšně obhájil, složil státnice a získal titul Bc.'
           },
           {
             year: '2025',
-            title: 'Profesní skok: Stáž v Profiq a CI/CD pipeline',
-            desc: 'Hned po státnicích na bakaláři jsem udělal svůj první velký krok do praxe a nastoupil jako stážista do firmy **Profiq.com**. Toto firemní prostředí mě obrovsky posunulo dopředu jak technicky, tak v oblasti týmové spolupráce. Získal jsem praktické zkušenosti s **React.JS** a **Google Firebase**, naučil se fungovat v agilním týmu za použití Slacku a GitLabu, a hlavně jsem se poprvé setkal s produkčním **CI/CD deployem**. Tento automatizovaný přístup se mi zalíbil natolik, že ho od té doby aplikuji na GitHubu u všech svých osobních projektů.'
+            title: 'Stáž ve firmě Profiq a první zkušenosti z praxe',
+            desc: 'Hned po bakalářských státnicích jsem udělal první velký krok do praxe a nastoupil jako stážista do firmy Profiq.com. Firemní prostředí mě výrazně posunulo jak technicky, tak v oblasti týmové spolupráce. Získal jsem praktické zkušenosti s Reactem a Google Firebase, naučil se fungovat v agilním týmu se Slackem a GitLabem a hlavně jsem se poprvé setkal s produkčním CI/CD nasazováním. Tento automatizovaný přístup se mi zalíbil natolik, že ho od té doby používám na GitHubu u všech svých osobních projektů.'
           },
           {
-            year: '2025 - Současnost',
-            title: 'Cesta za vysokým výkonem: Magisterské studium, Rust a Tauri',
-            desc: 'Pokračování na magisterském studiu Informatiky na VŠB pro mě bylo logickým krokem, přičemž jsem si jako zaměření vybral **Digitální zpracování obrazu a počítačovou grafiku**. Musím přiznat, že s masivním nástupem AI nástrojů začalo být studium trochu nudné, protože AI všechno až moc zjednodušuje a člověk pak ztrácí motivaci věci louskat sám a jít do hloubky. Abych si udržel ostrou mysl a posunul své technické hranice, naučil jsem se programovat v jazyce **Rust**. Kombinací Rustu se SvelteKitem v rámci frameworku **Tauri** jsem objevil možnost, jak vytvářet neuvěřitelně lehké a extrémně rychlé desktopové i mobilní aplikace.'
+            year: '2025 – současnost',
+            title: 'Magisterské studium, Rust a Tauri',
+            desc: 'Pokračování na magisterském studiu informatiky na VŠB-TUO pro mě bylo logickým krokem a jako zaměření jsem si vybral Digitální zpracování obrazu a počítačovou grafiku. Přiznávám, že s masivním nástupem AI nástrojů začalo být studium místy trochu nudné – AI řadu úkolů až moc zjednodušuje a člověk pak hůře hledá motivaci řešit věci sám do hloubky. Abych neustrnul a posunul své technické hranice, naučil jsem se programovat v jazyce Rust. Díky kombinaci Rustu se SvelteKitem ve frameworku Tauri jsem objevil možnost vytvářet neuvěřitelně lehké a rychlé desktopové i mobilní aplikace.'
           },
           {
-            year: '2025 - 2026',
-            title: 'Spojení kódu s hvězdami: Projekt astronomické klasifikace',
-            desc: 'Na konci prvního ročníku navazujícího studia jsem propojil své programátorské dovednosti se svou velkou vášní pro astrofotografii v rámci Semestrálního projektu: vytvořil jsem aplikaci pro **Klasifikaci astronomických fotografií**. Software automaticky načítá raw snímky z teleskopu, analyzuje je a na základě matematických metrik a normálního rozdělení jim uděluje body od 1 (nejlepší, nejblíže ke statistickému středu) do 0 (špatná data). Díky tomu dokáže aplikace automaticky vyfiltrovat snímky zničené mrakem, mlhou nebo rozmazanými hvězdami, i když samotný algoritmus vyžadoval hodně ručního ladění konstant pro konkrétní teleskop, kameru a dataset.'
+            year: '2025 – 2026',
+            title: 'Klasifikace astronomických fotografií',
+            desc: 'Na konci prvního ročníku navazujícího studia jsem propojil programování se svou vášní pro astrofotografii v rámci semestrálního projektu a vytvořil aplikaci pro klasifikaci astronomických fotografií. Software automaticky načítá surové snímky z dalekohledu, analyzuje je a na základě matematických metrik a normálního rozdělení jim přiděluje skóre od 1 (nejlepší, nejblíže statistickému středu) po 0 (nekvalitní data). Aplikace tak dokáže automaticky vyfiltrovat snímky znehodnocené mraky, mlhou či rozmazanými hvězdami, i když samotný algoritmus vyžadoval hodně ručního ladění konstant pro konkrétní dalekohled, kameru a sadu dat.'
           },
           {
-            year: 'Současnost - Budoucnost',
-            title: 'Open-Source vize: Deep Learning a hluboký vesmír',
-            desc: 'Na svůj semestrální projekt momentálně navazuji ve své **Diplomové práci**, kde chci celý systém posunout na úplně novou úroveň. Trénuji **konvoluční neuronovou síť (CNN)**, která bude snímky klasifikovat zcela automaticky a sama rozpozná „dobrý“ a „špatný“ záběr. Výsledný systém propojí neuronovou siť s uživatelsky nastavitelnými metrikami, takže si astrofotografové budou moci určit přesné hranice pro přijetí snímků do finálního zpracování (např. FWHM < 2.8 && star_count > 1000). Celý projekt plánuji vydat jako open-source na svém GitHubu, aby ho mohl volně využívat jak já, tak kdokoliv další z astronomické komunity.'
+            year: 'Současnost – budoucnost',
+            title: 'Diplomová práce a open-source nástroj s neuronovou sítí',
+            desc: 'Na semestrální projekt momentálně navazuji ve své diplomové práci, kde chci celý systém posunout na úplně novou úroveň. Trénuji konvoluční neuronovou síť (CNN), která bude snímky klasifikovat zcela automaticky a sama rozpozná dobrý a špatný záběr. Výsledný systém propojí neuronovou síť s uživatelsky nastavitelnými metrikami, takže si astrofotografové budou moci určit přesné limity pro výběr snímků do finálního zpracování (např. FWHM < 2.8 && star_count > 1000). Celý projekt plánuji vydat jako open-source na svém GitHubu, abych ho mohl využívat nejen já, ale kdokoliv z astrofotografické komunity.'
           }
         ]
       },
@@ -260,39 +261,38 @@ export const aboutCards: CardData[] = [
         name: 'Nebula',
         category: 'Astrofotografie',
         shortDesc:
-          'Focení vesmíru: moje dobrodružství při zachycování hlubokého vesmíru.',
+          'Focení noční oblohy a moje cesta k zachycování objektů hlubokého vesmíru.',
         tags: ['Vesmír', 'DSO', 'PixInsight', 'Mlhoviny'],
         timeline: [
           {
             year: 'Červen 2023',
-            title: 'Mobilní jiskra: Objevování noční oblohy',
-            desc: 'Moje cesta do hlubin vesmíru začala víceméně nečekaně, když jsem si v červnu 2023 pořídil nový telefon Google Pixel 7a. Výhodou telefonů řady Pixel je, že běžnou verzi Androidu doplňuje i oficiální aplikace Google Fotoaparát disponující specializovaným astrofotografickým módem. Fascinován touto funkcí jsem začal ze své zahrady zkoušet fotit noční oblohu na dlouhé expozice, abych zjistil, jaké skryté detaily dokáže mobilní senzor zachytit. Přibližně ve stejné době jsem se pokusil posunout své limity pomocí staré rodinné kamery, která nabízela obrovský 60násobný optický zoom (až 80násobný digitální). Pokusil jsem se s ní vyfotit Měsíc a aspoň trochu zachytit Saturn, ale výsledky byly poměrně slabé, což ve mně pouze probudilo touhu po skutečném astronomickém vybavení.',
+            title: 'První noční snímky mobilem',
+            desc: 'Moje cesta k focení noční oblohy začala docela nečekaně v červnu 2023, kdy jsem si pořídil telefon Google Pixel 7a. Jeho oficiální aplikace Google Fotoaparát má speciální astrofotografický režim, který mě okamžitě nadchl. Začal jsem ze zahrady zkoušet dlouhé expozice, abych zjistil, jaké detaily dokáže mobilní senzor zachytit. Zhruba ve stejné době jsem zkusil posunout limity i pomocí staré rodinné kamery s 60násobným optickým (a až 80násobným digitálním) zoomem. Pokusil jsem se s ní vyfotit Měsíc a alespoň náznak Saturnu, ale výsledky byly dost slabé – a právě to ve mně probudilo chuť pořídit si skutečné astronomické vybavení.',
             image: '/images/night_sky.jpg'
           },
           {
             year: 'Konec roku 2023',
-            title: 'První skutečná optika: Teleskop k 20. narozeninám',
-            desc: 'Rodiče si postupně všimli mé rostoucí fascinace vesmírem a hvězdnou oblohou, a proto mě k mým 20. narozeninám překvapili koupí mého úplně prvního teleskopu – Celestron Astromaster 130EQ. Vyzbrojen skutečnou optikou jsem začal trávit noci pozorováním oblohy, vyhledáváním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem chtěl vizuální zážitky také zdokumentovat, brzy jsem své možnosti rozšířil nákupem dedikované planetární kamery ZWO ASI678MC a začal zkoušet skutečné fotografování. S touto novou sestavou se mi podařilo úspěšně vyfotit Jupiter a pořídit detailní snímky Měsíce.',
+            title: 'První dalekohled k 20. narozeninám',
+            desc: 'Rodiče si všimli mé rostoucí fascinace vesmírem a noční oblohou, a proto mě ke 20. narozeninám překvapili mým úplně prvním dalekohledem – Celestron AstroMaster 130EQ. Vyzbrojený skutečnou optikou jsem začal trávit noci pozorováním Měsíce, planet a všeho, co se mi na obloze podařilo najít. Protože jsem si zážitky chtěl také zaznamenat, brzy jsem sestavu rozšířil o dedikovanou planetární kameru ZWO ASI678MC a pustil se do opravdového focení. S touto výbavou se mi podařilo vyfotit Jupiter a pořídit detailní snímky Měsíce.',
             image: '/image/0d7762d19c705f971526533e210edbc6.jpg?format=jpg'
           },
           {
             year: '2024',
-            title: 'Vstup do hlubokého vesmíru: Montáž Star Adventurer',
-            desc: 'Následující rok znamenal obrovský posun v mém přístupu, protože jsem přešel od pozorování planet k objektům hlubokého vesmíru (DSO). Pořídil jsem si svoji první motorizovanou rovníkovou montáž SkyWatcher Star Adventurer GTI, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem si uvědomil, že focení vzdálených mlhovin a galaxií mě fascinuje mnohem více než planety. Abych si vybudoval specializovaný DSO setup, postupně jsem kompletně obměnil výbavu: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro pro eliminaci tepelného šumu a starý teleskop nahradil prémiovým refraktorem William Optics RedCat 51 s naváděcím dalekohledem. S touto pokročilou sestavou jsem úspěšně vyfotit své první mlhoviny, galaxie a další objekty.',
+            title: 'Přechod na hluboký vesmír a nová sestava',
+            desc: 'Následující rok přinesl zásadní posun – od pozorování planet jsem přešel k objektům hlubokého vesmíru (DSO). Pořídil jsem si první motorizovanou rovníkovou montáž Sky-Watcher Star Adventurer GTi, která mi konečně umožnila fotit dlouhé expozice nezbytné pro zachycení slabých a vzdálených objektů. Rychle jsem zjistil, že focení mlhovin a galaxií mě baví mnohem víc než planety. Postupně jsem proto kompletně obměnil výbavu pro DSO: koupil jsem chlazenou astrofotografickou kameru ZWO ASI585MC Pro kvůli eliminaci tepelného šumu a původní dalekohled nahradil refraktorem William Optics RedCat 51 s pointačním dalekohledem. S touto sestavou jsem úspěšně vyfotil své první mlhoviny, galaxie a další objekty.',
             image: '/image/217bf73bd3408cf93bcd671d4ee6880c.png?format=jpg'
           },
           {
             year: '2025',
-            title:
-              'Technická optimalizace a mistrovství ve zpracování: Budování vzdáleného setupu',
-            desc: 'Jak moje vášeň rostla, rok 2025 se stal rokem těžké technické optimalizace mého DSO setupu. Výrazně jsem vylepšil přesnost navádění pořízením nové high-end montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) společně s dedikovaným mini PC, které celou sestavu v noci spolehlivě řídí. Ruku v ruce s hardwarem prošlo masivním vývojem i samotné softwarové zpracování dat. Začínal jsem se skládáním a úpravami v kombinaci programů Deep Sky Stacker a Siril, později jsem přešel na kombinaci Deep Sky Stacker a PixInsight, až jsem nakonec celý proces skládání a editace kompletně přesunul do PixInsightu, abych dosáhl špičkových výsledků.',
+            title: 'Automatizace sestavy a přechod na PixInsight',
+            desc: 'S rostoucím nadšením se rok 2025 nesl ve znamení důkladné technické optimalizace mé DSO sestavy. Výrazně jsem zlepšil přesnost navádění pořízením montáže Proxisky Ragdoll 17 Pro a celý proces automatizoval přidáním elektronického ostření (Gemini Astro EAF) a dedikovaného mini PC, které celou sestavu v noci spolehlivě řídí. Společně s hardwarem prošlo velkým vývojem i softwarové zpracování dat – začínal jsem v kombinaci DeepSkyStacker a Siril, později přešel na DeepSkyStacker s PixInsightem a nakonec celý proces skládání i úprav přesunul výhradně do PixInsightu pro dosažení špičkových výsledků.',
             image: '/image/d64650ba622b88f6c1be201f0ec834f2.png?format=jpg'
           },
 
           {
             year: 'Červen 2026',
-            title: 'Rozšiřování obzorů: 10palcový planetární upgrade',
-            desc: "V červnu 2026 jsem se rozhodl vrátit ke svým kořenům v podobě focení planet a Měsíce a pořídil jsem si masivní hardwarový upgrade. Nově jsem si koupil výkonný planetární teleskop Skywatcher Flextube 10'' GoTo. Tento obrovský teleskop mi umožňuje precizně sledovat a pořizovat vysoce detailní snímky planet a měsíčního povrchu, což vytváří dokonalou rovnováhu k mému širokoúhlému setupu pro focení hlubokého vesmíru.",
+            title: 'Návrat k planetám s 10palcovým dalekohledem',
+            desc: "V červnu 2026 jsem se rozhodl vrátit ke svým začátkům s focením planet a Měsíce a pořídil si pořádný hardwarový upgrade – výkonný planetární dalekohled Sky-Watcher Flextube 10'' GoTo. Tento velký dalekohled mi umožňuje přesně sledovat a zachycovat jemné detaily planet i měsíčního povrchu, takže skvěle doplňuje mou širokoúhlou sestavu pro hluboký vesmír.",
             image: '/image/40a0e0f84515a42f7516f52ec5d3a8ff.png?format=jpg'
           }
         ]

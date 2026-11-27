@@ -299,7 +299,9 @@
                       >
                         <i class="bi bi-zoom-in animate-pulse text-2xl"></i>
                         <span class="text-xs font-semibold tracking-widest uppercase"
-                          >Click to zoom</span
+                          >{currentLang === 'cs'
+                            ? 'Klikni pro zvětšení'
+                            : 'Click to zoom'}</span
                         >
                       </div>
                     </button>
@@ -327,7 +329,9 @@
                       >
                         <i class="bi bi-zoom-in animate-pulse text-2xl"></i>
                         <span class="text-xs font-semibold tracking-widest uppercase"
-                          >Click to zoom</span
+                          >{currentLang === 'cs'
+                            ? 'Klikni pro zvětšení'
+                            : 'Click to zoom'}</span
                         >
                       </div>
                     </button>

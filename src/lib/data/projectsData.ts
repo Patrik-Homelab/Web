@@ -338,11 +338,11 @@ export const projectsSeed: ProjectSeedItem[] = [
   {
     uuid: 'c1a2b3d4-e5f6-4789-8012-3456789abc01',
     name: {
-      cs: 'AgentManager (Homelab AI Agents)',
+      cs: 'AgentManager',
       en: 'AgentManager (Homelab AI Agents)'
     },
     description: {
-      cs: 'Vlastní self-hosted platforma v **SvelteKit** a **TypeScriptu** pro správu a běh autonomních AI agentů na homelabu. Umožňuje agentům definovat vlastní API a kódové nástroje (tools), spouštět úlohy podle cron rozvrhu, udržovat stav, sledovat logy v reálném čase a ovládat agenty přes dedikovaný MCP server.',
+      cs: 'AgentManager je vlastní self-hosted platforma pro běh autonomních AI agentů a automatizovaných úloh. Místo toho, abych pro každý nový nápad vytvářel a nasazoval samostatnou aplikaci, mohu zde díky připravenému runtime, pomocným funkcím a logování snadno nasadit agenta či automatizovanou službu propojenou s AI (Gemini).\n\nSoučástí platformy je také MCP server a vlastní CLI nástroj (HAM – Home Agent Manager), díky kterému mohu agenta nejprve napsat a otestovat lokálně a poté ho jedním příkazem nasadit, případně ho nechat ladit jiným AI agentem přímo přes MCP.\n\nAktuálně na platformě provozuji automatizovaný průzkum informací na internetu, vyhodnocování kamerových záznamů a agenta pro zpracování příchozích e-mailů a tvorbu přehledných reportů.',
       en: 'Self-hosted platform built with **SvelteKit** and **TypeScript** for managing and running autonomous AI agents in my homelab. It allows defining custom API and code tools, scheduling agent runs via cron, managing persistent agent state, inspecting real-time execution logs, and controlling agents through a dedicated MCP server.'
     },
     date: '2026-11-06',
@@ -357,7 +357,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Stream Manager (StreamPlatform)'
     },
     description: {
-      cs: 'Self-hosted multi-streamovací platforma pro **YouTube**, **Twitch** a **Kick**. Nabízí sjednocený real-time multi-chat se zachováním nativních odznaků a barev jednotlivých platforem, plnou podporu **7TV emotů**, moderaci napříč platformami (mazání zpráv, timeouty, bany, schvalování pozastavených zpráv), odesílání zpráv na všechny platformy najednou a transparentní OBS overlaye.',
+      cs: 'Self-hosted multi-streamovací platforma pro **YouTube**, **Twitch** a **Kick**. Nabízí sjednocený real-time multi-chat, vlastní overlaye pro streamovací software a událostmi řízené (event-driven) akce – při vybrané události lze zobrazit alert, poslat zprávu do chatu, upravit proměnnou nebo spustit v podstatě cokoliv dalšího.',
       en: 'Self-hosted multi-streaming control platform for **YouTube**, **Twitch**, and **Kick**. Features a unified real-time multi-chat preserving native platform badges and colors, full **7TV emote** support, cross-platform moderation (message deletion, timeouts, bans, held message approval), multi-cast message sending, and transparent OBS overlays.'
     },
     date: '2026-11-02',
@@ -372,7 +372,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Tonda AI Discord Assistant'
     },
     description: {
-      cs: 'Pokročilý Discord AI asistent postavený na `discord.js` a **Google Gemini** (`@google/genai`). Funguje nejen jako klasický serverový bot, ale i jako **User-Installable App**, kterou si uživatelé mohou nainstalovat na svůj účet a používat v DM, skupinách i na libovolných serverech. Podporuje vlastní API klíče, přepínání modelů s automatickým fallbackem, dlouhodobou paměť, analýzu snímků z GIFů a kontextové menu.',
+      cs: 'Pokročilý Discord AI asistent postavený na `discord.js` a **Google Gemini** (`@google/genai`). Funguje nejen jako klasický serverový bot, ale také jako **User-Installable App**, kterou si lze nainstalovat přímo na vlastní účet a používat ji v soukromých zprávách, skupinách i na libovolných serverech. Podporuje vlastní API klíče, přepínání modelů s automatickým fallbackem, dlouhodobou paměť i analýzu snímků z GIFů – zkrátka všestranný AI parťák na Discordu.\n\n*Vytvořeno pro zábavu a osobní účely.*',
       en: 'Advanced Discord AI assistant powered by `discord.js` and **Google Gemini** (`@google/genai`). Works both as a server bot and as a **User-Installable Application** usable across DMs, group chats, and external servers. Supports personal API keys, multi-model selection with automatic fallback, persistent user memory, GIF frame extraction, and message context menus.'
     },
     date: '2026-11-01',
@@ -387,7 +387,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Proxmox Homelab Dashboard'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/local)\n\nModerní výchozí stránka do prohlížeče a monitorovací dashboard pro **Proxmox VE** infrastrukturu napsaný v **SvelteKit 5** a **Tailwind CSS**. Zobrazuje interaktivní grafy vytížení v reálném čase (CPU, RAM, síťový provoz, disk) přes Proxmox API a obsahuje rychlé záložky na self-hosted služby.',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/local)\n\nModerní domovská stránka do prohlížeče a monitorovací dashboard pro infrastrukturu **Proxmox VE**, postavený na **SvelteKitu 5** a **Tailwind CSS**. Přes Proxmox API zobrazuje v reálném čase interaktivní grafy vytížení (CPU, RAM, síťový provoz i disk) a nabízí rychlé záložky na self-hosted služby.',
       en: '[**GitHub Repository**](https://github.com/patrick11514/local)\n\nModern browser startpage and monitoring dashboard for **Proxmox VE** infrastructure built with **SvelteKit 5** and **Tailwind CSS**. Visualizes real-time RRD telemetry graphs (CPU, memory, network traffic, disk usage) via the Proxmox API alongside customizable homelab bookmarks.'
     },
     date: '2026-01-19',
@@ -402,7 +402,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Factorio Updater'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/factorio-updater)\n\nTerminálová aplikace (TUI) napsaná v jazyce **Rust** pomocí knihovny **Ratatui** jako projekt do předmětu **PvR (Programování v Rustu)** na **VŠB-TUO**. Umožňuje přihlášení přes oficiální Factorio účet, stahování a správu více instalací hry Factorio a především jejich rychlé inkrementální aktualizování pomocí rozdílových patchů místo stahování celé hry znovu.',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/factorio-updater)\n\nTerminálová aplikace (TUI) napsaná v jazyce **Rust** s knihovnou **Ratatui** jako projekt do předmětu **PvR (Programování v Rustu)** na **VŠB-TUO**. Umožňuje přihlášení přes oficiální účet Factorio, stahování a správu více instalací hry a především jejich rychlé inkrementální aktualizace pomocí rozdílových patchů, aniž by bylo nutné stahovat celou hru znovu.',
       en: '[**GitHub Repository**](https://github.com/patrick11514/factorio-updater)\n\nTerminal UI (TUI) application written in **Rust** using **Ratatui** as a project for the **PvR (Programming in Rust)** course at **VŠB-TUO**. It authenticates with a Factorio account, manages multiple game installations across platforms, and performs fast incremental updates using binary patches instead of re-downloading full builds.'
     },
     date: '2026-01-03',
@@ -417,7 +417,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'WPlace Canvas Downloader'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/WPlaceDownloader)\n\nNástroj a knihovna v **TypeScriptu** (Node.js) pro stahování, lokální cachování a skládání jednotlivých dlaždic (chunků) plátna ze stránky [wplace.live](https://wplace.live) do jednoho celistvého obrázku ve vysokém rozlišení.',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/WPlaceDownloader)\n\nNástroj a knihovna v **TypeScriptu** (Node.js) pro stahování, lokální cachování a skládání jednotlivých dlaždic (chunků) plátna ze stránky [wplace.live](https://wplace.live) do jednoho celistvého obrázku ve vysokém rozlišení.\n\nPro zajímavost se můžeš podívat na [delší timelapse | Delší timelapse](https://www.youtube.com/watch?v=YfVyvKAH3Dc).',
       en: '[**GitHub Repository**](https://github.com/patrick11514/WPlaceDownloader)\n\nTypeScript (Node.js) CLI tool and library for downloading, locally caching, and stitching canvas tile chunks from [wplace.live](https://wplace.live) into a single high-resolution composite image.'
     },
     date: '2026-01-02',
@@ -432,7 +432,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'FileManager'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/FileManager)\n\nSelf-hosted webová aplikace v **SvelteKit 5**, **TypeScriptu**, **Tailwind CSS v4** a **Kysely** (MySQL) pro nahrávání, správu a rychlé sdílení souborů a obrázků.',
+      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/FileManager)\n\nSelf-hosted webová aplikace postavená na **SvelteKitu 5**, **TypeScriptu**, **Tailwind CSS v4** a **Kysely** (MySQL) pro nahrávání, správu a rychlé sdílení souborů a obrázků.',
       en: '[**GitHub Repository**](https://github.com/Patrik-Homelab/FileManager)\n\nSelf-hosted web application built with **SvelteKit 5**, **TypeScript**, **Tailwind CSS v4**, and **Kysely** (MySQL) for uploading, organizing, and sharing files and images.'
     },
     date: '2025-12-16',
@@ -447,7 +447,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'FamilyAPP'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/FamilyAPP)\n\nProgresivní webová aplikace (PWA) v **SvelteKit** a **TypeScriptu** s MariaDB databází, kterou používáme v rodině. Obsahuje moduly **Dárkovník** (seznamy přání na Vánoce a narozeniny), **Dlužníček** (evidence společných výdajů a dluhů), **Datumovník** (rodinný kalendář propojený s Google Kalendářem) a sdílené poznámky.',
+      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/FamilyAPP)\n\nProgresivní webová aplikace (PWA) ve **SvelteKitu** a **TypeScriptu** s databází MariaDB, kterou používáme v rodině. Obsahuje moduly **Dárkovník** (seznamy přání na Vánoce a narozeniny), **Dlužníček** (evidence společných výdajů a dluhů), **Datumovník** (rodinný kalendář propojený s Google Kalendářem) a sdílené poznámky.',
       en: '[**GitHub Repository**](https://github.com/Patrik-Homelab/FamilyAPP)\n\nProgressive Web App (PWA) built with **SvelteKit**, **TypeScript**, and MariaDB used by our family. Includes modules for birthday/Christmas wishlists (*Dárkovník*), shared expense and debt tracking (*Dlužníček*), a family event calendar synced with Google Calendar (*Datumovník*), and shared notes.'
     },
     date: '2024-12-30',
@@ -462,7 +462,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Tondík Web Server'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/TondikWebServer)\n\nHTTP Web Server vytvořený jako projekt do předmětu **C++** na **VŠB-TUO**.\n\nMá dva módy:\n1. **Dev mód**: Servíruje jednu složku se statickými soubory a log vypisuje přímo do konzole.\n2. **Server mód**:\n   - Využívá konfigurační soubory\n   - Zvládá obsluhovat více hostname (domén/subdomén), kdy 1 hostname = 1 config soubor\n   - Podporuje servírování statických souborů i **Reverse Proxy (`proxy_pass`)**',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/TondikWebServer)\n\nHTTP webový server vytvořený jako projekt do předmětu **C++** na **VŠB-TUO**.\n\nNabízí dva režimy:\n1. **Dev režim**: Obsluhuje jednu složku se statickými soubory a logy vypisuje přímo do konzole.\n2. **Server režim**:\n   - Řídí se konfiguračními soubory\n   - Zvládá obsluhovat více domén a subdomén (1 hostname = 1 konfigurační soubor)\n   - Podporuje jak statické soubory, tak **reverse proxy (`proxy_pass`)**',
       en: '[**GitHub Repository**](https://github.com/patrick11514/TondikWebServer)\n\nHTTP Web Server created as a project for the **C++** course at **VŠB-TUO**.\n\nFeatures two modes:\n1. **Dev Mode**: Serves a single static directory and logs requests directly to the console.\n2. **Server Mode**:\n   - Driven by configuration files\n   - Supports multiple virtual hosts (domains/subdomains), with one config file per hostname\n   - Supports both static file serving and **Reverse Proxy (`proxy_pass`)**'
     },
     date: '2024-05-26',
@@ -477,7 +477,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'My Personal Website'
     },
     description: {
-      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/Web)\n\nMoje osobní webové stránky a portfolio s astrofotografickou galerií, živou telemetrií z dalekohledu, přehledem projektů a administrací, na kterých se právě nacházíte.',
+      cs: '[**Odkaz na GitHub**](https://github.com/Patrik-Homelab/Web)\n\nMoje osobní webové stránky a portfolio – přesně ty, na kterých se právě nacházíš. Obsahují astrofotografickou galerii s interaktivní mapou oblohy, živou telemetrii z dalekohledu, přehled projektů i vlastní administraci.',
       en: '[**GitHub Repository**](https://github.com/Patrik-Homelab/Web)\n\nMy personal website and portfolio featuring my astrophotography gallery with interactive sky maps, live telescope telemetry, project showcase, and custom admin panel—the website you are currently browsing.'
     },
     date: '2024-02-24',
@@ -497,11 +497,11 @@ export const projectsSeed: ProjectSeedItem[] = [
   {
     uuid: 'd67411ac-8afe-4036-9613-92526f6c0ac5',
     name: {
-      cs: 'Sveltekit API (@patrick115/sveltekitapi)',
+      cs: 'SvelteKit API (@patrick115/sveltekitapi)',
       en: 'Sveltekit API (@patrick115/sveltekitapi)'
     },
     description: {
-      cs: '[**Odkaz na npm**](https://www.npmjs.com/package/@patrick115/sveltekitapi) • [**Odkaz na GitHub**](https://github.com/patrick11514/SveltekitAPI)\n\nKnihovna, která umožňuje jednoduše vytvářet end-to-end typesafe API pro [SvelteKit](https://kit.svelte.dev). Využívá TypeScriptu pro automatické předávání typů ze serveru do klienta a umožňuje okamžitě pracovat s definicí API bez ručního psaní fetch volání.',
+      cs: '[**Odkaz na npm**](https://www.npmjs.com/package/@patrick115/sveltekitapi) • [**Odkaz na GitHub**](https://github.com/patrick11514/SveltekitAPI)\n\nKnihovna pro snadnou tvorbu end-to-end typově bezpečného API ve [SvelteKitu](https://kit.svelte.dev). Využívá TypeScript k automatickému přenosu typů ze serveru na klienta, takže lze s definovaným API pracovat okamžitě bez ručního psaní `fetch` volání.',
       en: '[**npm Package**](https://www.npmjs.com/package/@patrick115/sveltekitapi) • [**GitHub Repository**](https://github.com/patrick11514/SveltekitAPI)\n\nLibrary that makes it easy to build end-to-end type-safe APIs for [SvelteKit](https://kit.svelte.dev). Leverages TypeScript inference to pass types directly from server procedures to the client.'
     },
     date: '2024-02-19',
@@ -516,7 +516,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'NowPlaying for OBS'
     },
     description: {
-      cs: '[**Odkaz na stránku**](https://nowplaying.patrick115.eu)\n\nWidget do OBS, který zobrazuje aktuálně přehrávanou písničku na Spotify + obsahuje API pro získání aktuální skladby a playlistu, které lze využít například v [StreamElements](https://streamelements.com) botovi.\n\nStránka je funkční pouze pro přidané účty z důvodu development tokenu od Spotify.',
+      cs: '[**Odkaz na stránku**](https://nowplaying.patrick115.eu)\n\nWidget do OBS zobrazující právě přehrávanou skladbu ze Spotify a zároveň API pro získání aktuální skladby a playlistu, které lze využít například v botovi [StreamElements | hidden](https://streamelements.com).\n\nStránka funguje pouze pro předem schválené účty kvůli omezení vývojářského tokenu Spotify.',
       en: '[**Live Website**](https://nowplaying.patrick115.eu)\n\nOBS browser source widget that displays the currently playing Spotify track, accompanied by an API for fetching the current song and playlist (usable in bots like [StreamElements](https://streamelements.com)).\n\nAccessible to whitelisted accounts due to Spotify development token restrictions.'
     },
     date: '2023-08-05',
@@ -537,7 +537,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'GameRealms.cz Wiki'
     },
     description: {
-      cs: '[**Odkaz na stránky**](https://wiki.gamerealms.cz)\n\nKompletní wiki systém pro Minecraft server [GameRealms.cz](https://gamerealms.cz), který umožňuje administrátorům spravovat kategorie a psát příspěvky v Markdownu rozšířeném o vlastní komponenty a tagy.',
+      cs: '[**Odkaz na stránky**](https://wiki.gamerealms.cz)\n\nKompletní wiki systém pro Minecraft server [GameRealms.cz](https://gamerealms.cz). Administrátorům umožňuje spravovat kategorie a psát články v Markdownu rozšířeném o vlastní komponenty a tagy.',
       en: '[**Live Website**](https://wiki.gamerealms.cz)\n\nComplete wiki system for the [GameRealms.cz](https://gamerealms.cz) Minecraft server, allowing administrators to organize categories and write articles in Markdown extended with custom tags.'
     },
     date: '2023-06-22',
@@ -568,7 +568,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Miňonka (LoL Discord Bot)'
     },
     description: {
-      cs: '[**Odkaz na GitHub (v3)**](https://github.com/patrick11514/Minonka) • [**Odkaz na GitHub (v1/v2)**](https://github.com/patrick11514/MinonkaBot)\n\nDiscord bot primárně sloužící pro zobrazování statistik ze hry **League of Legends**. Dokáže vygenerovat grafický hráčský profil, statistiky v hodnocených hrách, mastery šampionů, historii zápasů nebo detaily živé hry.',
+      cs: '[**Odkaz na GitHub (v3)**](https://github.com/patrick11514/Minonka) • [**Odkaz na GitHub (v1/v2)**](https://github.com/patrick11514/MinonkaBot)\n\nDiscord bot určený primárně pro zobrazování statistik ze hry **League of Legends**. Dokáže vygenerovat grafický profil hráče, přehled hodnocených her, mastery šampionů, historii zápasů i detaily právě probíhající hry.',
       en: '[**GitHub (v3)**](https://github.com/patrick11514/Minonka) • [**GitHub (v1/v2)**](https://github.com/patrick11514/MinonkaBot)\n\nDiscord bot designed primarily to display **League of Legends** statistics. Generates visual player profiles, ranked standings, champion mastery, match history, and live game details.'
     },
     date: '2023-01-21',
@@ -595,7 +595,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Arconix.eu Status Bot'
     },
     description: {
-      cs: 'Discord bot pro server Arconix.eu na zobrazování stavů jednotlivých částí projektu a jejich procentuálního dokončení. Bot obsahuje příkazy na přidání, odebrání a úpravu procent daného statusu, přičemž průběh je vizuálně reprezentován nastavitelnými emotikony.',
+      cs: 'Discord bot pro server Arconix.eu, který přehledně zobrazuje stav jednotlivých částí projektu a jejich procentuální dokončení. Nabízí příkazy pro přidávání, odebírání a aktualizaci jednotlivých položek, přičemž průběh vizuálně znázorňuje pomocí nastavitelných emotikonů.',
       en: 'Discord bot for the Arconix.eu server displaying development statuses and completion percentages. Includes commands for adding, removing, and updating progress bars rendered with customizable Discord emojis.'
     },
     date: '2023-01-19',
@@ -613,7 +613,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Arconix.eu Suggestion Bot'
     },
     description: {
-      cs: 'Discord bot pro server Arconix.eu umožňující hráčům podávat návrhy přes interaktivní tlačítka a formuláře. Ostatní hráči mohou o návrzích diskutovat a hlasovat pro jejich přijetí či zamítnutí, přičemž administrátoři mohou návrhy finálně schválit nebo zamítnout.',
+      cs: 'Discord bot pro server Arconix.eu, který hráčům umožňuje podávat návrhy pomocí interaktivních tlačítek a formulářů. Ostatní členové o nich mohou diskutovat a hlasovat, zatímco administrátoři mají možnost návrhy finálně schválit nebo zamítnout.',
       en: 'Discord bot for the Arconix.eu server allowing players to submit suggestions via interactive buttons and modals. Community members can comment and vote on proposals, while administrators can approve or reject them.'
     },
     date: '2023-01-06',
@@ -633,7 +633,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Hostuj.eu'
     },
     description: {
-      cs: 'Webová platforma pro hosting herních serverů. Obsahuje kompletní systém od objednání až po zaplacení serveru, ovládání běžících instancí, správu souborů, správu uživatelů a ticket systém. Servery běží v Pterodactyl Panelu a jsou ovládány přes API.\n\nNa systému jsem spolupracoval společně s [Tomášem](https://skypad6000.eu).',
+      cs: 'Webová platforma pro hosting herních serverů. Zahrnuje kompletní proces od objednávky a platby přes ovládání běžících instancí až po správu souborů, uživatelů a ticketovací systém. Samotné servery běží na Pterodactyl Panelu a jsou řízeny přes API.\n\nNa projektu jsem spolupracoval s [Tomášem | Tomáš](https://skypad6000.eu).',
       en: 'Web platform for game server hosting. Features a complete workflow from ordering and payment to live server control, file management, user administration, and a support ticket system powered by the Pterodactyl Panel API.\n\nDeveloped in collaboration with [Tomáš](https://skypad6000.eu).'
     },
     date: '2022-11-05',
@@ -658,7 +658,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'GameRealms.cz Discord Bot'
     },
     description: {
-      cs: 'Multifunkční Discord bot pro Minecraft server GameRealms.cz. Umožňuje hráčům vytvářet tickety (včetně generování historie konverzace při uzavření), podávat návrhy, získávat levely za aktivitu v chatu, generovat changelogy, vypisovat nové boostery serveru a moderovat chat pomocí regulárních výrazů.',
+      cs: 'Multifunkční Discord bot pro Minecraft server GameRealms.cz. Umožňuje hráčům zakládat tickety (včetně automatického uložení historie konverzace při uzavření), podávat návrhy a získávat úrovně za aktivitu v chatu. Administrátorům pak nabízí generování changelogů, oznámení nových server boosterů a moderaci chatu pomocí regulárních výrazů.',
       en: 'Multi-purpose Discord bot for the GameRealms.cz Minecraft server. Supports support tickets with transcript generation upon closure, player suggestions, XP/leveling based on chat activity, changelog generation, server booster announcements, and regex-based chat moderation.'
     },
     date: '2022-07-15',
@@ -678,7 +678,7 @@ export const projectsSeed: ProjectSeedItem[] = [
       en: 'Equation from Graph'
     },
     description: {
-      cs: '[**Odkaz na web**](https://sch.patrick115.eu/rovnice_z_grafu/) • [**Odkaz na GitHub**](https://github.com/patrick11514/Kalibracni-rovnice)\n\nJavaScript aplikace na výpočet kalibrační rovnice přímky z grafu, kde se zadá počet bodů a vyplní jednotlivé souřadnice na osách X a Y.',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/Kalibracni-rovnice)\n\nWebová aplikace v JavaScriptu pro výpočet kalibrační rovnice přímky z grafu – stačí zadat počet bodů a jejich souřadnice na osách X a Y.',
       en: '[**Live Website**](https://sch.patrick115.eu/rovnice_z_grafu/) • [**GitHub Repository**](https://github.com/patrick11514/Kalibracni-rovnice)\n\nJavaScript web application for calculating the linear calibration equation from graph data points after entering coordinates on the X and Y axes.'
     },
     date: '2021-11-21',
@@ -694,11 +694,11 @@ export const projectsSeed: ProjectSeedItem[] = [
   {
     uuid: '0ceaf41e-70a4-40d7-81c5-9febe913997d',
     name: {
-      cs: 'SuprisePlay.eu InfoPanel',
+      cs: 'SurprisePlay.eu InfoPanel',
       en: 'SuprisePlay.eu InfoPanel'
     },
     description: {
-      cs: '[**Odkaz na Web**](https://info.surpriseplay.cz)\n\nInformační panel pro Minecraft server SurprisePlay.eu. Umožňoval hráčům zakládat tickety s problémy, měnit si heslo a prohlížet herní statistiky. Admin tým zde mohl odpovídat na tickety, spravovat bany, upravovat prémiovou měnu, oprávnění a interní todo list.',
+      cs: '[**Odkaz na GitHub**](https://github.com/patrick11514/SurprisePlay.eu-InfoPanel)\n\nInformační a správní panel pro Minecraft server SurprisePlay.eu. Hráčům umožňoval zakládat tickety, měnit heslo a prohlížet herní statistiky, zatímco admin týmu sloužil pro vyřizování ticketů, správu banů, prémiové měny, oprávnění a interního seznamu úkolů.',
       en: '[**Live Website**](https://info.surpriseplay.cz)\n\nInformation and management panel for the SurprisePlay.eu Minecraft server. Allowed players to submit support tickets, change passwords, and view stats, while providing the admin team with tools for ticket responses, bans, premium currency, and permissions.'
     },
     date: '2020-05-17',
@@ -709,11 +709,11 @@ export const projectsSeed: ProjectSeedItem[] = [
   {
     uuid: 'ad3ad881-11a6-4d03-abbd-381376899253',
     name: {
-      cs: 'Počítání Q-Testu',
+      cs: 'Počítání Q-testu',
       en: 'Q-Test Calculator'
     },
     description: {
-      cs: '[**Odkaz na stránku**](https://sch.patrick115.eu/beta-prumer)\n\nPHP aplikace na statistické počítání Dean-Dixonova Q-Testu a Lordova testu pro odhalení odlehlých hodnot při laboratorních měřeních, kterou jsem vytvořil a využíval během studia na střední průmyslové škole chemické.',
+      cs: 'Webová aplikace v PHP pro výpočet Dean-Dixonova Q-testu a Lordova testu k odhalování odlehlých hodnot při laboratorních měřeních. Vytvořil jsem ji a aktivně používal během studia na střední průmyslové škole chemické.',
       en: "[**Live Website**](https://sch.patrick115.eu/beta-prumer)\n\nPHP web calculator for performing the Dean-Dixon Q-Test and Lord's test to detect outliers in analytical chemistry measurements, built and used during my studies at the Chemistry High School."
     },
     date: '2019-11-20',

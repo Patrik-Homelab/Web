@@ -3,7 +3,7 @@ import lang, { _extensions } from './_template';
 
 export default lang.parse({
   default_desc:
-    'Ahoj, jsem Patrik, student a programátor, který se ve volném čase věnuje astrofotografování. Věnuji se tvorbě webových stránek a aplikací ve frameworku SvelteKit. Nebráním se tvorbě jiných aplikací, například v NodeJS, nebo jiných frameworkcích, jako jsou Vue.js, nebo React.',
+    'Ahoj, jsem Patrik, student a programátor, který se ve volném čase věnuje astrofotografii. Tvořím především webové stránky a aplikace ve frameworku SvelteKit, ale nebráním se ani dalším technologiím – například Node.js, Vue.js nebo Reactu.',
   yes: 'Ano',
   no: 'Ne',
   cancel: 'Zrušit',
@@ -15,7 +15,7 @@ export default lang.parse({
     login: 'Přihlášení',
     contact: 'Kontakt',
     about: 'O mně',
-    live: 'Astro Okénko',
+    live: 'Astro okénko',
     movies: 'Filmy',
     projects: 'Projekty'
   },
@@ -31,18 +31,18 @@ export default lang.parse({
     message: 'Oops!',
     sub_message: 'Tuto stránku neznáme :(',
     go_home: 'Zpátky domů',
-    invalid_type_number: 'Zadejte platné číslo.'
+    invalid_type_number: 'Zadej platné číslo.'
   },
   live_photo: {
-    title: 'Astro Okénko',
+    title: 'Astro okénko',
     description:
-      'Pokud aktuálně probíhá focení, zde uvidíš aktuální snímek z kamery a statistiky z mého vybavení.',
+      'Pokud právě probíhá focení, najdeš zde aktuální snímek z kamery a živé statistiky mého vybavení.',
     loading_description: 'Chvíli vyčkej, než se data načtou, občas to trvá :)',
     inactive: 'Focení neprobíhá',
     stats: 'Statistiky',
     current_status: 'Aktuální stav',
     mount: 'Montáž',
-    image: 'Poslední obrázek',
+    image: 'Poslední snímek',
     guide: 'Navádění',
     labels: {
       temp: 'Teplota',
@@ -52,19 +52,19 @@ export default lang.parse({
       gain: 'Gain',
       target: 'Cíl',
       focal_length: 'Ohnisková vzdálenost',
-      telescope: 'Teleskop',
+      telescope: 'Dalekohled',
       camera: 'Kamera',
       date: 'Datum',
       error: 'Chyba',
       total: 'Celková'
     },
     last_frame:
-      '*poslední snímek (například z předchozí expozice, nebo automatického ostření, re-centerování, atd... proto se nemusí vždy jednat o kvalitní snímek)'
+      '*poslední snímek (například z předchozí expozice, automatického ostření či centrování, proto nemusí být vždy ostrý a kvalitní)'
   },
   main: {
     age: 'Věk',
     text: [
-      '🎓 Aktuálně studuji Inženýra na ',
+      '🎓 Aktuálně studuji v inženýrském programu na ',
       {
         text: 'Vysoké škole báňské – Technické univerzitě Ostrava',
         link: 'https://www.vsb.cz/'
@@ -78,7 +78,7 @@ export default lang.parse({
       '%%SPACE%%',
       ' 💻 Ve volném čase se nejvíce věnuji vývoji webových aplikací pomocí ',
       {
-        text: 'SvelteKit',
+        text: 'SvelteKitu',
         link: 'https://kit.svelte.dev/'
       },
       ', ',
@@ -91,9 +91,9 @@ export default lang.parse({
         text: 'TypeScriptu',
         link: 'https://www.typescriptlang.org/'
       },
-      '. Mám zkušenosti jak s frontendem, tak backendem a občas zabrousím i do designu.',
+      '. Mám zkušenosti jak s frontendem, tak s backendem, a občas zabrousím i do designu.',
       '%%SPACE%%',
-      ' 🧠 Kromě SvelteKitu zvládám i práci s jinými frameworky, jako je ',
+      ' 🧠 Kromě SvelteKitu zvládám i práci s dalšími frameworky, jako je ',
       {
         text: 'Vue.js',
         link: 'https://vuejs.org/'
@@ -105,11 +105,11 @@ export default lang.parse({
       },
       ', takže se umím přizpůsobit různým technologiím.',
       '%%SPACE%%',
-      ' 🛠️ V Node.js vytvářím i různé aplikace jako jsou Discord boti, Twitch boti nebo jiné skripty, které zjednodušují život.',
+      ' 🛠️ V Node.js tvořím i různé aplikace, jako jsou Discord a Twitch boti nebo skripty pro usnadnění každodenních úkolů.',
       '%%SPACE%%',
-      ' 🌌 Mimo programování se věnuji také astrofotografii – moje snímky najdeš v ',
+      ' 🌌 Kromě programování se věnuji také astrofotografii – moje snímky najdeš v ',
       {
-        text: 'mé galerii',
+        text: 'galerii',
         link: '/cs/gallery',
         blank: false
       },
@@ -234,7 +234,7 @@ export default lang.parse({
         created: 'Článek byl úspěšně vytvořen!',
         updated: 'Článek byl úspěšně upraven!',
         target: {
-          title: 'Cíl a Souřadnice (FOV)',
+          title: 'Cíl a souřadnice (FOV)',
           object: 'Astronomický objekt',
           select: 'Vyber objekt',
           none: 'Žádný',
@@ -252,7 +252,7 @@ export default lang.parse({
       }
     },
     movies: {
-      title: 'Filmy a Seriály',
+      title: 'Filmy a seriály',
       addTitle: 'Přidat film / seriál',
       editTitle: {
         title: 'Úprava filmu / seriálu #%1',
@@ -317,7 +317,7 @@ export default lang.parse({
     }
   },
   projects: {
-    title: 'Moje Projekty',
+    title: 'Moje projekty',
     description:
       'Přehled webových aplikací, nástrojů, Discord botů a školních či open-source projektů, na kterých jsem pracoval.',
     searchPlaceholder: 'Hledat projekt podle názvu, popisu nebo technologie...',
@@ -341,7 +341,7 @@ export default lang.parse({
     draftBadge: 'Skrytý'
   },
   movies: {
-    title: 'Filmy a Seriály',
+    title: 'Filmy a seriály',
     description: 'Zde najdeš seriály a filmy, které jsem zhlédl, a moje krátké recenze.',
     searchPlaceholder: 'Hledat film, seriál nebo text v recenzi...',
     allTypes: 'Všechny typy',
@@ -351,12 +351,12 @@ export default lang.parse({
     allYears: 'Všechny roky',
     sortBy: 'Řadit podle',
     sortAddedDesc: 'Nejnověji přidané',
-    sortAddedAsc: 'Nejstarší přidané',
+    sortAddedAsc: 'Nejdříve přidané',
     sortRatingDesc: 'Nejvyšší hodnocení',
     sortRatingAsc: 'Nejnižší hodnocení',
     sortYearDesc: 'Rok vydání (nejnovější)',
     sortYearAsc: 'Rok vydání (nejstarší)',
-    sortTitleAsc: 'Název (A-Z)',
+    sortTitleAsc: 'Název (A–Z)',
     filterStars: 'Hvězdičky',
     filterYear: 'Rok vydání',
     filterType: 'Typ',
@@ -365,9 +365,9 @@ export default lang.parse({
     addedOn: 'Přidáno'
   },
   gallery: {
-    title: 'Astro-Galerie',
+    title: 'Astro galerie',
     description:
-      'Zde nalezneš astrofotografie pořízené mnou, společně s popisy a detaily o expozicích.',
+      'Zde najdeš mé astrofotografie společně s popisy a technickými detaily jednotlivých expozic.',
     updated: 'Aktualizováno',
     created: 'Vytvořeno',
     readMore: 'Čti dále',
@@ -403,25 +403,25 @@ export default lang.parse({
     visit: 'Navštívit',
     send: 'Napsat',
     descriptions: {
-      github: 'Koukni na můj GitHub, kde najdeš repa s mými projekty',
-      email: 'Napiš mi email, pokud máš nějaké dotazy, nebo máš zájem o spolupráci',
+      github: 'Koukni na můj GitHub, kde najdeš repozitáře s mými projekty',
+      email: 'Napiš mi e-mail, pokud máš nějaké dotazy nebo zájem o spolupráci',
       linkedin:
-        'Spoj se se mnout na LinkedInu, zde najdeš mé profesní zkušenosti a dovednosti',
+        'Spoj se se mnou na LinkedInu, kde najdeš mé profesní zkušenosti a dovednosti',
       instagram:
         'Sleduj mě na Instagramu, kde sdílím své astrofotografie a další zajímavosti',
-      twitch: 'Sleduj mě na Twitch, kde streamuji programování, nebo hraní her',
+      twitch: 'Sleduj mě na Twitchi, kde streamuji programování nebo hraní her',
       discord:
-        'Přidej si mě na Discordu, zde jsem nejvíce aktivní a nejrychleji ti odpovím',
+        'Přidej si mě na Discordu – tam jsem nejaktivnější a odpovím ti nejrychleji',
       discordServer:
-        'Pokud tě zajímá dění okolo mě, určitě se připoj na můj Discord server'
+        'Pokud tě zajímá dění kolem mě, určitě se připoj na můj Discord server'
     }
   },
   about: {
-    title: 'Zde najdeš něco málo o mně',
+    title: 'Něco málo o mně',
     clickToExplore: 'Klikni pro prozkoumání'
   },
   errors: {
-    internal: 'Něco se nepovedlo, zkus to prosím zachvíli znova.',
+    internal: 'Něco se nepovedlo, zkus to prosím za chvíli znovu.',
     login: {
       form: 'Vyplň prosím všechny údaje.',
       username: 'Špatné uživatelské jméno.',
@@ -439,8 +439,8 @@ export default lang.parse({
     upload: {
       missing: 'Vyber prosím soubor k nahrání.',
       error: 'Nepodařilo se nahrát soubor, zkus to prosím znovu.',
-      invalidFile: 'Nahrej prosím platný soubor',
-      extension: 'Nahrej prosím platný obrázek s příponou ' + _extensions,
+      invalidFile: 'Nahraj prosím platný soubor',
+      extension: 'Nahraj prosím platný obrázek s příponou ' + _extensions,
       notFound: 'Soubor s tímto jménem neexistuje.'
     },
     article: {
