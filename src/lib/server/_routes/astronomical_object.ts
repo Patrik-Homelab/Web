@@ -89,7 +89,7 @@ export default {
     })
   ).query(async ({ input }) => {
     const used = await conn
-      .selectFrom('article')
+      .selectFrom('article_object')
       .select('id')
       .where('object_id', '=', input.id)
       .executeTakeFirst();

@@ -26,7 +26,7 @@ export const load = (async ({ params }) => {
         images: [],
         exposures: [],
         equipment: [],
-        object_id: null,
+        object_ids: [],
         ra: null,
         dec: null,
         fov_width: null,
@@ -70,12 +70,20 @@ export const load = (async ({ params }) => {
     .orderBy('article_equipment.id', 'asc')
     .execute();
 
+  const objectLinks = await conn
+    .selectFrom('article_object')
+    .select(['object_id'])
+    .where('article_object.article_id', '=', params.id)
+    .orderBy('article_object.id', 'asc')
+    .execute();
+
   return {
     article: {
       ...article,
       images,
       exposures,
-      equipment: equipment.map((e) => e.equipment_id)
+      equipment: equipment.map((e) => e.equipment_id),
+      object_ids: objectLinks.map((o) => o.object_id)
     },
     ...baseData,
     dynamicTranslations: await gatherTranslationsAll([

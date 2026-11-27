@@ -25,7 +25,6 @@ export interface Article {
   fov_rotation: Generated<number | null>;
   fov_width: Generated<number | null>;
   id: Generated<string>;
-  object_id: Generated<unknown | null>;
   ra: Generated<number | null>;
   title: string;
   updated_at: Generated<Date>;
@@ -37,10 +36,16 @@ export interface ArticleEquipment {
   id: Generated<number>;
 }
 
+export interface ArticleObject {
+  article_id: string;
+  id: Generated<number>;
+  object_id: string;
+}
+
 export interface AstronomicalObject {
   created_at: Generated<Date | null>;
-  id: unknown;
-  name: unknown;
+  id: string;
+  name: string;
 }
 
 export interface Equipment {
@@ -77,20 +82,6 @@ export interface GalleryImage {
   name: string;
 }
 
-export interface Translations {
-  key: string;
-  lang: string;
-  text: string;
-}
-
-export interface Visitors {
-  date: Generated<Date>;
-  id: Generated<number>;
-  ip: string;
-  page: string;
-  user_agent: string;
-}
-
 export interface Movie {
   added_at: Date;
   created_at: Generated<Date>;
@@ -118,10 +109,25 @@ export interface Project {
   uuid: string;
 }
 
+export interface Translations {
+  key: string;
+  lang: string;
+  text: string;
+}
+
+export interface Visitors {
+  date: Generated<Date>;
+  id: Generated<number>;
+  ip: string;
+  page: string;
+  user_agent: string;
+}
+
 export interface DB {
   account: Account;
   article: Article;
   article_equipment: ArticleEquipment;
+  article_object: ArticleObject;
   astronomical_object: AstronomicalObject;
   equipment: Equipment;
   equipment_type: EquipmentType;

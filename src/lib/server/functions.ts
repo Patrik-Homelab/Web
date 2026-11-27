@@ -222,7 +222,7 @@ export const updateTranslations = async <
 
     for (const lang of languagesKeys) {
       const newText = parsed[lang]?.[field];
-      if (newText && typeof newText === 'string') {
+      if (typeof newText === 'string') {
         somethingUpdated = true;
         await trx
           .insertInto('translations')

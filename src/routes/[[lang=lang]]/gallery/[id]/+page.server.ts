@@ -34,15 +34,74 @@ export const load = (async ({ params, parent, url }) => {
     .where('article_id', '=', post.id)
     .execute();
 
-  let objectTranslationUuid: string | undefined = undefined;
-  if (post.object_id) {
-    const obj = await conn
-      .selectFrom('astronomical_object')
-      .selectAll()
-      .where('id', '=', post.object_id)
-      .executeTakeFirst();
-    if (obj) {
-      objectTranslationUuid = obj.name as string;
+  const objects = await conn
+    .selectFrom('article_object')
+    .innerJoin(
+      'astronomical_object',
+      'article_object.object_id',
+      'astronomical_object.id'
+    )
+    .select(['astronomical_object.id', 'astronomical_object.name'])
+    .where('article_object.article_id', '=', post.id)
+    .orderBy('article_object.id', 'asc')
+    .execute();
+
+  const objectIds = objects.map((o) => o.id);
+  let relatedPosts: Array<{
+    id: string;
+    title: string;
+    created_at: Date;
+    imageName: string | null;
+    imageAlt: string | null;
+    lightSeconds: number;
+  }> = [];
+
+  if (objectIds.length > 0) {
+    const relatedLinks = await conn
+      .selectFrom('article_object')
+      .select('article_id')
+      .where('object_id', 'in', objectIds)
+      .where('article_id', '!=', post.id)
+      .distinct()
+      .execute();
+
+    const relatedIds = relatedLinks.map((r) => r.article_id);
+    if (relatedIds.length > 0) {
+      const [relArticles, relImages, relExposures] = await Promise.all([
+        conn
+          .selectFrom('article')
+          .select(['id', 'title', 'created_at'])
+          .where('id', 'in', relatedIds)
+          .orderBy('created_at', 'desc')
+          .execute(),
+        conn
+          .selectFrom('gallery_image')
+          .select(['article_id', 'name', 'alt_text'])
+          .where('article_id', 'in', relatedIds)
+          .orderBy('id', 'asc')
+          .execute(),
+        conn
+          .selectFrom('exposure')
+          .select(['article_id', 'count', 'exposure_time_s', 'type'])
+          .where('article_id', 'in', relatedIds)
+          .where('type', '=', 'light')
+          .execute()
+      ]);
+
+      relatedPosts = relArticles.map((ra) => {
+        const firstImg = relImages.find((img) => img.article_id === ra.id);
+        const lightSeconds = relExposures
+          .filter((ex) => ex.article_id === ra.id)
+          .reduce((acc, ex) => acc + ex.count * ex.exposure_time_s, 0);
+        return {
+          id: ra.id,
+          title: ra.title,
+          created_at: ra.created_at,
+          imageName: firstImg?.name ?? null,
+          imageAlt: firstImg?.alt_text ?? null,
+          lightSeconds
+        };
+      });
     }
   }
 
@@ -50,11 +109,11 @@ export const load = (async ({ params, parent, url }) => {
     post.title,
     post.description,
     post.content_md,
-    ...images.map((image) => image.alt_text)
+    ...images.map((image) => image.alt_text),
+    ...objects.map((o) => o.name),
+    ...relatedPosts.map((rp) => rp.title),
+    ...relatedPosts.map((rp) => rp.imageAlt).filter((a): a is string => Boolean(a))
   ];
-  if (objectTranslationUuid) {
-    translationKeys.push(objectTranslationUuid);
-  }
 
   const dynamicTranslations = await gatherTranslations(
     translationKeys,
@@ -68,11 +127,12 @@ export const load = (async ({ params, parent, url }) => {
       exposures,
       equipment
     },
-    objectTranslationUuid,
+    objects,
+    relatedPosts,
     dynamicTranslations,
     meta: {
       title: dynamicTranslations[post.title],
-      description: dynamicTranslations[post.description],
+      description: dynamicTranslations[post.description] || undefined,
       type: 'article',
       image:
         images.length > 0

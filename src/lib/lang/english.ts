@@ -198,7 +198,9 @@ export default lang.parse({
           content: 'Article content (Markdown)',
           editContent: 'Edit',
           previewContent: 'Preview',
-          contentPlaceholder: 'Enter article content in markdown...'
+          contentPlaceholder: 'Enter article content in markdown...',
+          optionalHint:
+            'Description and Markdown content are optional — leave them empty for a quick photo-only capture.'
         },
         equipment: {
           title: 'Equipment',
@@ -391,16 +393,19 @@ export default lang.parse({
     equipmentDetails: 'Equipment details',
     images: 'Images',
     object: 'Object',
+    objects: 'Objects',
     all: 'All posts',
     byObject: 'By object',
     skyMap: 'Sky map',
+    skyMapCta: "Explore everything I've captured on the real night sky :)",
     fov: 'Field of view (FOV)',
     postsCount: {
       '1': 'post',
       '2': 'posts',
       other: 'posts'
     },
-    older: 'Older'
+    older: 'Older',
+    moreCaptures: 'More captures of this object'
   },
   contact: {
     title: 'Get in Touch',

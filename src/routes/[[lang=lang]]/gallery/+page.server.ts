@@ -13,7 +13,6 @@ export const load = (async ({ parent, url }) => {
       'description',
       'created_at',
       'updated_at',
-      'object_id',
       'ra',
       'dec',
       'fov_width',
@@ -34,10 +33,17 @@ export const load = (async ({ parent, url }) => {
   const images = await conn.selectFrom('gallery_image').selectAll().execute();
   const exposures = await conn.selectFrom('exposure').selectAll().execute();
   const objects = await conn.selectFrom('astronomical_object').selectAll().execute();
+  const articleObjects = await conn
+    .selectFrom('article_object')
+    .select(['article_id', 'object_id'])
+    .execute();
 
   return {
     posts: posts.map((post) => ({
       ...post,
+      object_ids: articleObjects
+        .filter((ao) => ao.article_id === post.id)
+        .map((ao) => ao.object_id),
       equipment: postsEquipment
         .filter((eq) => eq.article_id === post.id)
         .sort((a, b) => b.priority - a.priority),
