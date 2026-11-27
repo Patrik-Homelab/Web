@@ -17,7 +17,8 @@
     "migration:create": "./script/createMigration.sh",
     "migrate": "tsx ./script/runMigration.ts",
     "migrate:up": "tsx ./script/runMigration.ts up",
-    "migrate:down": "tsx ./script/runMigration.ts down"
+    "migrate:down": "tsx ./script/runMigration.ts down",
+    "preview:seed": "tsx ./script/seedPreview.ts"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
