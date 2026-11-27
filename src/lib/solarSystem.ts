@@ -64,6 +64,56 @@ export interface PlanetConfig extends CelestialBodyInfo {
   moons?: MoonConfig[];
 }
 
+export interface SolarArticleLink {
+  id: string;
+  title: string;
+  year: number;
+  objectName: string;
+}
+
+export const MOON_CONFIG: CelestialBodyInfo = {
+  id: 'moon',
+  name: { cs: 'Měsíc', en: 'Moon' },
+  symbol: '☽',
+  type: { cs: 'Přirozená družice Země', en: 'Natural Satellite of Earth' },
+  orbitPeriod: { cs: '27.32 dní', en: '27.32 days' },
+  distanceAu: '0.00257 AU (384 400 km)',
+  moonsCount: 0,
+  description: {
+    cs: 'Jediný přirozený satelit Země a nejjasnější objekt noční oblohy.',
+    en: 'Earth’s only natural satellite and the brightest object in the night sky.'
+  }
+};
+
+const SOLAR_BODY_ALIASES: Record<PlanetId | 'sun' | 'moon', string[]> = {
+  sun: ['sun', 'slunce', 'the sun'],
+  mercury: ['mercury', 'merkur'],
+  venus: ['venus', 'venuse'],
+  earth: ['earth', 'zeme'],
+  moon: ['moon', 'mesic', 'luna'],
+  mars: ['mars'],
+  jupiter: ['jupiter'],
+  saturn: ['saturn'],
+  uranus: ['uranus', 'uran'],
+  neptune: ['neptune', 'neptun']
+};
+
+export function matchSolarBodyId(names: string[]): PlanetId | 'sun' | 'moon' | null {
+  for (const raw of names) {
+    const normalized = raw
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    for (const [bodyId, aliases] of Object.entries(SOLAR_BODY_ALIASES)) {
+      if (aliases.includes(normalized)) {
+        return bodyId as PlanetId | 'sun' | 'moon';
+      }
+    }
+  }
+  return null;
+}
+
 export const SUN_CONFIG: CelestialBodyInfo = {
   id: 'sun',
   name: { cs: 'Slunce', en: 'The Sun' },
@@ -168,7 +218,17 @@ export const PLANETS: PlanetConfig[] = [
       mid: '#2563eb',
       dark: '#0f172a'
     },
-    glowColor: 'rgba(56, 189, 248, 0.6)'
+    glowColor: 'rgba(56, 189, 248, 0.6)',
+    moons: [
+      {
+        id: 'moon',
+        radiusPx: 14,
+        sizePx: 3.4,
+        periodDays: 27.32,
+        initialPhaseDeg: 40,
+        color: '#e2e8f0'
+      }
+    ]
   },
   {
     id: 'mars',
